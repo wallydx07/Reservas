@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/transparent"
+    android:layout_height="match_parent"
+    tools:context=".view.Calendario">
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="408dp"
+            android:layout_height="664dp"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="75dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="right|fill_vertical"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/buttonfecha"
+                    android:layout_width="134dp"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="44dp"
+                    android:onClick="onclick1"
+                    android:text="Fecha" />
+
+                <EditText
+                    android:id="@+id/txtfecha"
+                    android:layout_width="136dp"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="48dp"
+                    android:layout_marginEnd="60dp"
+                    android:ems="10"
+                    android:hint="@string/report_planned_date"
+                    android:inputType="date"
+                    android:text="" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/listviewhoras"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="128dp"
+
+                tools:ignore="MissingConstraints" />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</FrameLayout>
