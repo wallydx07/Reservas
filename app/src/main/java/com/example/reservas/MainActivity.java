@@ -50,14 +50,7 @@ public class MainActivity extends AppCompatActivity {
        buttoniniciarsecion=(Button)findViewById(R.id.buttoniniciarsesion);
        firebasauth=FirebaseAuth.getInstance();
        awesomevalidation=new AwesomeValidation(ValidationStyle.BASIC);
-       //awesomevalidation.addValidation(this, R.id.Email,Patterns.EMAIL_ADDRESS, 1);
-       //awesomevalidation.addValidation(this, R.id.Password,".", 1);
-       // int n=0;
-        //if(n==1){
-          //  setContentView(R.layout.activity_main);
-        //BottomNavigationView navigation=(BottomNavigationView)findViewById(R.id.navigation);
-       //navigation.setOnNavigationItemSelectedListener(onNav);
-        //}
+
     }
 
     private final BottomNavigationView.OnNavigationItemSelectedListener onNav=new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -90,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                         setContentView(R.layout.activity_main);
                         BottomNavigationView navigation=(BottomNavigationView)findViewById(R.id.navigation);
                         navigation.setOnNavigationItemSelectedListener(onNav);
+                        loadFragment(producto);
                     }else{
                         String errocode=((FirebaseAuthException)task.getException()).getErrorCode();
                         System.out.println(errocode);

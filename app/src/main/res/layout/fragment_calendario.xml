@@ -48,7 +48,7 @@
             <ListView
                 android:id="@+id/listviewhoras"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="568dp"
                 android:layout_marginBottom="128dp"
 
                 tools:ignore="MissingConstraints" />

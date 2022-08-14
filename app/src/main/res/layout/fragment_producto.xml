@@ -25,11 +25,17 @@
 
         <ListView
             android:id="@+id/listView1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_alignParentRight="true"
+            android:layout_width="410dp"
+            android:layout_height="627dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentRight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.038"
+            tools:layout_editor_absoluteX="0dp">
+
+        </ListView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

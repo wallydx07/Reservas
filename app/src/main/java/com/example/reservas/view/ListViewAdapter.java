@@ -1,5 +1,6 @@
 package com.example.reservas.view;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,22 +10,23 @@ import android.widget.TextView;
 
 import com.example.reservas.R;
 
+import java.util.List;
+
 public class ListViewAdapter extends BaseAdapter {
     // Declare Variables
     Context context;
-    String[] titulos;
-    int[] imagenes;
+    objProducto producto;
+    List<objProducto> producto1;
     LayoutInflater inflater;
 
-    public ListViewAdapter(Context context, String[] titulos, int[] imagenes) {
+    public ListViewAdapter(Context context, List<objProducto> Producto) {
         this.context = context;
-        this.titulos = titulos;
-        this.imagenes = imagenes;
+        this.producto1 = Producto;
     }
 
     @Override
     public int getCount() {
-        return titulos.length;
+        return producto1.size();
     }
 
     @Override
@@ -38,9 +40,8 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-
         // Declare Variables
-        TextView txtTitle;
+        TextView txtTitle, txtSubTitle;
         ImageView imgImg;
 
         //http://developer.android.com/intl/es/reference/android/view/LayoutInflater.html
@@ -50,11 +51,16 @@ public class ListViewAdapter extends BaseAdapter {
 
         // Locate the TextViews in listview_item.xml
         txtTitle = (TextView) itemView.findViewById(R.id.list_row_title);
+        txtSubTitle = (TextView) itemView.findViewById(R.id.list_row_subtitle);
         imgImg = (ImageView) itemView.findViewById(R.id.list_row_image);
 
         // Capture position and set to the TextViews
-        txtTitle.setText(titulos[position]);
-        imgImg.setImageResource(imagenes[position]);
+        producto = producto1.get(position);
+        String nombre = producto.getNombre();
+        String precio = producto.getPrecio();
+        txtTitle.setText(nombre);
+        txtSubTitle.setText(precio);
+        imgImg.setImageResource(R.drawable.ic_person);
 
         return itemView;
     }
