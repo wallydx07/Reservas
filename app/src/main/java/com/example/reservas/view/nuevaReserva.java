@@ -14,10 +14,13 @@ public class nuevaReserva extends AppCompatActivity {
     ViewPager viewpager;
     TabItem tab1,tab2;
     PagerController pagercontroller;
+    String txt;
 
+    public nuevaReserva() {
 
+    }
 
-@Override
+    @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.nuevareserva);

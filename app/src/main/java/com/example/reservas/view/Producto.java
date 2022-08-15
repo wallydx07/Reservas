@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -103,8 +101,7 @@ public class Producto extends Fragment implements View.OnClickListener{
     }
 
     public void loadproducto() {
-        String precio1="0";
-        final List<objProducto> productolist = new ArrayList<>();
+        final List<obProductos> productolist = new ArrayList<>();
         final ListView lista =v.findViewById(R.id.listView1);
         mDatabase.child("producto").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -114,8 +111,8 @@ public class Producto extends Fragment implements View.OnClickListener{
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         String nombre = ds.child("nombre").getValue().toString();
                         String tipo = ds.child("tipo").getValue().toString();
-                        boolean disponible = (Boolean) ds.child("disponible").getValue();
-                        productolist.add(new objProducto(nombre, tipo, precio1, disponible));
+                        int precio=Integer.valueOf(ds.child("precio").getValue().toString());
+                        productolist.add(new obProductos(nombre, precio,tipo));
                     }
 
 
@@ -124,7 +121,7 @@ public class Producto extends Fragment implements View.OnClickListener{
                     lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                            Intent intent=new Intent(getActivity(), Nuevo_Producto.class);
+                            Intent intent=new Intent(getActivity(), EditarProductos.class);
                             startActivity(intent);
                             Toast.makeText(getContext(), "presiono " + i, Toast.LENGTH_SHORT).show();
                         }

@@ -92,6 +92,7 @@ public class Calendario extends Fragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 Intent intent=new Intent(getActivity(), nuevaReserva.class);
                 startActivity(intent);
 

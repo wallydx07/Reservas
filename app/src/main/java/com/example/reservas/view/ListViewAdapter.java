@@ -1,6 +1,5 @@
 package com.example.reservas.view;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,11 @@ import java.util.List;
 public class ListViewAdapter extends BaseAdapter {
     // Declare Variables
     Context context;
-    objProducto producto;
-    List<objProducto> producto1;
+    obProductos producto;
+    List<obProductos> producto1;
     LayoutInflater inflater;
 
-    public ListViewAdapter(Context context, List<objProducto> Producto) {
+    public ListViewAdapter(Context context, List<obProductos> Producto) {
         this.context = context;
         this.producto1 = Producto;
     }
@@ -57,9 +56,9 @@ public class ListViewAdapter extends BaseAdapter {
         // Capture position and set to the TextViews
         producto = producto1.get(position);
         String nombre = producto.getNombre();
-        String precio = producto.getPrecio();
+        int precio = producto.getPrecio();
         txtTitle.setText(nombre);
-        txtSubTitle.setText(precio);
+        txtSubTitle.setText(String.valueOf(precio));
         imgImg.setImageResource(R.drawable.ic_person);
 
         return itemView;

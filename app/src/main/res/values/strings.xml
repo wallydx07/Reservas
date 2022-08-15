@@ -6,4 +6,10 @@
     <string name="report_planned_date" />
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="tiposProductos">
+        <item>Seleccione</item>
+        <item>Circuito</item>
+        <item>Caballo</item>
+
+    </string-array>
 </resources>

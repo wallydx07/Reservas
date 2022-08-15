@@ -1,14 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".view.reservaDProductoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="615dp">
 
+        <LinearLayout
+            android:layout_width="347dp"
+            android:layout_height="382dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="51dp"
+                    android:layout_weight="1"
+                    android:text="Circuito"
+                    android:textSize="20sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerReservaProductoCircuito"
+                    android:layout_width="139dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:orientation="horizontal">
+
+                <Switch
+                    android:id="@+id/switchCaballo"
+                    android:layout_width="127dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Cabalgata" />
+
+                <LinearLayout
+                    android:layout_width="223dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/spinnerReservaProductoCaballo"
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/buttonReservaProductoagregar"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_add" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/listViewReservaProducto"
+                android:layout_width="match_parent"
+                android:layout_height="103dp" />
+
+            <EditText
+                android:id="@+id/txtReservaProductoTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Total"
+                android:inputType="number" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/txtReservaProductoAnticipo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Anticipo"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/txtReservaProductoPendiente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Pendiente"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonReservaProductoFinalizar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Finalizar Reserva" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

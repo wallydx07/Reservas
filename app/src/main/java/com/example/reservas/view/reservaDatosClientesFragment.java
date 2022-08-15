@@ -7,15 +7,22 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.example.reservas.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link reservaDatosClientesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class reservaDatosClientesFragment extends Fragment {
+public class reservaDatosClientesFragment extends Fragment implements View.OnClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,6 +32,12 @@ public class reservaDatosClientesFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    EditText tNombre, tNacimiento,tDNI;
+    View v;
+    Button agregar;
+    List<objPersona> Personalist;
+    ListViewAdapter adapter1;
+    ListView lista;
 
     public reservaDatosClientesFragment() {
         // Required empty public constructor
@@ -60,7 +73,37 @@ public class reservaDatosClientesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reserva_datos_clientes, container, false);
+
+        v=inflater.inflate(R.layout.fragment_reserva_datos_clientes, container, false);
+        tNombre=v.findViewById(R.id.txtDatosApellidoyNombre);
+        tNacimiento=v.findViewById(R.id.txtDAtosFechaNacimiento);
+        tDNI=v.findViewById(R.id.txtDatosDNI);
+        agregar=v.findViewById(R.id.bottomDatosnAgregar);
+        agregar.setOnClickListener(this);
+        Personalist = new ArrayList<>();
+         lista =v.findViewById(R.id.listViewDatosClientes);
+        return v;
+    }
+
+
+
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.bottomDatosnAgregar:
+                String nombre=String.valueOf(tNombre.getText());
+                String DNI=String.valueOf(tDNI.getText());
+                String fNacimiento=String.valueOf(tNacimiento.getText());
+                objPersona persona=new objPersona(nombre,DNI,fNacimiento,"nose");
+                Personalist.add(persona);
+                ArrayAdapter<objPersona> adapter=new ArrayAdapter<objPersona>(getActivity().getApplicationContext(),R.layout.listview_item,Personalist);
+                lista.setAdapter(adapter);
+                tNombre.setText("");
+                tDNI.setText("");
+                tNacimiento.setText("");
+                break;
+
+        }
     }
 }
