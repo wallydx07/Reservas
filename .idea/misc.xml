@@ -15,6 +15,7 @@
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_nuevo_producto.xml" value="0.22" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_ultimo.xml" value="0.18854166666666666" />
+        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/calendarlistview.xml" value="0.5" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/editar.xml" value="0.1675213675213675" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/fragment_calendario.xml" value="0.1" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/fragment_producto.xml" value="0.2976588628762542" />
@@ -23,7 +24,7 @@
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/fragment_usuario.xml" value="0.44895833333333335" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/gestioncircuitos.xml" value="0.1875" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/list_row.xml" value="0.33" />
-        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/listview_item.xml" value="0.14221014492753623" />
+        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/listview_item.xml" value="0.67" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/login.xml" value="0.25" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/micalanedario.xml" value="0.203125" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/nuevareserva.xml" value="0.4503657262277952" />

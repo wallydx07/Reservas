@@ -16,10 +16,12 @@ public class obProductos {
     }
 
     public void setNombre(String nombre) {
+
         Nombre = nombre;
     }
 
     public int getPrecio() {
+
         return Precio;
     }
 

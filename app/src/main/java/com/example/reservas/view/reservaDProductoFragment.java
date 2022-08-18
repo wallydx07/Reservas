@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,20 +43,24 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     private String mParam1;
     private String mParam2;
 View v;
+    List<objPersona> personalist;
+    List<obProductos> cabalgatalist;
+    objReserva miReserva;
+    objPersona persona;
     Spinner spinCircuito,spinCaballo;
-    EditText nombre,dni,fechanacimiento,correo,telefono,hospedaje, total, anticipo, pendiente;
+    EditText nombre,dni,fechanNacimiento, total, anticipo, pendiente;
+    String correo,telefono,hospedaje;
     ListView datoscaballos;
     DatabaseReference mDatabase;
     Switch cabalgata;
     Button finalizar;
     ImageButton agregar;
     int cant;
-    objReserva miReserva;
-    List<obProductos> cabalgatalist;
+
     List<obProductos> pcaballo;
     List<obProductos> pcircuito;
     public reservaDProductoFragment() {
-        // Required empty public constructor
+        // Required empty publifffc constructor
     }
 
     /**
@@ -79,12 +84,35 @@ View v;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        personalist = new ArrayList<>();
         mDatabase= FirebaseDatabase.getInstance().getReference();
         cabalgatalist=new ArrayList<>();
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        getParentFragmentManager().setFragmentResultListener("key",this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String nombreO=result.getString("nombre");
+                String dni=result.getString("dni");
+                String nacimineto=result.getString("nacimiento");
+                persona=new objPersona(nombreO,dni,nacimineto,"Cliente");
+                personalist.add(persona);
+                }
+        });
+        getParentFragmentManager().setFragmentResultListener("K",this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                correo=result.getString("correo");
+                telefono=result.getString("telefono");
+                hospedaje=result.getString("hospedaje");
+
+            }
+        });
+
+
+
+
+
+
+
     }
 
     @Override
@@ -112,14 +140,6 @@ View v;
 
 
 
-    public void writeNewReserva( String name, int price, String type) {
-
-        obProductos producto = new obProductos(name,price,type);
-        mDatabase.child("producto").push().setValue(producto);
-    }
-
-
-
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
@@ -136,11 +156,17 @@ View v;
                 datoscaballos.setAdapter(adapter);
                 break;
             case R.id.buttonReservaProductoFinalizar:
-                objReserva mireserva=new objReserva();
+
+                objReserva reserva=new objReserva("fecha", "horaInicio", "horaFin",  correo,  telefono,  hospedaje,  "usuario","guia", spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist);
+                  writeNewReserva(reserva);
+
                 break;
         }
     }
 
+    private void writeNewReserva(objReserva reserva) {
+        mDatabase.child("reserva").push().setValue(reserva);
+    }
     public void loadproducto() {
         //final List<obProductos> pcaballo = new ArrayList<>();
         //final List<obProductos> pcircuito = new ArrayList<>();

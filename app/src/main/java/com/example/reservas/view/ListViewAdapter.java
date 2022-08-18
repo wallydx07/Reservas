@@ -18,6 +18,7 @@ public class ListViewAdapter extends BaseAdapter {
     List<obProductos> producto1;
     LayoutInflater inflater;
 
+
     public ListViewAdapter(Context context, List<obProductos> Producto) {
         this.context = context;
         this.producto1 = Producto;
@@ -25,16 +26,19 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+
         return producto1.size();
     }
 
     @Override
     public Object getItem(int position) {
+
         return null;
     }
 
     @Override
     public long getItemId(int position) {
+
         return 0;
     }
 
@@ -59,7 +63,8 @@ public class ListViewAdapter extends BaseAdapter {
         int precio = producto.getPrecio();
         txtTitle.setText(nombre);
         txtSubTitle.setText(String.valueOf(precio));
-        imgImg.setImageResource(R.drawable.ic_person);
+        imgImg.setImageResource(R.drawable.ic_account);
+
 
         return itemView;
     }

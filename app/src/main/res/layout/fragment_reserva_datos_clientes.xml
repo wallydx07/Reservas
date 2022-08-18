@@ -54,7 +54,7 @@
                 android:ems="10"
                 android:gravity="center"
                 android:hint="Fecha nacimiento"
-                android:inputType="textPersonName"
+                android:inputType="number"
 
                 android:imeOptions="actionDone"/>
 

@@ -7,16 +7,37 @@ public class objReserva {
     String horaInicio;
     String horaFin;
     String correo;
-    String Telefono;
-    String Hospedaje;
+    String telefono;
+    String hospedaje;
     String usuario;
-    List<objGuia> guialist;
-    List<obProductos> circuitolist;
+    String guia;
+    String circuito;
     List<objPersona> Personalist;
-    List<objCaballo> Caballolist;
+    List<obProductos> Caballolist;
 
-    public objReserva(String fecha) {
+    public objReserva(String fecha, String horaInicio, String horaFin, String correo, String telefono, String hospedaje, String usuario, String guia, String circuito, List<objPersona> personalist, List<obProductos> caballolist) {
         this.fecha = fecha;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.correo = correo;
+        this.telefono = telefono;
+        this.hospedaje = hospedaje;
+        this.usuario = usuario;
+        this.guia = guia;
+        this.circuito = circuito;
+        Personalist = personalist;
+        Caballolist = caballolist;
+    }
+
+    public objReserva() {
+
+    }
+
+    public String nombreTitular() {
+        objPersona titular = Personalist.get(0);
+        String nombrexd = titular.getNombre();
+        return nombrexd;
+
     }
 
     public String getFecha() {
@@ -52,19 +73,19 @@ public class objReserva {
     }
 
     public String getTelefono() {
-        return Telefono;
+        return telefono;
     }
 
     public void setTelefono(String telefono) {
-        Telefono = telefono;
+        this.telefono = telefono;
     }
 
     public String getHospedaje() {
-        return Hospedaje;
+        return hospedaje;
     }
 
     public void setHospedaje(String hospedaje) {
-        Hospedaje = hospedaje;
+        this.hospedaje = hospedaje;
     }
 
     public String getUsuario() {
@@ -75,20 +96,20 @@ public class objReserva {
         this.usuario = usuario;
     }
 
-    public List<objGuia> getGuialist() {
-        return guialist;
+    public String getGuia() {
+        return guia;
     }
 
-    public void setGuialist(List<objGuia> guialist) {
-        this.guialist = guialist;
+    public void setGuia(String guia) {
+        this.guia = guia;
     }
 
-    public List<obProductos> getCircuitolist() {
-        return circuitolist;
+    public String getCircuito() {
+        return circuito;
     }
 
-    public void setCircuitolist(List<obProductos> circuitolist) {
-        this.circuitolist = circuitolist;
+    public void setCircuito(String circuito) {
+        this.circuito = circuito;
     }
 
     public List<objPersona> getPersonalist() {
@@ -99,11 +120,11 @@ public class objReserva {
         Personalist = personalist;
     }
 
-    public List<objCaballo> getCaballolist() {
+    public List<obProductos> getCaballolist() {
         return Caballolist;
     }
 
-    public void setCaballolist(List<objCaballo> caballolist) {
+    public void setCaballolist(List<obProductos> caballolist) {
         Caballolist = caballolist;
     }
 }

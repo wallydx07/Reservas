@@ -1,5 +1,6 @@
 package com.example.reservas.view;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.TableLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,8 +14,10 @@ public class nuevaReserva extends AppCompatActivity {
     TabLayout tablayout;
     ViewPager viewpager;
     TabItem tab1,tab2;
+    EditText tNombre, tNacimiento,tDNI, correo, telefono, hospedaje;
     PagerController pagercontroller;
     String txt;
+    reservaDProductoFragment miFragmento = null;
 
     public nuevaReserva() {
 
@@ -26,6 +29,7 @@ public class nuevaReserva extends AppCompatActivity {
             setContentView(R.layout.nuevareserva);
             tablayout=findViewById(R.id.tabnuevareserva);
             viewpager=findViewById(R.id.viewventa);
+            tNombre=(EditText)findViewById(R.id.txtDatosApellidoyNombre);
             tab1=findViewById(R.id.tabCLiente);
             tab2=findViewById(R.id.tabReserva);
             pagercontroller=new PagerController(getSupportFragmentManager(),tablayout.getTabCount());
@@ -34,11 +38,15 @@ public class nuevaReserva extends AppCompatActivity {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     viewpager.setCurrentItem(tab.getPosition());
-                    if(tab.getPosition()==0){
+                    if(tab.getPosition()==0) {
                         pagercontroller.notifyDataSetChanged();
+                        System.out.println("te amo martin");
+
 }
                     if(tab.getPosition()==1){
                         pagercontroller.notifyDataSetChanged();
+                        System.out.println("superhellorooro");
+
 }
                 }
 
@@ -54,4 +62,6 @@ public class nuevaReserva extends AppCompatActivity {
             });
             viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tablayout));
 }
+
+
 }

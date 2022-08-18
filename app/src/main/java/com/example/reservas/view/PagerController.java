@@ -21,6 +21,7 @@ public class PagerController extends FragmentPagerAdapter {
                 return new reservaDatosClientesFragment();
 
             case 1:
+
                 return new reservaDProductoFragment();
 
             default:

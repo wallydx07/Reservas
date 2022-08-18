@@ -3,15 +3,16 @@ package com.example.reservas.view;
 public class objPersona {
     String nombre;
     String dni;
-    String fechaN;
+    String fechaNacimiento;
     String Tipo;
 
     public objPersona(String nombre, String dni, String fechaN, String tipo) {
         this.nombre = nombre;
         this.dni = dni;
-        this.fechaN = fechaN;
+        this.fechaNacimiento = fechaN;
         Tipo = tipo;
     }
+
 
     public String getNombre() {
         return nombre;
@@ -30,11 +31,11 @@ public class objPersona {
     }
 
     public String getFechaN() {
-        return fechaN;
+        return fechaNacimiento;
     }
 
     public void setFechaN(String fechaN) {
-        this.fechaN = fechaN;
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public String getTipo() {
