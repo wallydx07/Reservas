@@ -42,11 +42,12 @@ public class Calendario extends Fragment {
     private int dia, mes, año;
     private TextView textview;
     private ListView listview;
-    private String horas[]={"8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"};
     private View v;
     List<objReserva> rlist;
     String formattedDate;
     DatabaseReference mDatabase;
+    Bundle bundle;
+    reservaDProductoFragment fragment;
     public Calendario() {
         // Required empty public constructor
 
@@ -75,11 +76,12 @@ public class Calendario extends Fragment {
         super.onCreate(savedInstanceState);
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
-
         mDatabase= FirebaseDatabase.getInstance().getReference();
-
         SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
         formattedDate = df.format(c);
+        bundle = new Bundle();
+        fragment = new reservaDProductoFragment();
+
     }
 
     @Override
@@ -105,7 +107,6 @@ public class Calendario extends Fragment {
         loadproducto();
         return v;
     }
-
 
     public void loadproducto() {
         String fecha="fecha";//textview.getText().toString();

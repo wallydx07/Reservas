@@ -34,20 +34,16 @@ import java.util.List;
  */
 public class reservaDProductoFragment extends Fragment implements View.OnClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-View v;
+    View v;
     List<objPersona> personalist;
     List<obProductos> cabalgatalist;
     objReserva miReserva;
     objPersona persona;
-    Spinner spinCircuito,spinCaballo;
+    Spinner spinCircuito,spinCaballo,horas;
     EditText nombre,dni,fechanNacimiento, total, anticipo, pendiente;
     String correo,telefono,hospedaje;
     ListView datoscaballos;
@@ -124,6 +120,8 @@ View v;
         v=inflater.inflate(R.layout.fragment_reserva_d_producto, container, false);
         spinCircuito=v.findViewById(R.id.spinnerReservaProductoCircuito);
         spinCaballo=v.findViewById(R.id.spinnerReservaProductoCaballo);
+
+        horas=v.findViewById(R.id.spinnerReservaProductoHoras);
         total=v.findViewById(R.id.txtReservaProductoTotal);
         anticipo=v.findViewById(R.id.txtReservaProductoAnticipo);
         pendiente=v.findViewById(R.id.txtReservaProductoPendiente);
@@ -156,8 +154,9 @@ View v;
                 datoscaballos.setAdapter(adapter);
                 break;
             case R.id.buttonReservaProductoFinalizar:
+                String fnhora=(horas.getSelectedItem().toString());
 
-                objReserva reserva=new objReserva("fecha", "horaInicio", "horaFin",  correo,  telefono,  hospedaje,  "usuario","guia", spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist);
+                objReserva reserva=new objReserva("fecha", "horaInicio", (fnhora),  correo,  telefono,  hospedaje,  "usuario","guia", spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist);
                   writeNewReserva(reserva);
 
                 break;

@@ -52,9 +52,10 @@
                     android:text="Tiempo Solicitado(hs)" />
 
                 <Spinner
-                    android:id="@+id/spinner2"
+                    android:id="@+id/spinnerReservaProductoHoras"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:entries="@array/horaspermitidas"
                     android:layout_weight="1" />
             </LinearLayout>
 
