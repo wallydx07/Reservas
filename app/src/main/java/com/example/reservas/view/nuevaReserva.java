@@ -1,9 +1,12 @@
 package com.example.reservas.view;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TableLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.reservas.R;
@@ -16,16 +19,19 @@ public class nuevaReserva extends AppCompatActivity {
     TabItem tab1,tab2;
     EditText tNombre, tNacimiento,tDNI, correo, telefono, hospedaje;
     PagerController pagercontroller;
-    String txt;
-    reservaDProductoFragment miFragmento = null;
+    String datoHora;
+public nuevaReserva() {
 
-    public nuevaReserva() {
 
     }
 
     @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+        Bundle parametros = this.getIntent().getExtras();
+        if(parametros !=null) {
+            datoHora = parametros.getString("datos");
+        }
             setContentView(R.layout.nuevareserva);
             tablayout=findViewById(R.id.tabnuevareserva);
             viewpager=findViewById(R.id.viewventa);
@@ -40,12 +46,10 @@ public class nuevaReserva extends AppCompatActivity {
                     viewpager.setCurrentItem(tab.getPosition());
                     if(tab.getPosition()==0) {
                         pagercontroller.notifyDataSetChanged();
-                        System.out.println("te amo martin");
 
 }
                     if(tab.getPosition()==1){
                         pagercontroller.notifyDataSetChanged();
-                        System.out.println("superhellorooro");
 
 }
                 }
@@ -60,8 +64,11 @@ public class nuevaReserva extends AppCompatActivity {
 
                 }
             });
-            viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tablayout));
+             viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tablayout));
+       // pasarparametros();
+    }
+
 }
 
 
-}
+

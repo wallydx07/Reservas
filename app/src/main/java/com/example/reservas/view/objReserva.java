@@ -1,8 +1,9 @@
 package com.example.reservas.view;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class objReserva {
+public class objReserva implements Serializable {
     String fecha;
     String horaInicio;
     String horaFin;

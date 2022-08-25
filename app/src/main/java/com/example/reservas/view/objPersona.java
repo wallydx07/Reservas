@@ -1,6 +1,8 @@
 package com.example.reservas.view;
 
-public class objPersona {
+import java.io.Serializable;
+
+public class objPersona implements Serializable {
     String nombre;
     String dni;
     String fechaNacimiento;

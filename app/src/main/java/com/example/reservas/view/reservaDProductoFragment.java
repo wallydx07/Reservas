@@ -51,6 +51,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     Switch cabalgata;
     Button finalizar;
     ImageButton agregar;
+
+    String datohora;
     int cant;
 
     List<obProductos> pcaballo;
@@ -79,6 +81,11 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        datohora=((nuevaReserva)this.getActivity()).datoHora;
+        System.out.println(datohora);
+        System.out.println(datohora);
+        System.out.println(datohora);
+
         super.onCreate(savedInstanceState);
         personalist = new ArrayList<>();
         mDatabase= FirebaseDatabase.getInstance().getReference();
@@ -102,14 +109,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
             }
         });
+      }
 
-
-
-
-
-
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -155,9 +156,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 break;
             case R.id.buttonReservaProductoFinalizar:
                 String fnhora=(horas.getSelectedItem().toString());
-
-                objReserva reserva=new objReserva("fecha", "horaInicio", (fnhora),  correo,  telefono,  hospedaje,  "usuario","guia", spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist);
-                  writeNewReserva(reserva);
+                objReserva reserva=new objReserva("fecha", datohora, "",  correo,  telefono,  hospedaje,  "usuario","guia", spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist);
+                writeNewReserva(reserva);
 
                 break;
         }

@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Reservas"
         tools:targetApi="31">
         <activity
+            android:name=".ConsultaReserva"
+            android:exported="false" />
+        <activity
             android:name=".EditarProductos"
             android:exported="false" />
         <activity
@@ -39,6 +42,8 @@
         <activity android:name=".view.nuevaReserva" />
         <activity android:name=".view.Nuevo_Producto" />
         <activity android:name=".view.EditarProductos" />
+
+        <activity android:name=".view.ConsultaReserva" />
     </application>
 
 </manifest>
