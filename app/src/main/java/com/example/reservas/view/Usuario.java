@@ -33,8 +33,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +72,8 @@ public class Usuario extends Fragment implements View.OnClickListener{
     private String mPath;
     private static final int PICK_IMAGE = 100;
     Uri imageUri;
+
+    DatabaseReference mDatabase;
     private static final String TAG = "Usuario";
 
     public Usuario() {
@@ -100,174 +108,201 @@ public class Usuario extends Fragment implements View.OnClickListener{
 
     public void updateProfile() {
         // [START update_profile]
-        String newName=String.valueOf(nameUser.getText());
-        System.out.println("la url es:"+imageUri);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest
-                .Builder()
-                .setDisplayName(newName)
-               // .setPhotoUri(imageUri)
-        .build();
-
-        user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "User profile updated.");
-                        }
-                    }
-                });
-        // [END update_profile]
-    }
-    @SuppressLint("SetTextI18n")
-    public void getUserProfile(ImageView image, EditText nameUser) {
+        String ID="";
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            nameUser.setText(user.getDisplayName());
-            Uri photoUrl = user.getPhotoUrl();
-            System.out.println(photoUrl+"sfdhd7897898");
-            //mSetImage.setImageURI(photoUrl);
-
-// Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-            String uid = user.getUid();
-            System.out.println("fghjhgfdf0dsfhgnh111111111111111dgfdsah");
-        } else {
-            System.out.println("fghjhgfdf0dsfhgnhdgfdsah");
-            // [END get_user_profile]
+             ID = user.getUid();
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        v=inflater.inflate(R.layout.fragment_usuario, container, false);
-        mSetImage=v.findViewById(R.id.userViewUser);
-        bottomGuardar=v.findViewById(R.id.buttonGuardar);
-        bottomGuardar.setOnClickListener(this);
-        nameUser = v.findViewById(R.id.txtUser);
-        //mSetImage.setOnClickListener(this);
-        getUserProfile(mSetImage,nameUser);
-        return v;//muy impoortante
-    }
-    @Override
-    public void onClick(View view) {
-        switch(view.getId()) {
-            case R.id.userViewUser:
-            //showOptions();
-            break;
-            case R.id.buttonGuardar:
-                updateProfile();
-
-
-                break;
-        }
-    }
-
-    private void showOptions() {
-        //final CharSequence[] option = {"Tomar foto", "Elegir de galeria", "Cancelar"};
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        final CharSequence[] option = {"Elegir de galeria", "Cancelar"};
-
-        builder.setTitle("Eleige una opción");
-        builder.setItems(option, new DialogInterface.OnClickListener() {
+        System.out.println("el id es:"+ID);
+        mDatabase.child("guia").child(ID).get().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(option[which] == "Tomar foto"){
-                    //openCamera();
-                }else if(option[which] == "Elegir de galeria"){
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(intent.createChooser(intent, "Selecciona app de imagen"), SELECT_PICTURE);
-                }else {
-                    dialog.dismiss();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        System.out.println(ds.getKey());
+                   }
+                }else{
+                    String newName=String.valueOf(nameUser.getText());
+                    System.out.println("la url es:"+imageUri);
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest
+                            .Builder()
+                            .setDisplayName(newName)
+                            // .setPhotoUri(imageUri)
+                            .build();
+                    user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "User profile updated.");
+                            }
+                        }
+                    });
+                    System.out.println("Datonoexiste");
                 }
             }
-        });
-
-        builder.show();
-    }
-
-    private void openCamera() {
-        File file = new File(Environment.getExternalStorageDirectory(), MEDIA_DIRECTORY);
-        boolean isDirectoryCreated = file.exists();
-
-        if(!isDirectoryCreated)
-            isDirectoryCreated = file.mkdirs();
-
-        if(isDirectoryCreated){
-            Long timestamp = System.currentTimeMillis() / 1000;
-            String imageName = timestamp.toString() + ".jpg";
-
-            mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY
-                    + File.separator + imageName;
-
-            File newFile = new File(mPath);
-
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
-            startActivityForResult(intent, PHOTO_CODE);
-        }
-    }
-    public void updateEmail() {
-        // [START update_email]
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        user.updateEmail("user@example.com")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "User email address updated.");
-                        }
-                    }
-                });
-        // [END update_email]
-    }
-    public void updatePassword() {
-        // [START update_password]
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String newPassword = "SOME-SECURE-PASSWORD";
-
-        user.updatePassword(newPassword)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "User password updated.");
-                        }
-                    }
-                });
-        // [END update_password]
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            switch (requestCode){
-                case PHOTO_CODE:
-                    MediaScannerConnection.scanFile(getContext().getApplicationContext(),
-                            new String[]{mPath}, null,
-                            new MediaScannerConnection.OnScanCompletedListener() {
-                                @Override
-                                public void onScanCompleted(String path, Uri uri) {
-                                    Log.i("ExternalStorage", "Scanned " + path + ":");
-                                    Log.i("ExternalStorage", "-> Uri = " + uri);
-                                }
-                            });
-
-
-                    Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    mSetImage.setImageBitmap(bitmap);
-                    break;
-                case SELECT_PICTURE:
-                    Uri path = data.getData();
-                    mSetImage.setImageURI(path);
-                    break;
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        }
-    }
-}
+});
+
+
+                    // [END update_profile]
+                }
+                @SuppressLint("SetTextI18n")
+                public void getUserProfile (ImageView image, EditText nameUser){
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        nameUser.setText(user.getDisplayName());
+                        Uri photoUrl = user.getPhotoUrl();
+                        System.out.println(photoUrl + "sfdhd7897898");
+                        //mSetImage.setImageURI(photoUrl);
+
+// Check if user's email is verified
+                        boolean emailVerified = user.isEmailVerified();
+                        String uid = user.getUid();
+                        System.out.println("fghjhgfdf0dsfhgnh111111111111111dgfdsah");
+                    } else {
+                        System.out.println("fghjhgfdf0dsfhgnhdgfdsah");
+                        // [END get_user_profile]
+                    }
+                }
+
+                @Override
+                public View onCreateView (LayoutInflater inflater, ViewGroup container,
+                        Bundle savedInstanceState){
+                    // Inflate the layout for this fragment
+                    v = inflater.inflate(R.layout.fragment_usuario, container, false);
+                    mSetImage = v.findViewById(R.id.userViewUser);
+                    bottomGuardar = v.findViewById(R.id.buttonGuardar);
+                    bottomGuardar.setOnClickListener(this);
+                    nameUser = v.findViewById(R.id.txtUser);
+                    //mSetImage.setOnClickListener(this);
+                    getUserProfile(mSetImage, nameUser);
+                    return v;//muy impoortante
+                }
+                @Override
+                public void onClick (View view){
+                    switch (view.getId()) {
+                        case R.id.userViewUser:
+                            //showOptions();
+                            break;
+                        case R.id.buttonGuardar:
+                            updateProfile();
+
+
+                            break;
+                    }
+                }
+
+                private void showOptions () {
+                    //final CharSequence[] option = {"Tomar foto", "Elegir de galeria", "Cancelar"};
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    final CharSequence[] option = {"Elegir de galeria", "Cancelar"};
+
+                    builder.setTitle("Eleige una opción");
+                    builder.setItems(option, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (option[which] == "Tomar foto") {
+                                //openCamera();
+                            } else if (option[which] == "Elegir de galeria") {
+                                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.setType("image/*");
+                                startActivityForResult(intent.createChooser(intent, "Selecciona app de imagen"), SELECT_PICTURE);
+                            } else {
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+
+                    builder.show();
+                }
+
+                private void openCamera () {
+                    File file = new File(Environment.getExternalStorageDirectory(), MEDIA_DIRECTORY);
+                    boolean isDirectoryCreated = file.exists();
+
+                    if (!isDirectoryCreated)
+                        isDirectoryCreated = file.mkdirs();
+
+                    if (isDirectoryCreated) {
+                        Long timestamp = System.currentTimeMillis() / 1000;
+                        String imageName = timestamp.toString() + ".jpg";
+
+                        mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY
+                                + File.separator + imageName;
+
+                        File newFile = new File(mPath);
+
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
+                        startActivityForResult(intent, PHOTO_CODE);
+                    }
+                }
+                public void updateEmail () {
+                    // [START update_email]
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                    user.updateEmail("user@example.com")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "User email address updated.");
+                                    }
+                                }
+                            });
+                    // [END update_email]
+                }
+                public void updatePassword () {
+                    // [START update_password]
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    String newPassword = "SOME-SECURE-PASSWORD";
+
+                    user.updatePassword(newPassword)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "User password updated.");
+                                    }
+                                }
+                            });
+                    // [END update_password]
+                }
+
+                @Override
+                public void onActivityResult ( int requestCode, int resultCode,
+                @Nullable Intent data){
+                    super.onActivityResult(requestCode, resultCode, data);
+                    if (resultCode == RESULT_OK) {
+                        switch (requestCode) {
+                            case PHOTO_CODE:
+                                MediaScannerConnection.scanFile(getContext().getApplicationContext(),
+                                        new String[]{mPath}, null,
+                                        new MediaScannerConnection.OnScanCompletedListener() {
+                                            @Override
+                                            public void onScanCompleted(String path, Uri uri) {
+                                                Log.i("ExternalStorage", "Scanned " + path + ":");
+                                                Log.i("ExternalStorage", "-> Uri = " + uri);
+                                            }
+                                        });
+
+
+                                Bitmap bitmap = BitmapFactory.decodeFile(mPath);
+                                mSetImage.setImageBitmap(bitmap);
+                                break;
+                            case SELECT_PICTURE:
+                                Uri path = data.getData();
+                                mSetImage.setImageURI(path);
+                                break;
+
+                        }
+                    }
+                }
+            }
+
+
+
+

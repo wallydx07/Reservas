@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
@@ -30,9 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,7 +44,7 @@ public class Calendario extends Fragment {
     private ListView listview;
     private View v;
     private String horasTV[]={"7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"};
-
+private Spinner spinGuia;
     List<objReserva> Reservalist;
     String formattedDate;
     DatabaseReference mDatabase;
@@ -61,7 +59,7 @@ public class Calendario extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         Button buttonfecha;
-        buttonfecha=(Button)getView().findViewById(R.id.buttonfecha);
+        buttonfecha=(Button)getView().findViewById(R.id.buttonCalendarioFecha);
         return fragment;
     }
     @Override
@@ -78,10 +76,12 @@ public class Calendario extends Fragment {
                              Bundle savedInstanceState) {
     // Inflate the layout for this fragment
         v=inflater.inflate(R.layout.fragment_calendario, container, false);
-       textview=v.findViewById(R.id.txtfecha);
+       textview=v.findViewById(R.id.txtCalendarioFecha);
        textview.setText(formattedDate);
-       listview=v.findViewById(R.id.listviewhoras);
-       loadproducto();
+       listview=v.findViewById(R.id.lvCalendarioHoras);
+       spinGuia=v.findViewById(R.id.spinnerCalendarioGuia);
+
+       loadHoras();
         return v;
     }
 
@@ -109,6 +109,32 @@ public class Calendario extends Fragment {
         }
     }
 
+    public void loadSpinner() {
+
+        ArrayList<String>aGuia= new ArrayList<>();
+        mDatabase.child("guia").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {//ver
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String nombre = ds.child("nombre").getValue().toString();
+                        int precio= Integer.valueOf(ds.child("precio").getValue().toString());
+                        aGuia.add(nombre);
+                    }
+                    ArrayAdapter<String> adapterGuia = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, aGuia);
+
+                    spinGuia.setAdapter(adapterGuia);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
 
     public static int getPositionInVector(String[] vector, String num) {
@@ -176,12 +202,13 @@ public class Calendario extends Fragment {
         return aux;
     }
 
-    public void loadproducto() {
-        String fecha="fecha";//textview.getText().toString();
+    public void loadHoras() {
+        String fecha=textview.getText().toString();
         final List<objReserva>rlist = new ArrayList<>();
-        final ListView lista =v.findViewById(R.id.listviewhoras);
+        final ListView lista =v.findViewById(R.id.lvCalendarioHoras);
         //Query ref = FirebaseDatabase.getInstance().getReference().
                // child("Universidades").orderByChild("nombre").equalTo("UAP");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("reserva").orderByChild("fecha").equalTo(fecha).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -219,10 +246,14 @@ public class Calendario extends Fragment {
                             if(textItemList.equals("Disponible")){
                                 TextView texHorainicio = (TextView)view.findViewById(R.id.txtCalendarListHora);
                                 //Obtiene el texto dentro del TextView.
-                                String cf  = texHorainicio.getText().toString();//si esta disponible le manda la hora de inicio
+                                String horaInicio  = texHorainicio.getText().toString();//si esta disponible le manda la hora de inicio
+                                String guia=spinGuia.getSelectedItem().toString();
+                                String fecha=textview.getText().toString();
                                 Intent intent = new Intent(getActivity(), nuevaReserva.class);
                                 Bundle datoenvia = new Bundle();
-                                datoenvia.putString("datos", cf);
+                                datoenvia.putString("guia",guia);
+                                datoenvia.putString("horaInicio", horaInicio);
+                                datoenvia.putString("fecha",fecha);
                                 intent.putExtras(datoenvia);
                                 startActivity(intent);
                                 }else{

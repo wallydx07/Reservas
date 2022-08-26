@@ -14,39 +14,51 @@
 
 
         <ListView
-            android:id="@+id/listviewhoras"
-            android:layout_width="352dp"
-            android:layout_height="464dp"
+            android:id="@+id/lvCalendarioHoras"
+            android:layout_width="341dp"
+            android:layout_height="451dp"
 
-            android:layout_marginTop="32dp"
+            android:layout_marginBottom="44dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonfecha"
-            app:layout_constraintVertical_bias="0.111"
+            app:layout_constraintTop_toBottomOf="@+id/txtCalendarioFecha"
+            app:layout_constraintVertical_bias="0.437"
             tools:ignore="MissingConstraints" />
 
         <EditText
-            android:id="@+id/txtfecha"
+            android:id="@+id/txtCalendarioFecha"
             android:layout_width="136dp"
             android:layout_height="46dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="4dp"
             android:ems="10"
             android:hint="@string/report_planned_date"
             android:inputType="date"
             android:text=""
-            app:layout_constraintStart_toEndOf="@+id/buttonfecha"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.339"
+            app:layout_constraintStart_toEndOf="@+id/buttonCalendarioFecha"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCalendarioGuia" />
 
         <Button
-            android:id="@+id/buttonfecha"
+            android:id="@+id/buttonCalendarioFecha"
             android:layout_width="134dp"
             android:layout_height="44dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
             android:onClick="onclick1"
             android:text="Fecha"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCalendarioGuia" />
+
+        <Spinner
+            android:id="@+id/spinnerCalendarioGuia"
+            android:layout_width="351dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.583"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

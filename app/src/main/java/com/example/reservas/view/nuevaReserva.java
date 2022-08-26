@@ -1,12 +1,8 @@
 package com.example.reservas.view;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.widget.EditText;
-import android.widget.TableLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.reservas.R;
@@ -19,7 +15,7 @@ public class nuevaReserva extends AppCompatActivity {
     TabItem tab1,tab2;
     EditText tNombre, tNacimiento,tDNI, correo, telefono, hospedaje;
     PagerController pagercontroller;
-    String datoHora;
+    String horaInicio,fecha,guia;
 public nuevaReserva() {
 
 
@@ -30,7 +26,10 @@ public nuevaReserva() {
             super.onCreate(savedInstanceState);
         Bundle parametros = this.getIntent().getExtras();
         if(parametros !=null) {
-            datoHora = parametros.getString("datos");
+            horaInicio = parametros.getString("horaInicio");
+            fecha = parametros.getString("fecha");
+            guia = parametros.getString("guia");
+
         }
             setContentView(R.layout.nuevareserva);
             tablayout=findViewById(R.id.tabnuevareserva);

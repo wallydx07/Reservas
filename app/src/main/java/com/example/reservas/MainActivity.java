@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +26,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 
 import java.util.Calendar;
-import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
       Button buttoniniciarsecion;
@@ -127,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int dia, int mes, int año) {
                                 //txtfecha[0]
-                EditText etPlannedDate = (EditText) findViewById(R.id.txtfecha);
+                EditText etPlannedDate = (EditText) findViewById(R.id.txtCalendarioFecha);
 
 
               //  txtfecha[0].setText(i+"/"+i1+"/"+i2);

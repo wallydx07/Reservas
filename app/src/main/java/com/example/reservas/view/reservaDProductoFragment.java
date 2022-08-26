@@ -18,6 +18,8 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import com.example.reservas.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,8 +53,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     Switch cabalgata;
     Button finalizar;
     ImageButton agregar;
-
-    String datohora;
+    FirebaseUser user;
+    String horaInicio,fecha,guia,User;
     int cant;
 
     List<obProductos> pcaballo;
@@ -81,11 +83,11 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        datohora=((nuevaReserva)this.getActivity()).datoHora;
-        System.out.println(datohora);
-        System.out.println(datohora);
-        System.out.println(datohora);
 
+        horaInicio =((nuevaReserva)this.getActivity()).horaInicio;
+        fecha=((nuevaReserva)this.getActivity()).fecha;
+        guia=((nuevaReserva)this.getActivity()).guia;
+        user = FirebaseAuth.getInstance().getCurrentUser();
         super.onCreate(savedInstanceState);
         personalist = new ArrayList<>();
         mDatabase= FirebaseDatabase.getInstance().getReference();
@@ -155,8 +157,9 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 datoscaballos.setAdapter(adapter);
                 break;
             case R.id.buttonReservaProductoFinalizar:
-                String fnhora=(horas.getSelectedItem().toString());
-                objReserva reserva=new objReserva("fecha", datohora, "",  correo,  telefono,  hospedaje,  "usuario","guia", spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist);
+                int Fin=Integer.valueOf(horas.getSelectedItem().toString());
+                Fin=Integer.valueOf(horaInicio)+Fin;
+                objReserva reserva=new objReserva(fecha, horaInicio, String.valueOf(Fin),  correo,  telefono,  hospedaje,  user.toString(),guia, spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist);
                 writeNewReserva(reserva);
 
                 break;
