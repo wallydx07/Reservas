@@ -116,7 +116,11 @@ public class Producto extends Fragment implements View.OnClickListener{
                     }
 
 
-                    adapter = new ListViewAdapter(getActivity().getApplicationContext(), productolist);
+                    try {
+                        adapter = new ListViewAdapter(getActivity().getApplicationContext(), productolist);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     lista.setAdapter(adapter);
                     lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override

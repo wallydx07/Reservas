@@ -238,7 +238,11 @@ private Spinner spinGuia;
                 }
                 BurbujaColObj(rlist);
                 Reservalist=acomodar(rlist);
-                adapter = new ListCalendarioAdapter(getActivity().getApplicationContext(), Reservalist);
+                try {
+                    adapter = new ListCalendarioAdapter(getActivity().getApplicationContext(), Reservalist);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 listview.setAdapter(adapter);
                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -301,8 +305,12 @@ final List<String> pguia = new ArrayList<>();
                         System.out.println("pguia es: " + nombre);
                     }
                 }
-                ArrayAdapter<String> adapterGuia = new ArrayAdapter<String>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, pguia);
-                spinGuia.setAdapter(adapterGuia);
+                try {
+                    ArrayAdapter<String> adapterGuia = new ArrayAdapter<String>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, pguia);
+                    spinGuia.setAdapter(adapterGuia);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
 

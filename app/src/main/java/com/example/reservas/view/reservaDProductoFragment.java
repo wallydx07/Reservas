@@ -48,6 +48,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     View v;
     List<objPersona> personalist;
     List<obProductos> cabalgatalist;
+    List<obProductos> pcircuito;
     objReserva miReserva;
     objPersona persona;
     Spinner spinCircuito,spinCaballo, spinhoras;
@@ -61,8 +62,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     FirebaseUser user;
     String horaInicio,fecha,guia,User;
     int cant;
-    List<obProductos> pcabalgata;
-    List<obProductos> pcircuito;
+
     public reservaDProductoFragment() {
         // Required empty publifffc constructor
     }
@@ -146,6 +146,9 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     agregar.setEnabled(isChecked);
                     spinCaballo.setEnabled(isChecked);
+                    if(isChecked){
+                        loadcaballo();
+                    }
 
             }
 
@@ -162,15 +165,16 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.buttonReservaProductoagregar:
-                String nombre=spinCaballo.getSelectedItem().toString();
 
-                for (int i = 0; i< pcabalgata.size(); i++) {
-                    obProductos productosss= pcabalgata.get(i);
+                List<obProductos> cabalgata=new ArrayList<>();
+                String nombre=spinCaballo.getSelectedItem().toString();
+                for (int i = 0; i< cabalgatalist.size(); i++) {
+                    obProductos productosss= cabalgatalist.get(i);
                     if(productosss.getNombre().equals(nombre)){
-                        cabalgatalist.add(productosss);
+                        cabalgata.add(productosss);
                     }
                 }
-                ArrayAdapter<obProductos> adapter=new ArrayAdapter<obProductos>(getActivity().getApplicationContext(),R.layout.listview_item,cabalgatalist);
+                ArrayAdapter<obProductos> adapter=new ArrayAdapter<obProductos>(getActivity().getApplicationContext(),R.layout.listview_item,cabalgata);
                 datoscaballos.setAdapter(adapter);
                 break;
             case R.id.buttonReservaProductoFinalizar:
@@ -190,7 +194,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         final List<obProductos> pcabalgata = new ArrayList<>();
         //final List<obProductos> pcircuito = new ArrayList<>();
         pcircuito = new ArrayList<>();
-        this.pcabalgata = new ArrayList<>();
+        this.cabalgatalist = new ArrayList<>();
         mDatabase.child("producto").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -204,14 +208,14 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                             pcircuito.add(new obProductos(nombre, precio,tipo));
                          }
                         if(tipo.equals("Caballo")){
-                            reservaDProductoFragment.this.pcabalgata.add(new obProductos(nombre, precio,tipo));
+                            reservaDProductoFragment.this.cabalgatalist.add(new obProductos(nombre, precio,tipo));
  }
 
 
                     }
-                    ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, reservaDProductoFragment.this.pcabalgata);
+                   // ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, reservaDProductoFragment.this.cabalgatalist);
                     ArrayAdapter<obProductos> adaptercircuito = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, pcircuito);
-                    spinCaballo.setAdapter(adaptercaballo);
+                 //   spinCaballo.setAdapter(adaptercaballo);
                     spinCircuito.setAdapter(adaptercircuito);
                 }
 
@@ -228,7 +232,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     public void loadcaballo() {
         final List<obProductos> pcabalgata = new ArrayList<>();
         //final List<obProductos> pcircuito = new ArrayList<>();
-        this.pcabalgata = new ArrayList<>();
+        //this.cabalgata = new ArrayList<>();
         pcircuito = new ArrayList<>();
         mDatabase.child("reserva").orderByChild("fecha").equalTo(fecha).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -244,41 +248,76 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                         DateFormat inFormat = new SimpleDateFormat("HH:mm");
                         Date horainicio = inFormat.parse(horaInicio);
                         Date horafin = inFormat.parse(spinhoras.getSelectedItem().toString());
-                        hora1 = horainicio.getTime();
-                        hora2 = horafin.getTime();
+                        System.out.println("las horas "+horainicio);
+                        System.out.println("las horas "+horafin);
+                        hora1 = (horainicio.getTime()/3600000)-3;//hora d einicio desde el listviewanterior
+                        hora2 = (horafin.getTime()/3600000)-3+hora1;//+hora1;//hora inicio desde el spiner actual
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                     for (DataSnapshot ds : snapshot.getChildren()) {
+                        System.out.println(ds.child("circuito").getValue().toString());
+
+
+
                         long horarec=0;
                         String horaI = ds.child("horaInicio").getValue().toString();
                         try {
                             DateFormat inFormat = new SimpleDateFormat("HH:mm");
                             Date horainicio = inFormat.parse(horaI);
-                            horarec = horainicio.getTime();
+                            horarec = (horainicio.getTime()/3600000)-3;
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
+                        System.out.println("estas son las horas");
+                        System.out.println("hora a la q posiblemete c/o"+horarec);
+                        System.out.println("hora q pretndo iniciar"+hora1);
+                        System.out.println("hora que pretendo finalizar"+hora2);
                         if((horarec>hora1)&&(horarec<hora2)){
                              for (DataSnapshot dsi : ds.child("caballolist").getChildren()){
-                                 caballonombre = dsi.child("nombre").getValue().toString();
-                                 precio = Integer.valueOf(dsi.child("precio").getValue().toString());
-                                  tipo=dsi.child("tipo").getValue().toString();
+                                 System.out.println("estee s caballilisto");
+
+                                 try {
+                                     caballonombre = dsi.child("nombre").getValue().toString();
+                                     precio = Integer.valueOf(dsi.child("precio").getValue().toString());
+                                     tipo=dsi.child("tipo").getValue().toString();
+
+                                 } catch (Exception e) {
+                                     e.printStackTrace();
+                                 }
+
+
+                                 System.out.println(caballonombre);
                                  obProductos caballo=new obProductos(caballonombre,precio,tipo);
                                  pcabalgata.add(caballo);
                              }
                              pcabalgata.add(new obProductos(caballonombre, precio,tipo));
+                        }else{
+                            System.out.println("hora no concuerda");
                         }
                    }
+                    boolean disponible=true;
+                    List<obProductos> auxadapter = new ArrayList<>();
+                    for(int i = 0; i < cabalgatalist.size(); i++) {
+                        obProductos auxpro=cabalgatalist.get(i);
+                        for(int j = 0; j < pcabalgata.size(); j++) {
+                            obProductos auxpro1=pcabalgata.get(j);
+                            if((auxpro.getNombre()).equals(auxpro1.getNombre())){
+                                disponible=false;
+                            }else {
+                                disponible=true;
+                            }
 
+                        }
+                        if(disponible){
+                            auxadapter.add(auxpro);
+                        }
 
-
-
-
-                    ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, reservaDProductoFragment.this.pcabalgata);
-                    ArrayAdapter<obProductos> adaptercircuito = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, pcircuito);
+                    }
+                    ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, auxadapter);
                     spinCaballo.setAdapter(adaptercaballo);
-                    spinCircuito.setAdapter(adaptercircuito);
+                }else{
+                    System.out.println("no exiten datos");
                 }
 
             }
