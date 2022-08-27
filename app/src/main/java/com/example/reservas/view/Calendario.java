@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reservas.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -68,7 +70,7 @@ private Spinner spinGuia;
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
         mDatabase= FirebaseDatabase.getInstance().getReference();
-        SimpleDateFormat df = new SimpleDateFormat("dd/mm/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         formattedDate = df.format(c);
     }
     @Override
@@ -82,6 +84,7 @@ private Spinner spinGuia;
        spinGuia=v.findViewById(R.id.spinnerCalendarioGuia);
 
        loadHoras();
+        loadGuias();
         return v;
     }
 
@@ -231,61 +234,47 @@ private Spinner spinGuia;
                         }
                         rlist.add(new objReserva("", hora0, horaFin, "", "", "", "", guia, circuito, plist, null));
                     }
-                    BurbujaColObj(rlist);
-                    Reservalist=acomodar(rlist);
-                    adapter = new ListCalendarioAdapter(getActivity().getApplicationContext(), Reservalist);
-                    listview.setAdapter(adapter);
-                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                            //Se busca la referencia del TextView en la vista.
-                            TextView textView = (TextView)view.findViewById(R.id.txtCalendarListNombre);
+
+                }
+                BurbujaColObj(rlist);
+                Reservalist=acomodar(rlist);
+                adapter = new ListCalendarioAdapter(getActivity().getApplicationContext(), Reservalist);
+                listview.setAdapter(adapter);
+                listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                        //Se busca la referencia del TextView en la vista.
+                        TextView textView = (TextView)view.findViewById(R.id.txtCalendarListNombre);
+                        //Obtiene el texto dentro del TextView.
+                        String textItemList  = textView.getText().toString();
+                        System.out.println(textItemList);
+                        if(textItemList.equals("Disponible")){
+                            TextView texHorainicio = (TextView)view.findViewById(R.id.txtCalendarListHora);
                             //Obtiene el texto dentro del TextView.
-                            String textItemList  = textView.getText().toString();
-                            System.out.println(textItemList);
-                            if(textItemList.equals("Disponible")){
-                                TextView texHorainicio = (TextView)view.findViewById(R.id.txtCalendarListHora);
-                                //Obtiene el texto dentro del TextView.
-                                String horaInicio  = texHorainicio.getText().toString();//si esta disponible le manda la hora de inicio
-                                String guia=spinGuia.getSelectedItem().toString();
-                                String fecha=textview.getText().toString();
-                                Intent intent = new Intent(getActivity(), nuevaReserva.class);
-                                Bundle datoenvia = new Bundle();
-                                datoenvia.putString("guia",guia);
-                                datoenvia.putString("horaInicio", horaInicio);
-                                datoenvia.putString("fecha",fecha);
-                                intent.putExtras(datoenvia);
-                                startActivity(intent);
-                                }else{
-                                Bundle datoenvia = new Bundle();
-                                objReserva Reserva=Reservalist.get(i);
-                                datoenvia.putString("datos", textItemList);
-
-                                Intent intent = new Intent(getActivity(), ConsultaReserva.class);
-                              //  intent.putExtras(datoenvia);
-                               intent.putExtra("reserva", Reserva);
-                                startActivity(intent);
-
-                            }
-                            Toast.makeText(getContext(), "presiono " + i, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }else {/*
-                    List<objPersona> plist=new ArrayList<>();
-                    plist.add(new objPersona("Nombre","DNI","00000","Cliente"));
-                    rlist.add(new objReserva(""," hora0", "horaFin", "", "", "", "", "guia", "circuito", plist, null));
-                    adapter = new ListCalendarioAdapter(getActivity().getApplicationContext(), rlist);
-                    listview.setAdapter(adapter);
-                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                            Intent intent=new Intent(getActivity(), nuevaReserva.class);
+                            String horaInicio  = texHorainicio.getText().toString();//si esta disponible le manda la hora de inicio
+                            String guia=spinGuia.getSelectedItem().toString();
+                            String fecha=textview.getText().toString();
+                            Intent intent = new Intent(getActivity(), nuevaReserva.class);
+                            Bundle datoenvia = new Bundle();
+                            datoenvia.putString("guia",guia);
+                            datoenvia.putString("horaInicio", horaInicio);
+                            datoenvia.putString("fecha",fecha);
+                            intent.putExtras(datoenvia);
                             startActivity(intent);
-                            Toast.makeText(getContext(), "presiono " + i, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                        }else{
+                            Bundle datoenvia = new Bundle();
+                            objReserva Reserva=Reservalist.get(i);
+                            datoenvia.putString("datos", textItemList);
 
-                */}
+                            Intent intent = new Intent(getActivity(), ConsultaReserva.class);
+                            //  intent.putExtras(datoenvia);
+                            intent.putExtra("reserva", Reserva);
+                            startActivity(intent);
+
+                        }
+                        Toast.makeText(getContext(), "presiono " + i, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -293,5 +282,41 @@ private Spinner spinGuia;
         });
 
     }
+    public void loadGuias(){
+        String ID="";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            ID = user.getUid();
+        }
+final List<String> pguia = new ArrayList<>();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        String finalID = ID;
+        mDatabase.child("guia").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String nombre = ds.child("nombre").getValue().toString();
+                        pguia.add(nombre);
+                        System.out.println("pguia es: " + nombre);
+                    }
+                }
+                ArrayAdapter<String> adapterGuia = new ArrayAdapter<String>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, pguia);
+                spinGuia.setAdapter(adapterGuia);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+
+            });
+
+
+
+
+
+
+        }
 
 }

@@ -81,14 +81,16 @@
                         android:id="@+id/spinnerReservaProductoCaballo"
                         android:layout_width="130dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:enabled="false"/>
 
                     <ImageButton
                         android:id="@+id/buttonReservaProductoagregar"
                         android:layout_width="20dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/ic_add" />
+                        android:src="@drawable/ic_add"
+                        android:enabled="false"/>
                 </LinearLayout>
 
             </LinearLayout>

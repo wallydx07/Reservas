@@ -36,6 +36,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
@@ -113,42 +114,49 @@ public class Usuario extends Fragment implements View.OnClickListener{
         if (user != null) {
              ID = user.getUid();
         }
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         System.out.println("el id es:"+ID);
-        mDatabase.child("guia").child(ID).get().addListenerForSingleValueEvent(new ValueEventListener() {
+        String finalID = ID;
+        mDatabase.child("guia").child(ID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    //Actualizar
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         System.out.println(ds.getKey());
+
                    }
                 }else{
-                    String newName=String.valueOf(nameUser.getText());
-                    System.out.println("la url es:"+imageUri);
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest
-                            .Builder()
-                            .setDisplayName(newName)
-                            // .setPhotoUri(imageUri)
-                            .build();
-                    user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "User profile updated.");
-                            }
-                        }
-                    });
-                    System.out.println("Datonoexiste");
+                    //ingresar
+                    mDatabase.child("guia").child(finalID).child("nombre").setValue(nameUser.getText().toString());
+
                 }
-            }
+}
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-});
+            }});
+
+        String newName=String.valueOf(nameUser.getText());
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest
+                    .Builder()
+                    .setDisplayName(newName)
+                    // .setPhotoUri(imageUri)
+                    .build();
+                user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User profile updated.");
+                    }
+                }
+            });
+        }
 
 
                     // [END update_profile]
-                }
+
                 @SuppressLint("SetTextI18n")
                 public void getUserProfile (ImageView image, EditText nameUser){
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
