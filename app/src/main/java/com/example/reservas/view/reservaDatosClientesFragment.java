@@ -1,9 +1,11 @@
 package com.example.reservas.view;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -12,9 +14,20 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.reservas.R;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +46,6 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
     objPersona persona;
     ListViewAdapter adapter1;
     ListView lista;
-
     Bundle bundle;
     reservaDProductoFragment fragment;
     public reservaDatosClientesFragment() {
@@ -164,4 +176,10 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
 
         }
     }
+
+
+
+
+
+
 }

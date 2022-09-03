@@ -6,6 +6,15 @@
     <string name="report_planned_date" />
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="textview">TextView</string>
+    <string name="pegado" />
+    <string name="eliminar" />
+    <string name="circuito">Circuito</string>
+    <string name="tiempo_solicitado_hs">Tiempo Solicitado(hs)</string>
+    <string name="cabalgata">Cabalgata</string>
+    <string name="button">Button</string>
+    <string name="volver">volver</string>
+    <string name="editar" />
     <string-array name="tiposProductos">
         <item>Seleccione</item>
         <item>Circuito</item>

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -78,21 +79,7 @@ public class Usuario extends Fragment implements View.OnClickListener{
     private static final String TAG = "Usuario";
 
     public Usuario() {
-
-
-
-
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Usuario.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Usuario newInstance(String param1, String param2) {
         Usuario fragment = new Usuario();
         Bundle args = new Bundle();
@@ -142,7 +129,7 @@ public class Usuario extends Fragment implements View.OnClickListener{
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest
                     .Builder()
                     .setDisplayName(newName)
-                    // .setPhotoUri(imageUri)
+                    .setPhotoUri(imageUri)
                     .build();
                 user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -164,7 +151,7 @@ public class Usuario extends Fragment implements View.OnClickListener{
                         nameUser.setText(user.getDisplayName());
                         Uri photoUrl = user.getPhotoUrl();
                         System.out.println(photoUrl + "sfdhd7897898");
-                        //mSetImage.setImageURI(photoUrl);
+                        mSetImage.setImageURI(photoUrl);
 
 // Check if user's email is verified
                         boolean emailVerified = user.isEmailVerified();
@@ -185,7 +172,7 @@ public class Usuario extends Fragment implements View.OnClickListener{
                     bottomGuardar = v.findViewById(R.id.buttonGuardar);
                     bottomGuardar.setOnClickListener(this);
                     nameUser = v.findViewById(R.id.txtUser);
-                    //mSetImage.setOnClickListener(this);
+                    mSetImage.setOnClickListener(this);
                     getUserProfile(mSetImage, nameUser);
                     return v;//muy impoortante
                 }
@@ -193,7 +180,7 @@ public class Usuario extends Fragment implements View.OnClickListener{
                 public void onClick (View view){
                     switch (view.getId()) {
                         case R.id.userViewUser:
-                            //showOptions();
+                            showOptions();
                             break;
                         case R.id.buttonGuardar:
                             updateProfile();
@@ -206,16 +193,16 @@ public class Usuario extends Fragment implements View.OnClickListener{
                 private void showOptions () {
                     //final CharSequence[] option = {"Tomar foto", "Elegir de galeria", "Cancelar"};
                     final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    final CharSequence[] option = {"Elegir de galeria", "Cancelar"};
+                    final CharSequence[] option = {"Tomar foto","Elegir de galeria", "Cancelar"};
 
                     builder.setTitle("Eleige una opción");
                     builder.setItems(option, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (option[which] == "Tomar foto") {
-                                //openCamera();
+                                openCamera();
                             } else if (option[which] == "Elegir de galeria") {
-                                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                                 intent.setType("image/*");
                                 startActivityForResult(intent.createChooser(intent, "Selecciona app de imagen"), SELECT_PICTURE);
                             } else {
@@ -280,6 +267,7 @@ public class Usuario extends Fragment implements View.OnClickListener{
                     // [END update_password]
                 }
 
+                @SuppressLint("WrongConstant")
                 @Override
                 public void onActivityResult ( int requestCode, int resultCode,
                 @Nullable Intent data){
@@ -302,8 +290,15 @@ public class Usuario extends Fragment implements View.OnClickListener{
                                 mSetImage.setImageBitmap(bitmap);
                                 break;
                             case SELECT_PICTURE:
-                                Uri path = data.getData();
-                                mSetImage.setImageURI(path);
+                                imageUri = data.getData();
+
+                                getActivity().getApplication().getContentResolver().takePersistableUriPermission(imageUri
+                                        , data.getFlags()&(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                                + Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                                        )
+                                );
+
+                                mSetImage.setImageURI(imageUri);
                                 break;
 
                         }

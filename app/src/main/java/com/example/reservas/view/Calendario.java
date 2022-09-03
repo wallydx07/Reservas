@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +72,7 @@ private Spinner spinGuia;
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
         mDatabase= FirebaseDatabase.getInstance().getReference();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         formattedDate = df.format(c);
     }
     @Override
@@ -78,13 +80,46 @@ private Spinner spinGuia;
                              Bundle savedInstanceState) {
     // Inflate the layout for this fragment
         v=inflater.inflate(R.layout.fragment_calendario, container, false);
-       textview=v.findViewById(R.id.txtCalendarioFecha);
-       textview.setText(formattedDate);
-       listview=v.findViewById(R.id.lvCalendarioHoras);
+
+
        spinGuia=v.findViewById(R.id.spinnerCalendarioGuia);
+        loadGuias();
+
+
+        textview=v.findViewById(R.id.txtCalendarioFecha);
+        textview.setText(formattedDate);
+        listview=v.findViewById(R.id.lvCalendarioHoras);
+
+
+        spinGuia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                loadHoras();
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
+        textview.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                loadHoras();
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+            }
+
+        });
 
        loadHoras();
-        loadGuias();
         return v;
     }
 
@@ -212,29 +247,52 @@ private Spinner spinGuia;
         //Query ref = FirebaseDatabase.getInstance().getReference().
                // child("Universidades").orderByChild("nombre").equalTo("UAP");
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        System.out.println(fecha+
+        "qwerty44444");
         mDatabase.child("reserva").orderByChild("fecha").equalTo(fecha).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
-                        System.out.println(ds.getKey());
-                        List<objPersona> plist=new ArrayList<>();
-                        String hora = ds.child("horaInicio").getValue().toString();
-                        String cabecera = ds.child("circuito").getValue().toString();
-                        String hora0=ds.child("horaInicio").getValue().toString();
-                        String horaFin=ds.child("horaFin").getValue().toString();
-                        String guia=ds.child("guia").getValue().toString();
-                        String circuito=ds.child("circuito").getValue().toString();
-                        for (DataSnapshot dsi : ds.child("personalist").getChildren()){
-                            String nombre=dsi.child("nombre").getValue().toString();
-                            String dni=dsi.child("dni").getValue().toString();
-                            String fechaN=dsi.child("fechaN").getValue().toString();
-                            String tipo=dsi.child("tipo").getValue().toString();
-                            plist.add(new objPersona(nombre,dni,fechaN,tipo));
-                        }
-                        rlist.add(new objReserva("", hora0, horaFin, "", "", "", "", guia, circuito, plist, null));
-                    }
 
+                        System.out.println(ds.child("fecha").getValue().toString());
+                        System.out.println(fecha);
+                        System.out.println("qwerty7777777777777777777");
+                        String guia = ds.child("guia").getValue().toString();
+
+                        try {
+                            if (guia.equals(spinGuia.getSelectedItem().toString())) {
+
+                                System.out.println(ds.getKey());
+                                List<objPersona> plist = new ArrayList<>();
+                                String fecha=ds.child("fecha").getValue().toString();
+                                String hora = ds.child("horaInicio").getValue().toString();
+                                String correo = ds.child("correo").getValue().toString();
+
+                                String usuario = ds.child("usuario").getValue().toString();
+                                String hospedaje = ds.child("hospedaje").getValue().toString();
+                                String telefono = ds.child("telefono").getValue().toString();
+                                String hora0 = ds.child("horaInicio").getValue().toString();
+                                String horaFin = ds.child("horaFin").getValue().toString();
+                                String circuito = ds.child("circuito").getValue().toString();
+                                String deposito= ds.child("deposito").getValue().toString();
+
+                                String pendiente = ds.child("pendiente").getValue().toString();
+                                for (DataSnapshot dsi : ds.child("personalist").getChildren()) {
+                                    String nombre = dsi.child("nombre").getValue().toString();
+                                    String dni = dsi.child("dni").getValue().toString();
+                                    String fechaN = dsi.child("fechaN").getValue().toString();
+                                    String tipo = dsi.child("tipo").getValue().toString();
+                                    plist.add(new objPersona(nombre, dni, fechaN, tipo));
+                                }
+                                rlist.add(new objReserva(fecha, hora0, horaFin, correo, telefono, hospedaje, usuario, guia, circuito, plist, null,pendiente,deposito));
+
+
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 BurbujaColObj(rlist);
                 Reservalist=acomodar(rlist);

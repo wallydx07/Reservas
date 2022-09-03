@@ -24,6 +24,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
@@ -42,15 +44,38 @@ public class MainActivity extends AppCompatActivity {
    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
-        email=(EditText)findViewById(R.id.Email);
-       password=(EditText)findViewById(R.id.Password);
-       buttoniniciarsecion=(Button)findViewById(R.id.buttoniniciarsesion);
+
+      // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
        firebasauth=FirebaseAuth.getInstance();
        awesomevalidation=new AwesomeValidation(ValidationStyle.BASIC);
+       inicialize();
+
+       System.out.println("inicializar");
 
     }
+    private void inicialize() {
 
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            setContentView(R.layout.activity_main);
+            BottomNavigationView navigation=(BottomNavigationView)findViewById(R.id.navigation);
+            navigation.setOnNavigationItemSelectedListener(onNav);
+            loadFragment(usuario);
+            System.out.println("usuario activo");
+        } else {
+            // No user is signed in
+            System.out.println("usuario va a iniciar seccion");
+            email = (EditText) findViewById(R.id.Email);
+            password = (EditText) findViewById(R.id.Password);
+            buttoniniciarsecion = (Button) findViewById(R.id.buttoniniciarsesion);
+            setContentView(R.layout.login);
+        }
+
+
+    }
     private final BottomNavigationView.OnNavigationItemSelectedListener onNav=new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -129,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
 
               //  txtfecha[0].setText(i+"/"+i1+"/"+i2);
-                final String selectedDate = twoDigits(año) + "/" + twoDigits(mes+1) + "/" + dia;
+                final String selectedDate = twoDigits(año) + "-" + twoDigits(mes+1) + "-" + dia;
                 etPlannedDate.setText(selectedDate);
 
             }

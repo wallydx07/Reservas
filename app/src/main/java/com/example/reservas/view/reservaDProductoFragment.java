@@ -1,24 +1,41 @@
 package com.example.reservas.view;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.animation.ObjectAnimator;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.media.metrics.Event;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.reservas.R;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +43,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -57,12 +78,18 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     ListView datoscaballos;
     DatabaseReference mDatabase;
     Switch cabalgata;
+    private ProgressBar miprogress;
+    private ObjectAnimator anim;
     Button finalizar;
-    ImageButton agregar;
+    ImageButton agregar, subirsalud,subirDNI;
     FirebaseUser user;
     String horaInicio,fecha,guia,User;
     int cant;
-
+    TextView sDNI,sSalud;
+    Date date;
+    Uri imageuri = null;
+    Uri imageuri2 = null;
+    ProgressDialog dialog;
     public reservaDProductoFragment() {
         // Required empty publifffc constructor
     }
@@ -88,8 +115,20 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+
         horaInicio =((nuevaReserva)this.getActivity()).horaInicio;
         fecha=((nuevaReserva)this.getActivity()).fecha;
+
+
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+           date = dateFormat.parse(fecha);
+           System.out.println(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
         guia=((nuevaReserva)this.getActivity()).guia;
         user = FirebaseAuth.getInstance().getCurrentUser();
         super.onCreate(savedInstanceState);
@@ -125,6 +164,11 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
 
         v=inflater.inflate(R.layout.fragment_reserva_d_producto, container, false);
+        sDNI=v.findViewById(R.id.txtDNIReservaDeProducto);
+        sSalud=v.findViewById(R.id.txtBuenaSaludReservaDeProducto);
+        miprogress =v.findViewById(R.id.circularProgress);
+       anim = ObjectAnimator.ofInt(miprogress, "progress", 0, 100);
+
         spinCircuito=v.findViewById(R.id.spinnerReservaProductoCircuito);
         spinCaballo=v.findViewById(R.id.spinnerReservaProductoCaballo);
         spinhoras =v.findViewById(R.id.spinnerReservaProductoHoras);
@@ -133,6 +177,10 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         pendiente=v.findViewById(R.id.txtReservaProductoPendiente);
         agregar=v.findViewById(R.id.buttonReservaProductoagregar);
         agregar.setOnClickListener(this);
+        subirsalud=v.findViewById(R.id.btBuenaSaludReservaDeProducto);
+        subirsalud.setOnClickListener(this);
+        subirDNI=v.findViewById(R.id.btDNIReservaDeProducto);
+        subirDNI.setOnClickListener(this);
         datoscaballos=v.findViewById(R.id.listViewReservaProducto);
         cabalgata=v.findViewById(R.id.switchCaballo);
         finalizar=v.findViewById(R.id.buttonReservaProductoFinalizar);
@@ -177,18 +225,72 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 ArrayAdapter<obProductos> adapter=new ArrayAdapter<obProductos>(getActivity().getApplicationContext(),R.layout.listview_item,cabalgata);
                 datoscaballos.setAdapter(adapter);
                 break;
+            case R.id.btBuenaSaludReservaDeProducto:
+                System.out.println("accionaste el boton salud");
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+                // We will be redirected to choose pdf
+                galleryIntent.setType("application/pdf");
+                startActivityForResult(galleryIntent, 1);
+                break;
             case R.id.buttonReservaProductoFinalizar:
-                int Fin=Integer.valueOf(spinhoras.getSelectedItem().toString());
-                Fin=Integer.valueOf(horaInicio)+Fin;
-                objReserva reserva=new objReserva(fecha, horaInicio, String.valueOf(Fin),  correo,  telefono,  hospedaje,  user.toString(),guia, spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist);
-                writeNewReserva(reserva);
+                mostrarProgress();
+                int Fin=Transforma(spinhoras.getSelectedItem().toString());
+                Fin=Transforma(horaInicio)+Fin;
+                objReserva reserva=new objReserva(fecha, horaInicio, String.valueOf(Fin)+":00",  correo,  telefono,  hospedaje,  user.toString(),guia, spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist,pendiente.getText().toString(),anticipo.getText().toString());
+
+                try {
+                   Subir("Salud",imageuri, reserva.nombreTitular());
+                   Subir("DNI",imageuri2,reserva.nombreTitular());
+                   writeNewReserva(reserva);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
 
                 break;
+            case R.id.btDNIReservaDeProducto:
+                System.out.println("accionaste el boton dni");
+                Intent galleryIntent1 = new Intent();
+                galleryIntent1.setAction(Intent.ACTION_GET_CONTENT);
+
+                // We will be redirected to choose pdf
+                galleryIntent1.setType("application/pdf");
+                startActivityForResult(galleryIntent1, 2);
+
+
+                break;
+
+
         }
+    }
+    private void mostrarProgress(){
+        miprogress.setVisibility(View.VISIBLE);
+        anim.setDuration(15000);
+        anim.setInterpolator(new DecelerateInterpolator());
+       // anim.start();
+    }
+    private void detenerProgress(){
+        miprogress.setVisibility(View.GONE);
+        anim.cancel();
     }
 
     private void writeNewReserva(objReserva reserva) {
         mDatabase.child("reserva").push().setValue(reserva);
+    }
+    public int Transforma(String Hora){
+        int fin=0;
+        try {
+            DateFormat inFormat = new SimpleDateFormat("HH:mm");
+            Date horainicio = inFormat.parse(Hora);
+            long hora1 = horainicio.getTime();
+            fin= (int) ((hora1/3600000)-3);
+        } catch (ParseException e ) {
+            e.printStackTrace();
+        }
+        return fin;
     }
     public void loadproducto() {
         final List<obProductos> pcabalgata = new ArrayList<>();
@@ -228,7 +330,6 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         });
 
     }
-
     public void loadcaballo() {
         final List<obProductos> pcabalgata = new ArrayList<>();
         //final List<obProductos> pcircuito = new ArrayList<>();
@@ -291,7 +392,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                                  obProductos caballo=new obProductos(caballonombre,precio,tipo);
                                  pcabalgata.add(caballo);
                              }
-                             pcabalgata.add(new obProductos(caballonombre, precio,tipo));
+                            // pcabalgata.add(new obProductos(caballonombre, precio,tipo));
                         }else{
                             System.out.println("hora no concuerda");
                         }
@@ -317,10 +418,15 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                     ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, auxadapter);
                     spinCaballo.setAdapter(adaptercaballo);
                 }else{
-                    System.out.println("no exiten datos");
-                }
+
+                    ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, cabalgatalist);
+                    spinCaballo.setAdapter(adaptercaballo);
+
+
+
 
             }
+                }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -329,4 +435,67 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         });
 
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode==1) {
+                imageuri = data.getData();
+                sSalud.setText("Listo");
+            }
+            if (requestCode==2){
+
+                imageuri2 = data.getData();
+                sDNI.setText("Listo");
+            }
+
+        }
+    }
+
+
+
+
+        public void Subir(String act,Uri uri,String titular ){
+            final String messagePushID = act+titular+fecha;
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+            dialog = new ProgressDialog(getActivity().getApplicationContext());
+        // Here we are uploading the pdf in firebase storage with the name of current time
+            //String
+            final StorageReference filepath = storageReference.child(messagePushID+ "." + "pdf");
+            //Toast.makeText(getActivity().getApplicationContext(), filepath.getName(), Toast.LENGTH_SHORT).show();
+            UploadTask uploadTask =filepath.putFile(uri);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                  dialog.dismiss();
+                    Toast.makeText(getActivity().getApplicationContext(), "La Carga Falla, por favor Reintente", Toast.LENGTH_SHORT).show();
+
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                 dialog.dismiss();
+                    Toast.makeText(getActivity().getApplicationContext(), "Carga Exitosa", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

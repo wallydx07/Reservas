@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class objReserva implements Serializable {
+    String ID;
     String fecha;
     String horaInicio;
     String horaFin;
@@ -13,10 +14,38 @@ public class objReserva implements Serializable {
     String usuario;
     String guia;
     String circuito;
+    String UrlBuenaSalud;
+    String UrlDNI;
+    String pendiente;
+    String deposito;
     List<objPersona> Personalist;
     List<obProductos> Caballolist;
 
-    public objReserva(String fecha, String horaInicio, String horaFin, String correo, String telefono, String hospedaje, String usuario, String guia, String circuito, List<objPersona> personalist, List<obProductos> caballolist) {
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public String getUrlBuenaSalud() {
+        return UrlBuenaSalud;
+    }
+
+    public void setUrlBuenaSalud(String urlBuenaSalud) {
+        UrlBuenaSalud = urlBuenaSalud;
+    }
+
+    public String getUrlDNI() {
+        return UrlDNI;
+    }
+
+    public void setUrlDNI(String urlDNI) {
+        UrlDNI = urlDNI;
+    }
+
+    public objReserva(String fecha, String horaInicio, String horaFin, String correo, String telefono, String hospedaje, String usuario, String guia, String circuito, List<objPersona> personalist, List<obProductos> caballolist,String pendiente,String deposito) {
         this.fecha = fecha;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
@@ -25,6 +54,8 @@ public class objReserva implements Serializable {
         this.hospedaje = hospedaje;
         this.usuario = usuario;
         this.guia = guia;
+        this.deposito=deposito;
+        this.pendiente=pendiente;
         this.circuito = circuito;
         Personalist = personalist;
         Caballolist = caballolist;
@@ -32,6 +63,22 @@ public class objReserva implements Serializable {
 
     public objReserva() {
 
+    }
+
+    public String getPendiente() {
+        return pendiente;
+    }
+
+    public void setPendiente(String pendiente) {
+        this.pendiente = pendiente;
+    }
+
+    public String getDeposito() {
+        return deposito;
+    }
+
+    public void setDeposito(String Deposito) {
+        deposito = Deposito;
     }
 
     public String nombreTitular() {

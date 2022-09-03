@@ -1,14 +1,23 @@
 package com.example.reservas.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.reservas.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ConsultaReserva extends AppCompatActivity {
@@ -41,8 +50,8 @@ public class ConsultaReserva extends AppCompatActivity {
             fecha.setText(Reserva.getFecha());
             horapartida.setText(Reserva.getHoraInicio());
             horallegada.setText(Reserva.getHoraFin());
-            //deposito.setText(Reserva.get);
-            //pendiente.setText(Reserva.);
+            deposito.setText(Reserva.getDeposito());
+            pendiente.setText(Reserva.getPendiente());
             ArrayAdapter<objPersona> adapter=new ArrayAdapter<objPersona>(this.getApplicationContext(),R.layout.listview_item,Personalist);
             clientes.setAdapter(adapter);
 
@@ -58,4 +67,27 @@ public class ConsultaReserva extends AppCompatActivity {
             System.out.println(datos);
         }
     }
+
+
+
+
+
+    public long downloadFile(Context context, String fileName, String fileExtension, String destinationDirectory, String url) {
+
+
+        DownloadManager downloadmanager = (DownloadManager) context.
+                getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension);
+
+        return downloadmanager.enqueue(request);
+    }
+
+
+
+
+
 }

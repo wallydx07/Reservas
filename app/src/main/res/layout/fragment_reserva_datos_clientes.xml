@@ -39,7 +39,8 @@
                 android:gravity="center"
                 android:hint="Apellido y Nombre"
                 android:imeOptions="actionDone"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                tools:text="GeronimoWalter" />
 
             <EditText
                 android:id="@+id/txtDatosDNI"
@@ -50,7 +51,8 @@
                 android:gravity="center"
                 android:hint="DNI"
                 android:imeOptions="actionDone"
-                android:inputType="number" />
+                android:inputType="number"
+                tools:text="0000000" />
 
             <EditText
                 android:id="@+id/txtDAtosFechaNacimiento"
@@ -61,7 +63,8 @@
                 android:gravity="center"
                 android:hint="Fecha nacimiento"
                 android:imeOptions="actionDone"
-                android:inputType="number" />
+                android:inputType="number"
+                android:text="070894" />
 
             <Button
                 android:id="@+id/bottomDatosnAgregar"
@@ -76,7 +79,7 @@
             <ListView
                 android:id="@+id/listViewDatosClientes"
                 android:layout_width="match_parent"
-                android:layout_height="102dp"
+                android:layout_height="117dp"
                 android:layout_marginBottom="32dp"
                 android:gravity="center" />
 
@@ -89,7 +92,8 @@
                 android:gravity="center"
                 android:hint="correo"
                 android:imeOptions="actionDone"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:text="walter@gmail.com" />
 
             <EditText
                 android:id="@+id/txtTelefonoDatosClientes"
@@ -100,7 +104,8 @@
                 android:gravity="center"
                 android:hint="Telefono"
                 android:imeOptions="actionDone"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:text="3885628802" />
 
             <EditText
                 android:id="@+id/txtHospedajeDatosCliente"
@@ -111,7 +116,8 @@
                 android:gravity="center"
                 android:hint="Hospedaje"
                 android:imeOptions="actionDone"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:text="munay dx" />
 
         </LinearLayout>
     </ScrollView>
