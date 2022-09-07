@@ -40,14 +40,11 @@ public class MainActivity extends AppCompatActivity {
     EditText email,password;
 
 
-
    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-      // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-       firebasauth=FirebaseAuth.getInstance();
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(false);
+        firebasauth=FirebaseAuth.getInstance();
        awesomevalidation=new AwesomeValidation(ValidationStyle.BASIC);
        inicialize();
 

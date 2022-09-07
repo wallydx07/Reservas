@@ -2,6 +2,7 @@ package com.example.reservas.view;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.reservas.R;
 import com.google.android.gms.tasks.Continuation;
@@ -41,10 +43,11 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
 
     EditText tNombre, tNacimiento,tDNI, correo, telefono, hospedaje;
     View v;
-    Button agregar;
+    Button agregar,siguiente;
     List<objPersona> Personalist;
     objPersona persona;
     ListViewAdapter adapter1;
+    ListClientesAdpater adapter;
     ListView lista;
     Bundle bundle;
     reservaDProductoFragment fragment;
@@ -59,11 +62,12 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = new Bundle();
-        fragment = new reservaDProductoFragment();
+       // fragment = new reservaDProductoFragment();
 
 
 
@@ -75,7 +79,8 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
 
         v=inflater.inflate(R.layout.fragment_reserva_datos_clientes, container, false);
         correo=v.findViewById(R.id.txtCorreoDatosClientes);
-        correo.addTextChangedListener(new TextWatcher() {
+
+       /* correo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -95,9 +100,9 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
 
 
             }
-        });
+        });*/
         telefono=v.findViewById(R.id.txtTelefonoDatosClientes);
-        telefono.addTextChangedListener(new TextWatcher() {
+       /* telefono.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -116,8 +121,8 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
 
 
             }
-        });
-        hospedaje=v.findViewById(R.id.txtHospedajeDatosCliente);
+        });*/
+        /*hospedaje=v.findViewById(R.id.txtHospedajeDatosCliente);
         hospedaje.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -137,14 +142,17 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
 
 
             }
-        });
+        });*/
+        siguiente=v.findViewById(R.id.btSiguienteReservaDatosCliente);
+        siguiente.setOnClickListener(((nuevaReserva)this.getActivity()));
         tNombre=v.findViewById(R.id.txtDatosApellidoyNombre);
         tNacimiento=v.findViewById(R.id.txtDAtosFechaNacimiento);
         tDNI=v.findViewById(R.id.txtDatosDNI);
         agregar=v.findViewById(R.id.bottomDatosnAgregar);
-        agregar.setOnClickListener(this);
+        //agregar.setOnClickListener(this);
+        agregar.setOnClickListener(((nuevaReserva)this.getActivity()));
         Personalist = new ArrayList<>();
-         lista =v.findViewById(R.id.listViewDatosClientes);
+        lista =v.findViewById(R.id.listViewDatosClientes);
         return v;
     }
 
@@ -155,24 +163,22 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
-            case R.id.bottomDatosnAgregar:
+          /*  case R.id.bottomDatosnAgregar:
                 String nombre=String.valueOf(tNombre.getText());
                 String DNI=String.valueOf(tDNI.getText());
                 String fNacimiento=String.valueOf(tNacimiento.getText());
                 persona=new objPersona(nombre,DNI,fNacimiento,"nose");
                 Personalist.add(persona);
-                ArrayAdapter<objPersona> adapter=new ArrayAdapter<objPersona>(getActivity().getApplicationContext(),R.layout.listview_item,Personalist);
+                ArrayAdapter<objPersona> adapter=new ArrayAdapter<objPersona>(getActivity().getApplicationContext(),R.layout.clientesadapter,Personalist);
                 lista.setAdapter(adapter);
                 tNombre.setText("");
                 tDNI.setText("");
                 tNacimiento.setText("");
-                bundle.putString("nombre", nombre );
+               /* bundle.putString("nombre", nombre );
                 bundle.putString("dni", DNI );
                 bundle.putString("nacimiento", fNacimiento );
                 getParentFragmentManager().setFragmentResult("key",bundle);
-
-
-                break;
+                break;*/
 
         }
     }

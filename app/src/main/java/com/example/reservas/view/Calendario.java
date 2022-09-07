@@ -1,5 +1,6 @@
 package com.example.reservas.view;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,11 +10,13 @@ import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -227,15 +230,10 @@ private Spinner spinGuia;
                     int newpost=posicion+j;
                     System.out.println("se agregara a la posicion "+newpost);
                     aux.add(newpost,reser);
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
-
-
         }
         return aux;
     }
@@ -244,12 +242,10 @@ private Spinner spinGuia;
         String fecha=textview.getText().toString();
         final List<objReserva>rlist = new ArrayList<>();
         final ListView lista =v.findViewById(R.id.lvCalendarioHoras);
-        //Query ref = FirebaseDatabase.getInstance().getReference().
-               // child("Universidades").orderByChild("nombre").equalTo("UAP");
         mDatabase = FirebaseDatabase.getInstance().getReference();
         System.out.println(fecha+
         "qwerty44444");
-        mDatabase.child("reserva").orderByChild("fecha").equalTo(fecha).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("reserva").orderByChild("fecha").equalTo(fecha).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -268,6 +264,8 @@ private Spinner spinGuia;
                                 String fecha=ds.child("fecha").getValue().toString();
                                 String hora = ds.child("horaInicio").getValue().toString();
                                 String correo = ds.child("correo").getValue().toString();
+                                String urlBuenaSalud=ds.child("urlBuenaSalud").getValue().toString();
+                                String urlDNI=ds.child("urlDNI").getValue().toString();
 
                                 String usuario = ds.child("usuario").getValue().toString();
                                 String hospedaje = ds.child("hospedaje").getValue().toString();
@@ -285,7 +283,11 @@ private Spinner spinGuia;
                                     String tipo = dsi.child("tipo").getValue().toString();
                                     plist.add(new objPersona(nombre, dni, fechaN, tipo));
                                 }
-                                rlist.add(new objReserva(fecha, hora0, horaFin, correo, telefono, hospedaje, usuario, guia, circuito, plist, null,pendiente,deposito));
+                                objReserva Res=new objReserva(fecha, hora0, horaFin, correo, telefono, hospedaje, usuario, guia, circuito, plist, null,pendiente,deposito);
+                                Res.setUrlDNI(urlDNI);
+                                System.out.println(urlBuenaSalud);
+                                Res.setUrlBuenaSalud(urlBuenaSalud);
+                                rlist.add(Res);
 
 
                             }
@@ -293,6 +295,9 @@ private Spinner spinGuia;
                             e.printStackTrace();
                         }
                     }
+                }else{
+
+                    System.out.println("no se ha enctrado nadi aca");
                 }
                 BurbujaColObj(rlist);
                 Reservalist=acomodar(rlist);
@@ -301,7 +306,8 @@ private Spinner spinGuia;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                listview.setAdapter(adapter);
+                //listview.setAdapter(adapter);
+                listview.setAdapter((ListAdapter) adapter);
                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView adapterView, View view, int i, long l) {
@@ -319,6 +325,7 @@ private Spinner spinGuia;
                             Intent intent = new Intent(getActivity(), nuevaReserva.class);
                             Bundle datoenvia = new Bundle();
                             datoenvia.putString("guia",guia);
+                            datoenvia.putString("bandera","reserva");
                             datoenvia.putString("horaInicio", horaInicio);
                             datoenvia.putString("fecha",fecha);
                             intent.putExtras(datoenvia);
@@ -337,6 +344,9 @@ private Spinner spinGuia;
                         Toast.makeText(getContext(), "presiono " + i, Toast.LENGTH_SHORT).show();
                     }
                 });
+                //==========================================
+
+                        //===================================
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -346,21 +356,27 @@ private Spinner spinGuia;
     }
     public void loadGuias(){
         String ID="";
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String usuariuo=user.getDisplayName();
         if (user != null) {
             ID = user.getUid();
         }
 final List<String> pguia = new ArrayList<>();
+pguia.add(usuariuo);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         String finalID = ID;
-        mDatabase.child("guia").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("guia").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         String nombre = ds.child("nombre").getValue().toString();
-                        pguia.add(nombre);
-                        System.out.println("pguia es: " + nombre);
+                        if(!(nombre.equals(usuariuo))) {
+
+                            pguia.add(nombre);
+                            System.out.println("pguia es: " + nombre);
+                        }
                     }
                 }
                 try {

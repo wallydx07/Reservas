@@ -10,14 +10,17 @@
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/drawable/ic_baseline_sports_cricket_24.xml" value="0.1175" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/drawable/ic_calendar.xml" value="0.1175" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1175" />
+        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/drawable/ic_person.xml" value="0.133" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/drawable/ic_store.xml" value="0.1175" />
-        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_consulta_reserva.xml" value="0.5" />
+        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_consulta_reserva.xml" value="0.2625250501002004" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_datos.xml" value="0.14166666666666666" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_editar_productos.xml" value="0.1" />
-        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_list_clientes_adpater.xml" value="0.18854166666666666" />
+        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_nuevo_producto.xml" value="0.22" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/activity_ultimo.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/calendarlistview.xml" value="0.29411764705882354" />
+        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/clientesadapter.xml" value="0.12129629629629629" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/editar.xml" value="0.1675213675213675" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/fragment_calendario.xml" value="0.33" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/fragment_producto.xml" value="0.2976588628762542" />
@@ -29,6 +32,7 @@
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/listview_item.xml" value="0.67" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/login.xml" value="0.25" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/micalanedario.xml" value="0.203125" />
+        <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/nuevares.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/nuevareserva.xml" value="0.275626423690205" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/nuevocircuito.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/layout/nuevoproducto.xml" value="0.33" />

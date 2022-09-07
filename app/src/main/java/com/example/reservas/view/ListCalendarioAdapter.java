@@ -1,14 +1,21 @@
 package com.example.reservas.view;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.Scroller;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.reservas.R;
 
@@ -16,7 +23,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +36,8 @@ public class ListCalendarioAdapter extends BaseAdapter {
     int ultimo;
     private String horasTV[]={"7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"};
 
-    public ListCalendarioAdapter(Context context, List<objReserva> reservaslist) {
+    //============================================================
+   public ListCalendarioAdapter(Context context, List<objReserva> reservaslist) {
         this.context = context;
        /* try {
             BurbujaColObj(reservaslist);
@@ -41,6 +48,7 @@ public class ListCalendarioAdapter extends BaseAdapter {
        this.reservaslist = reservaslist;
 
     }
+
     public static void BurbujaColObj(List<objReserva> reservador) throws ParseException {
         objReserva aux;
         for(int i = 0;i < reservador.size()-1;i++){
@@ -127,7 +135,7 @@ public class ListCalendarioAdapter extends BaseAdapter {
         return 0;
     }
 
-    @Override
+   @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         System.out.println(position);
         System.out.println(reserva);

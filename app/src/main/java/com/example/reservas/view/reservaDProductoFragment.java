@@ -2,10 +2,11 @@ package com.example.reservas.view;
 
 import static android.app.Activity.RESULT_OK;
 
+import static java.lang.Thread.sleep;
+
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.media.metrics.Event;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -28,13 +29,10 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.reservas.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,7 +43,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.DateFormat;
@@ -72,7 +69,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     List<obProductos> pcircuito;
     objReserva miReserva;
     objPersona persona;
-    Spinner spinCircuito,spinCaballo, spinhoras;
+    Spinner spinCircuito,spinCaballo, spinhoraFin,spinhoraInicio,spinGuia;
     EditText nombre,dni,fechanNacimiento, total, anticipo, pendiente;
     String correo,telefono,hospedaje;
     ListView datoscaballos;
@@ -161,17 +158,15 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-
+        //
         v=inflater.inflate(R.layout.fragment_reserva_d_producto, container, false);
         sDNI=v.findViewById(R.id.txtDNIReservaDeProducto);
         sSalud=v.findViewById(R.id.txtBuenaSaludReservaDeProducto);
         miprogress =v.findViewById(R.id.circularProgress);
-       anim = ObjectAnimator.ofInt(miprogress, "progress", 0, 100);
-
+        anim = ObjectAnimator.ofInt(miprogress, "progress", 0, 100);
         spinCircuito=v.findViewById(R.id.spinnerReservaProductoCircuito);
         spinCaballo=v.findViewById(R.id.spinnerReservaProductoCaballo);
-        spinhoras =v.findViewById(R.id.spinnerReservaProductoHoras);
+        spinhoraFin =v.findViewById(R.id.spinnerhorafinReservaProducto);
         total=v.findViewById(R.id.txtReservaProductoTotal);
         anticipo=v.findViewById(R.id.txtReservaProductoAnticipo);
         pendiente=v.findViewById(R.id.txtReservaProductoPendiente);
@@ -203,7 +198,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         });
 
 
-        loadproducto();
+        //loadproducto();
+        loadGuias();
         return v;
     }
 
@@ -236,18 +232,11 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 break;
             case R.id.buttonReservaProductoFinalizar:
                 mostrarProgress();
-                int Fin=Transforma(spinhoras.getSelectedItem().toString());
+                int Fin=Transforma(spinhoraFin.getSelectedItem().toString());
                 Fin=Transforma(horaInicio)+Fin;
                 objReserva reserva=new objReserva(fecha, horaInicio, String.valueOf(Fin)+":00",  correo,  telefono,  hospedaje,  user.toString(),guia, spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist,pendiente.getText().toString(),anticipo.getText().toString());
+               Subir("Salud", imageuri, reserva.nombreTitular(), reserva);
 
-                try {
-                   Subir("Salud",imageuri, reserva.nombreTitular());
-                   Subir("DNI",imageuri2,reserva.nombreTitular());
-                   writeNewReserva(reserva);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
 
                 break;
@@ -279,6 +268,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
     private void writeNewReserva(objReserva reserva) {
         mDatabase.child("reserva").push().setValue(reserva);
+        detenerProgress();
+        requireActivity().finish();
     }
     public int Transforma(String Hora){
         int fin=0;
@@ -348,7 +339,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                     try {
                         DateFormat inFormat = new SimpleDateFormat("HH:mm");
                         Date horainicio = inFormat.parse(horaInicio);
-                        Date horafin = inFormat.parse(spinhoras.getSelectedItem().toString());
+                        Date horafin = inFormat.parse(spinhoraFin.getSelectedItem().toString());
                         System.out.println("las horas "+horainicio);
                         System.out.println("las horas "+horafin);
                         hora1 = (horainicio.getTime()/3600000)-3;//hora d einicio desde el listviewanterior
@@ -437,6 +428,124 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     }
 
 
+
+    public void loadcircuito() {
+        final List<obProductos> pcabalgata = new ArrayList<>();
+        //final List<obProductos> pcircuito = new ArrayList<>();
+        //this.cabalgata = new ArrayList<>();
+        pcircuito = new ArrayList<>();
+        mDatabase.child("reserva").orderByChild("fecha").equalTo(fecha).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {//ver
+                    System.out.println("se van a cargar los elementos");
+                    String guia = "Walter Geronimo";
+                    int precio = 0;
+                    String tipo = "";
+                    String caballonombre = "";
+                    long hora1 = 0;
+                    long hora2 = 0;
+                    try {
+                        DateFormat inFormat = new SimpleDateFormat("HH:mm");
+                        Date horainicio = inFormat.parse(horaInicio);
+                        Date horafin = inFormat.parse(spinhoraFin.getSelectedItem().toString());
+                        System.out.println("las horas " + horainicio);
+                        System.out.println("las horas " + horafin);
+                        hora1 = (horainicio.getTime() / 3600000) - 3;//hora d einicio desde el listviewanterior
+                        hora2 = (horafin.getTime() / 3600000) - 3 + hora1;//+hora1;//hora inicio desde el spiner actual
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        System.out.println(ds.child("circuito").getValue().toString());
+                        long horarec = 0;
+                        String horaI = ds.child("horaInicio").getValue().toString();
+                        try {
+                            DateFormat inFormat = new SimpleDateFormat("HH:mm");
+                            Date horainicio = inFormat.parse(horaI);
+                            horarec = (horainicio.getTime() / 3600000) - 3;
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        if ((horarec > hora1) && (horarec < hora2)) {//hay citas programadas en el itervalo
+                            ArrayList<String> Nodisp=new ArrayList<>();
+                            Nodisp.add("No Disponible");
+                            ArrayAdapter<String> adapterNo = new ArrayAdapter<String>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, Nodisp);
+                            spinCaballo.setAdapter(adapterNo);
+
+
+                        }else{
+                            loadproducto();
+                        }
+
+                    }
+
+
+                }else{
+
+                        ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, cabalgatalist);
+                        spinCaballo.setAdapter(adaptercaballo);
+
+
+                    }
+                }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+
+        });
+
+
+    }
+    public void loadGuias(){
+        String ID="";
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String usuariuo=user.getDisplayName();
+        if (user != null) {
+            ID = user.getUid();
+        }
+        final List<String> pguia = new ArrayList<>();
+        pguia.add(usuariuo);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        String finalID = ID;
+        mDatabase.child("guia").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String nombre = ds.child("nombre").getValue().toString();
+                        if(!(nombre.equals(usuariuo))) {
+
+                            pguia.add(nombre);
+                            System.out.println("pguia es: " + nombre);
+                        }
+                    }
+                }
+                try {
+                    ArrayAdapter<String> adapterGuia = new ArrayAdapter<String>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, pguia);
+                    spinGuia.setAdapter(adapterGuia);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+
+        });
+
+
+
+
+
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -457,7 +566,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
 
 
-        public void Subir(String act,Uri uri,String titular ){
+        public void Subir(String act, Uri uri, String titular, objReserva reserva) {
+        objAux aux =new objAux ("");
             final String messagePushID = act+titular+fecha;
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
             dialog = new ProgressDialog(getActivity().getApplicationContext());
@@ -466,20 +576,37 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             final StorageReference filepath = storageReference.child(messagePushID+ "." + "pdf");
             //Toast.makeText(getActivity().getApplicationContext(), filepath.getName(), Toast.LENGTH_SHORT).show();
             UploadTask uploadTask =filepath.putFile(uri);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                  dialog.dismiss();
-                    Toast.makeText(getActivity().getApplicationContext(), "La Carga Falla, por favor Reintente", Toast.LENGTH_SHORT).show();
+            System.out.println("foikuhjvbfodevbnji22222222222222222222222");
 
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                 dialog.dismiss();
-                    Toast.makeText(getActivity().getApplicationContext(), "Carga Exitosa", Toast.LENGTH_SHORT).show();
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
 
+                    // Continue with the task to get the download URL
+                    return filepath.getDownloadUrl();
                 }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()){
+                        Uri downloadUrl = task.getResult();
+                        aux.setUrl(downloadUrl.toString());
+
+                        if(act.equals("Salud")) {
+                            reserva.setUrlBuenaSalud(downloadUrl.toString());
+                            Subir("DNI", imageuri2, reserva.nombreTitular(), reserva);
+                        }
+                        if(act.equals("DNI")){
+                            reserva.setUrlDNI(downloadUrl.toString());
+                            writeNewReserva(reserva);
+                        }
+
+                    }
+                }
+
             });
 
         }
