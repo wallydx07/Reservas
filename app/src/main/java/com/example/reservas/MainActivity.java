@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
       Calendario calendario= new Calendario();
       Producto producto= new Producto();
       Usuario usuario=new Usuario();
-    private int dia, mes, año;
+    //private int dia, mes, año;
     AwesomeValidation awesomevalidation;
     FirebaseAuth firebasauth;
     EditText email,password;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // FirebaseDatabase.getInstance().setPersistenceEnabled(false);
+       FirebaseDatabase.getInstance().setPersistenceEnabled(false);
         firebasauth=FirebaseAuth.getInstance();
        awesomevalidation=new AwesomeValidation(ValidationStyle.BASIC);
        inicialize();
@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     public void onclick1(View view) {
+         int dia, mes, año;
         final EditText[] txtfecha = new EditText[1];
         final Calendar c= Calendar.getInstance();
         final Calendar newCalendar = Calendar.getInstance();

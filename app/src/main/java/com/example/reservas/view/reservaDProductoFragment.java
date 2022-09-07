@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import static java.lang.Thread.sleep;
 
 import android.animation.ObjectAnimator;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,9 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -49,6 +52,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -70,7 +74,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     objReserva miReserva;
     objPersona persona;
     Spinner spinCircuito,spinCaballo, spinhoraFin,spinhoraInicio,spinGuia;
-    EditText nombre,dni,fechanNacimiento, total, anticipo, pendiente;
+    EditText nombre,dni,fechanNacimiento, total, anticipo, pendiente, etFecha;
     String correo,telefono,hospedaje;
     ListView datoscaballos;
     DatabaseReference mDatabase;
@@ -160,6 +164,9 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         // Inflate the layout for this fragment
         //
         v=inflater.inflate(R.layout.fragment_reserva_d_producto, container, false);
+        etFecha =v.findViewById(R.id.etFechaReservaProducto);
+        etFecha.setText(fecha);
+        etFecha.setOnClickListener(this);
         sDNI=v.findViewById(R.id.txtDNIReservaDeProducto);
         sSalud=v.findViewById(R.id.txtBuenaSaludReservaDeProducto);
         miprogress =v.findViewById(R.id.circularProgress);
@@ -167,6 +174,52 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         spinCircuito=v.findViewById(R.id.spinnerReservaProductoCircuito);
         spinCaballo=v.findViewById(R.id.spinnerReservaProductoCaballo);
         spinhoraFin =v.findViewById(R.id.spinnerhorafinReservaProducto);
+        try {
+            spinhoraFin.setSelection(getpos(horaInicio)+1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        spinhoraInicio=v.findViewById(R.id.spinnerhorainicioReservaProducto);
+        try {
+            spinhoraInicio.setSelection(getpos(horaInicio));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        spinGuia =v.findViewById(R.id.spinnerGuiaReservaProducto);
+        spinGuia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                loadcircuito();
+                System.out.println("sew ha llamado a loadcircuito");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinhoraInicio.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+           @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                loadcircuito();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinhoraFin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                loadcircuito();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         total=v.findViewById(R.id.txtReservaProductoTotal);
         anticipo=v.findViewById(R.id.txtReservaProductoAnticipo);
         pendiente=v.findViewById(R.id.txtReservaProductoPendiente);
@@ -198,9 +251,25 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         });
 
 
-        //loadproducto();
+        loadproducto();
         loadGuias();
+        loadcaballo();
         return v;
+    }
+
+
+    public int getpos(String horaf) throws ParseException {
+        int n=0;
+        String hora0="7:00";
+        DateFormat inFormat = new SimpleDateFormat("HH:mm");
+        // Date horainicio = inFormat.parse(horaInicio);
+        //Date horafin = inFormat.parse(spinhoraFin.getSelectedItem().toString());
+        Date horainicio = inFormat.parse(hora0);
+        Date horafin = inFormat.parse(horaf);
+       long hora1 = (horainicio.getTime() / 3600000) - 3;//hora d einicio desde el listviewanterior
+       long hora2 = (horafin.getTime() / 3600000) - 3; //+ hora1;//+hora1;//hora inicio desde el spiner actual
+        n= (int) (hora2-hora1);
+        return n;
     }
 
 
@@ -208,8 +277,10 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
+            case R.id.etFechaReservaProducto:
+                loadCalendario();
+                break;
             case R.id.buttonReservaProductoagregar:
-
                 List<obProductos> cabalgata=new ArrayList<>();
                 String nombre=spinCaballo.getSelectedItem().toString();
                 for (int i = 0; i< cabalgatalist.size(); i++) {
@@ -236,23 +307,15 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 Fin=Transforma(horaInicio)+Fin;
                 objReserva reserva=new objReserva(fecha, horaInicio, String.valueOf(Fin)+":00",  correo,  telefono,  hospedaje,  user.toString(),guia, spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist,pendiente.getText().toString(),anticipo.getText().toString());
                Subir("Salud", imageuri, reserva.nombreTitular(), reserva);
-
-
-
-                break;
+               break;
             case R.id.btDNIReservaDeProducto:
                 System.out.println("accionaste el boton dni");
                 Intent galleryIntent1 = new Intent();
                 galleryIntent1.setAction(Intent.ACTION_GET_CONTENT);
-
                 // We will be redirected to choose pdf
                 galleryIntent1.setType("application/pdf");
                 startActivityForResult(galleryIntent1, 2);
-
-
                 break;
-
-
         }
     }
     private void mostrarProgress(){
@@ -265,7 +328,6 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         miprogress.setVisibility(View.GONE);
         anim.cancel();
     }
-
     private void writeNewReserva(objReserva reserva) {
         mDatabase.child("reserva").push().setValue(reserva);
         detenerProgress();
@@ -302,18 +364,14 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                          }
                         if(tipo.equals("Caballo")){
                             reservaDProductoFragment.this.cabalgatalist.add(new obProductos(nombre, precio,tipo));
- }
-
-
+                        }
                     }
                    // ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, reservaDProductoFragment.this.cabalgatalist);
                     ArrayAdapter<obProductos> adaptercircuito = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, pcircuito);
                  //   spinCaballo.setAdapter(adaptercaballo);
                     spinCircuito.setAdapter(adaptercircuito);
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -322,92 +380,120 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
     }
     public void loadcaballo() {
+        String h1=spinhoraInicio.getSelectedItem().toString();
+        String h2=spinhoraFin.getSelectedItem().toString();
+        String f=etFecha.toString();
         final List<obProductos> pcabalgata = new ArrayList<>();
-        //final List<obProductos> pcircuito = new ArrayList<>();
-        //this.cabalgata = new ArrayList<>();
         pcircuito = new ArrayList<>();
-        mDatabase.child("reserva").orderByChild("fecha").equalTo(fecha).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("reserva").orderByChild("fecha").equalTo(f).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {//ver
+
+
+
+
                     System.out.println("se van a cargar los elementos");
-                    int precio=0;
-                    String tipo="";
-                    String caballonombre="";
-                    long hora1=0;
-                    long hora2=0;
+                    int precio = 0;
+                    String tipo = "";
+                    String caballonombre = "";
+                    long hora1 = 0;
+                    long hora2 = 0;
                     try {
                         DateFormat inFormat = new SimpleDateFormat("HH:mm");
-                        Date horainicio = inFormat.parse(horaInicio);
-                        Date horafin = inFormat.parse(spinhoraFin.getSelectedItem().toString());
-                        System.out.println("las horas "+horainicio);
-                        System.out.println("las horas "+horafin);
-                        hora1 = (horainicio.getTime()/3600000)-3;//hora d einicio desde el listviewanterior
-                        hora2 = (horafin.getTime()/3600000)-3+hora1;//+hora1;//hora inicio desde el spiner actual
+                        // Date horainicio = inFormat.parse(horaInicio);
+                        //Date horafin = inFormat.parse(spinhoraFin.getSelectedItem().toString());
+                        Date horainicio = inFormat.parse(h1);
+                        Date horafin = inFormat.parse(h2);
+                        hora1 = (horainicio.getTime() / 3600000) - 3;//hora d einicio desde el listviewanterior
+                        hora2 = (horafin.getTime() / 3600000) - 3; //+ hora1;//+hora1;//hora inicio desde el spiner actual
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                     for (DataSnapshot ds : snapshot.getChildren()) {
+
+
+
+
+
+
+
+
+
+
+
                         System.out.println(ds.child("circuito").getValue().toString());
-
-
-
-                        long horarec=0;
+                        long horarec = 0;
                         String horaI = ds.child("horaInicio").getValue().toString();
                         try {
                             DateFormat inFormat = new SimpleDateFormat("HH:mm");
                             Date horainicio = inFormat.parse(horaI);
-                            horarec = (horainicio.getTime()/3600000)-3;
+                            horarec = (horainicio.getTime() / 3600000) - 3;
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        System.out.println("estas son las horas");
-                        System.out.println("hora a la q posiblemete c/o"+horarec);
-                        System.out.println("hora q pretndo iniciar"+hora1);
-                        System.out.println("hora que pretendo finalizar"+hora2);
-                        if((horarec>hora1)&&(horarec<hora2)){
-                             for (DataSnapshot dsi : ds.child("caballolist").getChildren()){
-                                 System.out.println("estee s caballilisto");
-
-                                 try {
-                                     caballonombre = dsi.child("nombre").getValue().toString();
-                                     precio = Integer.valueOf(dsi.child("precio").getValue().toString());
-                                     tipo=dsi.child("tipo").getValue().toString();
-
-                                 } catch (Exception e) {
-                                     e.printStackTrace();
-                                 }
+                        if(hora1<hora2) {
 
 
-                                 System.out.println(caballonombre);
-                                 obProductos caballo=new obProductos(caballonombre,precio,tipo);
-                                 pcabalgata.add(caballo);
-                             }
-                            // pcabalgata.add(new obProductos(caballonombre, precio,tipo));
-                        }else{
-                            System.out.println("hora no concuerda");
+                            if ((horarec > hora1) && (horarec < hora2)) {
+                                for (DataSnapshot dsi : ds.child("caballolist").getChildren()) {
+                                    try {
+                                        caballonombre = dsi.child("nombre").getValue().toString();
+                                        precio = Integer.valueOf(dsi.child("precio").getValue().toString());
+                                        tipo = dsi.child("tipo").getValue().toString();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    System.out.println(caballonombre);
+                                    obProductos caballo = new obProductos(caballonombre, precio, tipo);
+                                    pcabalgata.add(caballo);
+                                }
+                            } else {
+                                System.out.println("hora no concuerda");
+                            }
+
+
                         }
-                   }
-                    boolean disponible=true;
+
+
+
+
+
+
+
+
+
+
+
+
+                    }
+
+
+
+
+                    boolean disponible = true;
                     List<obProductos> auxadapter = new ArrayList<>();
-                    for(int i = 0; i < cabalgatalist.size(); i++) {
-                        obProductos auxpro=cabalgatalist.get(i);
-                        for(int j = 0; j < pcabalgata.size(); j++) {
-                            obProductos auxpro1=pcabalgata.get(j);
-                            if((auxpro.getNombre()).equals(auxpro1.getNombre())){
-                                disponible=false;
-                            }else {
-                                disponible=true;
+                    for (int i = 0; i < cabalgatalist.size(); i++) {
+                        obProductos auxpro = cabalgatalist.get(i);
+                        for (int j = 0; j < pcabalgata.size(); j++) {
+                            obProductos auxpro1 = pcabalgata.get(j);
+                            if ((auxpro.getNombre()).equals(auxpro1.getNombre())) {
+                                disponible = false;
+                            } else {
+                                disponible = true;
                             }
 
                         }
-                        if(disponible){
+                        if (disponible) {
                             auxadapter.add(auxpro);
                         }
 
                     }
                     ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, auxadapter);
                     spinCaballo.setAdapter(adaptercaballo);
+
+
+
                 }else{
 
                     ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, cabalgatalist);
@@ -426,68 +512,83 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         });
 
     }
-
-
-
     public void loadcircuito() {
-        final List<obProductos> pcabalgata = new ArrayList<>();
-        //final List<obProductos> pcircuito = new ArrayList<>();
-        //this.cabalgata = new ArrayList<>();
+        String h1=spinhoraInicio.getSelectedItem().toString();
+        String h2=spinhoraFin.getSelectedItem().toString();
+        String f=etFecha.getText().toString();
         pcircuito = new ArrayList<>();
-        mDatabase.child("reserva").orderByChild("fecha").equalTo(fecha).addListenerForSingleValueEvent(new ValueEventListener() {
+        System.out.println("se ha inicado load Circuito con fecha: "+f);
+        mDatabase.child("reserva").orderByChild("fecha").equalTo(f).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {//ver
-                    System.out.println("se van a cargar los elementos");
-                    String guia = "Walter Geronimo";
-                    int precio = 0;
-                    String tipo = "";
-                    String caballonombre = "";
                     long hora1 = 0;
                     long hora2 = 0;
+                    String resul="";
                     try {
                         DateFormat inFormat = new SimpleDateFormat("HH:mm");
-                        Date horainicio = inFormat.parse(horaInicio);
-                        Date horafin = inFormat.parse(spinhoraFin.getSelectedItem().toString());
+                        // Date horainicio = inFormat.parse(horaInicio);
+                        //Date horafin = inFormat.parse(spinhoraFin.getSelectedItem().toString());
+                        Date horainicio = inFormat.parse(h1);
+                        Date horafin = inFormat.parse(h2);
                         System.out.println("las horas " + horainicio);
                         System.out.println("las horas " + horafin);
                         hora1 = (horainicio.getTime() / 3600000) - 3;//hora d einicio desde el listviewanterior
-                        hora2 = (horafin.getTime() / 3600000) - 3 + hora1;//+hora1;//hora inicio desde el spiner actual
+                        hora2 = (horafin.getTime() / 3600000) - 3;//+hora1;//hora inicio desde el spiner actual
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                    boolean haycitas=false;
                     for (DataSnapshot ds : snapshot.getChildren()) {
-                        System.out.println(ds.child("circuito").getValue().toString());
-                        long horarec = 0;
-                        String horaI = ds.child("horaInicio").getValue().toString();
-                        try {
-                            DateFormat inFormat = new SimpleDateFormat("HH:mm");
-                            Date horainicio = inFormat.parse(horaI);
-                            horarec = (horainicio.getTime() / 3600000) - 3;
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        if ((horarec > hora1) && (horarec < hora2)) {//hay citas programadas en el itervalo
-                            ArrayList<String> Nodisp=new ArrayList<>();
-                            Nodisp.add("No Disponible");
-                            ArrayAdapter<String> adapterNo = new ArrayAdapter<String>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, Nodisp);
-                            spinCaballo.setAdapter(adapterNo);
+                        String guiaaxu=ds.child("guia").getValue().toString();
+                        if(guiaaxu.equals(spinGuia.getSelectedItem().toString())) {
+                            if(hora1<hora2){
+                                long horarec = 0;
+                            String horaI = ds.child("horaInicio").getValue().toString();
+                            try {
+                                DateFormat inFormat = new SimpleDateFormat("HH:mm");
+                                Date horainicio = inFormat.parse(horaI);
+                                horarec = (horainicio.getTime() / 3600000) - 3;
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            if ((horarec > hora1) && (horarec < hora2)) {//hay citas programadas en el itervalo
+                                haycitas=true;
+                                resul="Horario no disponible";
+                                System.out.println("Hoy citas entre las"+hora1+" "+horarec+" "+hora2);
+
+
+                            }
 
 
                         }else{
-                            loadproducto();
+                                haycitas=true;
+                                resul="Revise horario";
+
+
+
+
                         }
 
+
+                    }
+                    }
+                    if(haycitas) {
+                        ArrayList<String> Nodisp = new ArrayList<>();
+                        Nodisp.add(resul);
+                        ArrayAdapter<String> adapterNo = new ArrayAdapter<String>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, Nodisp);
+                        spinCircuito.setAdapter(adapterNo);
+                        System.out.println("no disponible");
+                    }else{
+                        loadproducto();
                     }
 
 
                 }else{
-
-                        ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, cabalgatalist);
-                        spinCaballo.setAdapter(adaptercaballo);
-
-
-                    }
+                   System.out.println("no existen datos en la fecha"+f);
+                   loadproducto();
+                }
                 }
 
 
@@ -501,7 +602,6 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     }
     public void loadGuias(){
         String ID="";
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String usuariuo=user.getDisplayName();
         if (user != null) {
@@ -530,22 +630,13 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
-
         });
-
-
-
-
-
-
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -611,12 +702,32 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
         }
 
+    private String twoDigits(int n) {
+        return (n<=9) ? ("0"+n) : String.valueOf(n);
+    }
+    public void loadCalendario() {
+        int dia, mes, año;
+        final Calendar c= Calendar.getInstance();
+        final Calendar newCalendar = Calendar.getInstance();
+        dia=c.get(Calendar.DAY_OF_MONTH);
+        mes=c.get(Calendar.MONTH);
+        año=c.get(Calendar.YEAR);
+        DatePickerDialog datePickerDialog=new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int dia, int mes, int año) {
+                EditText etPlannedDate = etFecha;
+                etPlannedDate.setText("");
+                final String selectedDate = twoDigits(año) + "-" + twoDigits(mes+1) + "-" + dia;
+                etPlannedDate.setText(selectedDate);
+
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        //,dia,mes,año);
+        datePickerDialog.show();
+        loadcircuito();
 
 
-
-
-
-
+    }
 
 
 

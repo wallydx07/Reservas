@@ -391,14 +391,7 @@ pguia.add(usuariuo);
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
-
-            });
-
-
-
-
-
-
-        }
+        });
+    }
 
 }

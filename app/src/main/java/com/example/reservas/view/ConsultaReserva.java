@@ -51,16 +51,10 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
             caballos=(ListView)findViewById(R.id.lvConsutlaReservaCaballos);
             descarga=(Button)findViewById(R.id.btDescargaConsultaReserva);
             descarga.setOnClickListener(this);
-
             editar=(Button)findViewById(R.id.btEditarConsultaReserva);
             editar.setOnClickListener(this);
-
             eliminar=(Button)findViewById(R.id.btEliminarConsultaReserva);
             eliminar.setOnClickListener(this);
-
-
-
-
             fecha.setText(Reserva.getFecha());
             horapartida.setText(Reserva.getHoraInicio());
             horallegada.setText(Reserva.getHoraFin());
