@@ -47,32 +47,26 @@ public class MainActivity extends AppCompatActivity {
         firebasauth=FirebaseAuth.getInstance();
        awesomevalidation=new AwesomeValidation(ValidationStyle.BASIC);
        inicialize();
-
        System.out.println("inicializar");
 
     }
     private void inicialize() {
-
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            // User is signed in
             setContentView(R.layout.activity_main);
-            BottomNavigationView navigation=(BottomNavigationView)findViewById(R.id.navigation);
+            BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
             navigation.setOnNavigationItemSelectedListener(onNav);
             loadFragment(usuario);
             System.out.println("usuario activo");
         } else {
-            // No user is signed in
             System.out.println("usuario va a iniciar seccion");
+            setContentView(R.layout.login);
             email = (EditText) findViewById(R.id.Email);
             password = (EditText) findViewById(R.id.Password);
             buttoniniciarsecion = (Button) findViewById(R.id.buttoniniciarsesion);
-            setContentView(R.layout.login);
         }
-
-
     }
+
     private final BottomNavigationView.OnNavigationItemSelectedListener onNav=new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -92,10 +86,8 @@ public class MainActivity extends AppCompatActivity {
     };
 
         public void onclick(View view) {
-            System.out.println("este es: "+view);
             String Semail=(String.valueOf(email.getText()));
             String Spassword=(String.valueOf(password.getText()));
-
             firebasauth.signInWithEmailAndPassword(Semail,Spassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {

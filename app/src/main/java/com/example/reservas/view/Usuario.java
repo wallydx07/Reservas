@@ -151,7 +151,7 @@ public class Usuario extends Fragment implements View.OnClickListener{
                         nameUser.setText(user.getDisplayName());
                         Uri photoUrl = user.getPhotoUrl();
                         System.out.println(photoUrl + "sfdhd7897898");
-                        mSetImage.setImageURI(photoUrl);
+                        //mSetImage.setImageURI(photoUrl);
 
 // Check if user's email is verified
                         boolean emailVerified = user.isEmailVerified();

@@ -62,7 +62,6 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class reservaDProductoFragment extends Fragment implements View.OnClickListener {
-
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -115,12 +114,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
-
         horaInicio =((nuevaReserva)this.getActivity()).horaInicio;
         fecha=((nuevaReserva)this.getActivity()).fecha;
-
-
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
            date = dateFormat.parse(fecha);
@@ -128,8 +123,6 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
         guia=((nuevaReserva)this.getActivity()).guia;
         user = FirebaseAuth.getInstance().getCurrentUser();
         super.onCreate(savedInstanceState);
@@ -144,6 +137,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 String nacimineto=result.getString("nacimiento");
                 persona=new objPersona(nombreO,dni,nacimineto,"Cliente");
                 personalist.add(persona);
+                System.out.println("se agrego nueov");
                 }
         });
         getParentFragmentManager().setFragmentResultListener("K",this, new FragmentResultListener() {

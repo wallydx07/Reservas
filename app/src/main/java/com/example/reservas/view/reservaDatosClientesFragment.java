@@ -67,7 +67,7 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = new Bundle();
-       // fragment = new reservaDProductoFragment();
+        fragment = new reservaDProductoFragment();
 
 
 
@@ -163,7 +163,7 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
-          /*  case R.id.bottomDatosnAgregar:
+          case R.id.bottomDatosnAgregar:
                 String nombre=String.valueOf(tNombre.getText());
                 String DNI=String.valueOf(tDNI.getText());
                 String fNacimiento=String.valueOf(tNacimiento.getText());
@@ -174,11 +174,11 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
                 tNombre.setText("");
                 tDNI.setText("");
                 tNacimiento.setText("");
-               /* bundle.putString("nombre", nombre );
+                bundle.putString("nombre", nombre );
                 bundle.putString("dni", DNI );
                 bundle.putString("nacimiento", fNacimiento );
                 getParentFragmentManager().setFragmentResult("key",bundle);
-                break;*/
+                break;
 
         }
     }

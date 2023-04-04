@@ -23,6 +23,7 @@
         android:layout_marginBottom="0dp"
         android:fillViewport="true">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,56 +31,77 @@
             android:layout_marginBottom="3dp"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/txtDatosApellidoyNombre"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="Apellido y Nombre"
-                android:imeOptions="actionDone"
-                android:inputType="textPersonName"
-                tools:text="Geronimo Walter" />
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/txtDatosDNI"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="DNI"
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                tools:text="12345" />
 
-            <EditText
-                android:id="@+id/txtDAtosFechaNacimiento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="Fecha nacimiento"
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                android:text="@string/_070894" />
+                <LinearLayout
+                    android:layout_width="343dp"
+                    android:layout_height="144dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:orientation="vertical">
 
-            <Button
-                android:id="@+id/bottomDatosnAgregar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:gravity="center"
-                android:imeOptions="actionDone"
+                    <EditText
+                        android:id="@+id/txtDatosApellidoyNombre"
+                        android:layout_width="313dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:hint="Apellido y Nombre"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPersonName"
+                        tools:text="Geronimo Walter" />
 
-                android:text="Agregar" />
+                    <EditText
+                        android:id="@+id/txtDatosDNI"
+                        android:layout_width="313dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:hint="DNI"
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        tools:text="12345" />
+
+                    <EditText
+                        android:id="@+id/txtDAtosFechaNacimiento"
+                        android:layout_width="313dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:hint="Fecha nacimiento"
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:text="@string/_070894" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/bottomDatosnAgregar"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:imeOptions="actionDone"
+
+                    android:text="+" />
+
+
+            </LinearLayout>
+
 
             <ListView
                 android:id="@+id/listViewDatosClientes"
                 android:layout_width="match_parent"
-                android:layout_height="117dp"
+                android:layout_height="226dp"
                 android:layout_marginBottom="32dp"
                 android:gravity="center" />
 

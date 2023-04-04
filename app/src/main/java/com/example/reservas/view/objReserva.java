@@ -81,12 +81,11 @@ public class objReserva implements Serializable {
         deposito = Deposito;
     }
 
-    public String nombreTitular() {
-        objPersona titular = Personalist.get(0);
-        String nombrexd = titular.getNombre();
-        return nombrexd;
-
-    }
+   public String nombreTitular() {
+            objPersona titular = Personalist.get(0);
+            String nombrexd = titular.getNombre();
+            return nombrexd;
+        }
 
     public String getFecha() {
         return fecha;

@@ -87,13 +87,9 @@ private Spinner spinGuia;
 
        spinGuia=v.findViewById(R.id.spinnerCalendarioGuia);
         loadGuias();
-
-
         textview=v.findViewById(R.id.txtCalendarioFecha);
         textview.setText(formattedDate);
         listview=v.findViewById(R.id.lvCalendarioHoras);
-
-
         spinGuia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
