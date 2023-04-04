@@ -296,11 +296,11 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 startActivityForResult(galleryIntent, 1);
                 break;
             case R.id.buttonReservaProductoFinalizar:
-                mostrarProgress();
+                //mostrarProgress();
                 int Fin=Transforma(spinhoraFin.getSelectedItem().toString());
                 Fin=Transforma(horaInicio)+Fin;
                 objReserva reserva=new objReserva(fecha, horaInicio, String.valueOf(Fin)+":00",  correo,  telefono,  hospedaje,  user.toString(),guia, spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist,pendiente.getText().toString(),anticipo.getText().toString());
-               Subir("Salud", imageuri, reserva.nombreTitular(), reserva);
+                Subir("Salud", imageuri, reserva.nombreTitular(), reserva);
                break;
             case R.id.btDNIReservaDeProducto:
                 System.out.println("accionaste el boton dni");
