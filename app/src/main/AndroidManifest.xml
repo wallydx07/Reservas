@@ -27,10 +27,14 @@
         </activity>
         <activity
             android:name=".view.nuevaReserva"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".view.Nuevo_Producto" />
-        <activity android:name=".view.EditarProductos" />
-        <activity android:name=".view.ConsultaReserva" />
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity android:name=".view.Nuevo_Producto"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".view.EditarProductos"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".view.ConsultaReserva"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

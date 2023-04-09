@@ -42,14 +42,14 @@
 
                 <LinearLayout
                     android:layout_width="343dp"
-                    android:layout_height="144dp"
+                    android:layout_height="160dp"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
                     android:orientation="vertical">
 
                     <EditText
                         android:id="@+id/txtDatosApellidoyNombre"
-                        android:layout_width="313dp"
+                        android:layout_width="328dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:ems="10"
@@ -57,11 +57,11 @@
                         android:hint="Apellido y Nombre"
                         android:imeOptions="actionDone"
                         android:inputType="textPersonName"
-                        tools:text="Geronimo Walter" />
+                        tools:text="" />
 
                     <EditText
                         android:id="@+id/txtDatosDNI"
-                        android:layout_width="313dp"
+                        android:layout_width="330dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:ems="10"
@@ -69,11 +69,11 @@
                         android:hint="DNI"
                         android:imeOptions="actionDone"
                         android:inputType="number"
-                        tools:text="12345" />
+                        tools:text="" />
 
                     <EditText
                         android:id="@+id/txtDAtosFechaNacimiento"
-                        android:layout_width="313dp"
+                        android:layout_width="332dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:ems="10"
@@ -81,13 +81,13 @@
                         android:hint="Fecha nacimiento"
                         android:imeOptions="actionDone"
                         android:inputType="number"
-                        android:text="@string/_070894" />
+                        android:text="" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/bottomDatosnAgregar"
                     android:layout_width="58dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="156dp"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:imeOptions="actionDone"
@@ -115,7 +115,7 @@
                 android:hint="correo"
                 android:imeOptions="actionDone"
                 android:inputType="textEmailAddress"
-                android:text="walter@gmail.com" />
+                android:text="" />
 
             <EditText
                 android:id="@+id/txtTelefonoDatosClientes"
@@ -127,7 +127,7 @@
                 android:hint="Telefono"
                 android:imeOptions="actionDone"
                 android:inputType="textPersonName"
-                android:text="3885628802" />
+                android:text="" />
 
             <EditText
                 android:id="@+id/txtHospedajeDatosCliente"
@@ -139,7 +139,19 @@
                 android:hint="Hospedaje"
                 android:imeOptions="actionDone"
                 android:inputType="textPersonName"
-                android:text="munay dx" />
+                android:text="" />
+
+            <EditText
+                android:id="@+id/txtProcedenciaDatosCliente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Procedencia"
+                android:imeOptions="actionDone"
+                android:inputType="textPersonName"
+                android:text="" />
 
             <Button
                 android:id="@+id/btSiguienteReservaDatosCliente"

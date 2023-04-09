@@ -32,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.reservas.R;
 import com.google.android.gms.tasks.Continuation;
@@ -70,14 +71,14 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     List<objPersona> personalist;
     List<obProductos> cabalgatalist;
     List<obProductos> pcircuito;
+    List<String> Circuito;
     objReserva miReserva;
     objPersona persona;
     Spinner spinCircuito,spinCaballo, spinhoraFin,spinhoraInicio,spinGuia;
     EditText nombre,dni,fechanNacimiento, total, anticipo, pendiente, etFecha;
-    String correo,telefono,hospedaje;
+    String correo,telefono,hospedaje, procedencia;
     ListView datoscaballos;
     DatabaseReference mDatabase;
-    Switch cabalgata;
     private ProgressBar miprogress;
     private ObjectAnimator anim;
     Button finalizar;
@@ -115,6 +116,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         horaInicio =((nuevaReserva)this.getActivity()).horaInicio;
+        System.out.println("______________________________"+horaInicio+"______________________________");
         fecha=((nuevaReserva)this.getActivity()).fecha;
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -145,6 +147,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 correo=result.getString("correo");
                 telefono=result.getString("telefono");
+                procedencia=result.getString("procedencia");
                 hospedaje=result.getString("hospedaje");
 
             }
@@ -155,6 +158,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        System.out.println("Se crea la view______________________________________________________");
         // Inflate the layout for this fragment
         //
         v=inflater.inflate(R.layout.fragment_reserva_d_producto, container, false);
@@ -224,13 +228,13 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         subirDNI=v.findViewById(R.id.btDNIReservaDeProducto);
         subirDNI.setOnClickListener(this);
         datoscaballos=v.findViewById(R.id.listViewReservaProducto);
-        cabalgata=v.findViewById(R.id.switchCaballo);
+     //   cabalgata=v.findViewById(R.id.switchCaballo);
         finalizar=v.findViewById(R.id.buttonReservaProductoFinalizar);
         finalizar.setOnClickListener(this);
-        cabalgata=v.findViewById(R.id.switchCaballo);
-        agregar.setEnabled(false);
-        spinCaballo.setEnabled(false);
-        cabalgata.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    //    cabalgata=v.findViewById(R.id.switchCaballo);
+        agregar.setEnabled(true);
+        spinCaballo.setEnabled(true);
+    /*    cabalgata.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -239,22 +243,18 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                     if(isChecked){
                         loadcaballo();
                     }
-
             }
-
         });
-
+*/
 
         loadproducto();
         loadGuias();
         loadcaballo();
         return v;
     }
-
-
     public int getpos(String horaf) throws ParseException {
         int n=0;
-        String hora0="7:00";
+        String hora0="0:00";
         DateFormat inFormat = new SimpleDateFormat("HH:mm");
         // Date horainicio = inFormat.parse(horaInicio);
         //Date horafin = inFormat.parse(spinhoraFin.getSelectedItem().toString());
@@ -265,8 +265,6 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         n= (int) (hora2-hora1);
         return n;
     }
-
-
 
     @Override
     public void onClick(View view) {
@@ -290,17 +288,39 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 System.out.println("accionaste el boton salud");
                 Intent galleryIntent = new Intent();
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
                 // We will be redirected to choose pdf
                 galleryIntent.setType("application/pdf");
                 startActivityForResult(galleryIntent, 1);
                 break;
             case R.id.buttonReservaProductoFinalizar:
-                //mostrarProgress();
-                int Fin=Transforma(spinhoraFin.getSelectedItem().toString());
-                Fin=Transforma(horaInicio)+Fin;
-                objReserva reserva=new objReserva(fecha, horaInicio, String.valueOf(Fin)+":00",  correo,  telefono,  hospedaje,  user.toString(),guia, spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist,pendiente.getText().toString(),anticipo.getText().toString());
-                Subir("Salud", imageuri, reserva.nombreTitular(), reserva);
+
+               String pend=pendiente.getText().toString();
+                String tot=total.getText().toString();
+                String ant=anticipo.getText().toString();
+                String hora0=spinhoraInicio.getSelectedItem().toString();
+                String hora1=spinhoraFin.getSelectedItem().toString();
+
+
+                if (pend.isEmpty() || tot.isEmpty() ||ant.isEmpty()) {
+                    Toast.makeText(getContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
+
+
+
+                }else {
+                   // int Fin=Transforma(spinhoraFin.getSelectedItem().toString());
+                 //   Fin=Transforma(horaInicio)+Fin;
+                    objReserva reserva=new objReserva(fecha, hora0, hora1,  correo,  telefono,  hospedaje,   user.getDisplayName(),guia, spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist,pend,ant,procedencia);
+                    reserva.setTotal(tot);
+                    //  Subir("Salud", imageuri, reserva.nombreTitular(), reserva);
+                    reserva.setUrlBuenaSalud("---");
+                    reserva.setUrlDNI("---");
+                    writeNewReserva(reserva);
+                }
+
+
+
+
+
                break;
             case R.id.btDNIReservaDeProducto:
                 System.out.println("accionaste el boton dni");
@@ -323,8 +343,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         anim.cancel();
     }
     private void writeNewReserva(objReserva reserva) {
+
         mDatabase.child("reserva").push().setValue(reserva);
-        detenerProgress();
         requireActivity().finish();
     }
     public int Transforma(String Hora){
@@ -340,24 +360,25 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         return fin;
     }
     public void loadproducto() {
-        final List<obProductos> pcabalgata = new ArrayList<>();
+        System.out.println(("________________________________loadPorducto"));
+       // final List<obProductos> pcabalgata = new ArrayList<>();
         //final List<obProductos> pcircuito = new ArrayList<>();
         pcircuito = new ArrayList<>();
-        this.cabalgatalist = new ArrayList<>();
+        cabalgatalist = new ArrayList<>();
         mDatabase.child("producto").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {//ver
-                    System.out.println("se van a cargar los elementos");
+                if (snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         String nombre = ds.child("nombre").getValue().toString();
                         String tipo = ds.child("tipo").getValue().toString();
-                        int precio= Integer.valueOf(ds.child("precio").getValue().toString());
+                        String precio= ds.child("precio").getValue().toString();
+
                         if(tipo.equals("Circuito")){
                             pcircuito.add(new obProductos(nombre, precio,tipo));
                          }
                         if(tipo.equals("Caballo")){
-                            reservaDProductoFragment.this.cabalgatalist.add(new obProductos(nombre, precio,tipo));
+                            cabalgatalist.add(new obProductos(nombre, precio,tipo));
                         }
                     }
                    // ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, reservaDProductoFragment.this.cabalgatalist);
@@ -374,21 +395,19 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
     }
     public void loadcaballo() {
+        System.out.println("se van a ller los caballos disp_______________________");
+       // spinCaballo.setAdapter(null);
         String h1=spinhoraInicio.getSelectedItem().toString();
         String h2=spinhoraFin.getSelectedItem().toString();
         String f=etFecha.toString();
         final List<obProductos> pcabalgata = new ArrayList<>();
-        pcircuito = new ArrayList<>();
+      //  pcircuito = new ArrayList<>();
         mDatabase.child("reserva").orderByChild("fecha").equalTo(f).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {//ver
 
-
-
-
-                    System.out.println("se van a cargar los elementos");
-                    int precio = 0;
+                    String precio = "0";
                     String tipo = "";
                     String caballonombre = "";
                     long hora1 = 0;
@@ -406,34 +425,29 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                     }
                     for (DataSnapshot ds : snapshot.getChildren()) {
 
-
-
-
-
-
-
-
-
-
-
                         System.out.println(ds.child("circuito").getValue().toString());
-                        long horarec = 0;
+                        long H1 = 0;
+                        long H2 = 0;
                         String horaI = ds.child("horaInicio").getValue().toString();
+                        String horaII= ds.child("horaFin").getValue().toString();
+
                         try {
                             DateFormat inFormat = new SimpleDateFormat("HH:mm");
                             Date horainicio = inFormat.parse(horaI);
-                            horarec = (horainicio.getTime() / 3600000) - 3;
+                            Date horafin=inFormat.parse(horaII);
+                            H1 = (horainicio.getTime() / 3600000) - 3;
+                            H2 = (horafin.getTime() / 3600000) - 3;
+
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                         if(hora1<hora2) {
 
-
-                            if ((horarec > hora1) && (horarec < hora2)) {
+                            if ((H1< hora1 && H2 > hora1) || (H1 > hora1 && H1 < hora2) || (H2 > hora1 && H2 < hora2)) {
                                 for (DataSnapshot dsi : ds.child("caballolist").getChildren()) {
                                     try {
                                         caballonombre = dsi.child("nombre").getValue().toString();
-                                        precio = Integer.valueOf(dsi.child("precio").getValue().toString());
+                                        precio = dsi.child("precio").getValue().toString();
                                         tipo = dsi.child("tipo").getValue().toString();
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -442,28 +456,10 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                                     obProductos caballo = new obProductos(caballonombre, precio, tipo);
                                     pcabalgata.add(caballo);
                                 }
-                            } else {
-                                System.out.println("hora no concuerda");
+
                             }
-
-
                         }
-
-
-
-
-
-
-
-
-
-
-
-
                     }
-
-
-
 
                     boolean disponible = true;
                     List<obProductos> auxadapter = new ArrayList<>();
@@ -505,65 +501,93 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             }
         });
 
+
+
+
+
     }
     public void loadcircuito() {
-        String h1=spinhoraInicio.getSelectedItem().toString();
-        String h2=spinhoraFin.getSelectedItem().toString();
+        String h11=spinhoraInicio.getSelectedItem().toString();
+        String h22=spinhoraFin.getSelectedItem().toString();
         String f=etFecha.getText().toString();
-        pcircuito = new ArrayList<>();
         System.out.println("se ha inicado load Circuito con fecha: "+f);
+         long h1w1=0;
+         long h1w2=0 ;
+        try {
+            DateFormat inFormat = new SimpleDateFormat("HH:mm");
+            Date horainicio = inFormat.parse(h11);
+            Date horafin = inFormat.parse(h22);
+            h1w1 = (horainicio.getTime() / 3600000) - 3;//hora d einicio desde el listviewanterior
+            h1w2 = (horafin.getTime() / 3600000) - 3;//+hora1;//hora inicio desde el spiner actual
+        } catch (ParseException e) {
+            System.out.println("error"+e);
+            e.printStackTrace();
+        }
+        if(h1w1<h1w2){
         mDatabase.child("reserva").orderByChild("fecha").equalTo(f).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                long h1=0;
+                long h2=0 ;
+
+
                 if (snapshot.exists()) {//ver
-                    long hora1 = 0;
-                    long hora2 = 0;
-                    String resul="";
                     try {
                         DateFormat inFormat = new SimpleDateFormat("HH:mm");
-                        // Date horainicio = inFormat.parse(horaInicio);
-                        //Date horafin = inFormat.parse(spinhoraFin.getSelectedItem().toString());
-                        Date horainicio = inFormat.parse(h1);
-                        Date horafin = inFormat.parse(h2);
-                        System.out.println("las horas " + horainicio);
-                        System.out.println("las horas " + horafin);
-                        hora1 = (horainicio.getTime() / 3600000) - 3;//hora d einicio desde el listviewanterior
-                        hora2 = (horafin.getTime() / 3600000) - 3;//+hora1;//hora inicio desde el spiner actual
+                        Date horainicio = inFormat.parse(h11);
+                        Date horafin = inFormat.parse(h22);
+                        h1 = (horainicio.getTime() / 3600000) - 3;//hora d einicio desde el listviewanterior
+                        h2 = (horafin.getTime() / 3600000) - 3;//+hora1;//hora inicio desde el spiner actual
                     } catch (ParseException e) {
+                        System.out.println("error"+e);
                         e.printStackTrace();
                     }
+                    String resul="";
+
                     boolean haycitas=false;
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         String guiaaxu=ds.child("guia").getValue().toString();
                         if(guiaaxu.equals(spinGuia.getSelectedItem().toString())) {
-                            if(hora1<hora2){
-                                long horarec = 0;
+                            //System.out.println(h1+"-"+h2);
+
+
+
+
+                              long H1= 0;
+                              long H2=0;
                             String horaI = ds.child("horaInicio").getValue().toString();
+                            String horaII= ds.child("horaFin").getValue().toString();
                             try {
                                 DateFormat inFormat = new SimpleDateFormat("HH:mm");
                                 Date horainicio = inFormat.parse(horaI);
-                                horarec = (horainicio.getTime() / 3600000) - 3;
+                                Date horafin= inFormat.parse(horaII);
+
+                                H1 = (horainicio.getTime() / 3600000) - 3;
+                                H2=(horafin.getTime() / 3600000) - 3;
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-
+ /*
                             if ((horarec > hora1) && (horarec < hora2)) {//hay citas programadas en el itervalo
                                 haycitas=true;
                                 resul="Horario no disponible";
                                 System.out.println("Hoy citas entre las"+hora1+" "+horarec+" "+hora2);
-
-
                             }
 
-
-                        }else{
-                                haycitas=true;
-                                resul="Revise horario";
+*/
 
 
+                                if ((H1< h1 && H2 > h1) || (H1 > h1 && H1 < h2) || (H2 > h1 && H2 < h2)) {
+                                    haycitas=true;
+                                    resul="Guia no disponible";
+                                    System.out.println("Hoy citas entre las"+h1+"-"+h2+"---- "+H1+"-"+H2);
+                                } else {
+                                    resul="Disponible";
+                                    System.out.println("no hay citas entre las"+h1+"-"+h2+"---- "+H1+"-"+H2);
+                                     haycitas=false;
+                                }
 
 
-                        }
 
 
                     }
@@ -573,16 +597,24 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                         Nodisp.add(resul);
                         ArrayAdapter<String> adapterNo = new ArrayAdapter<String>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, Nodisp);
                         spinCircuito.setAdapter(adapterNo);
-                        System.out.println("no disponible");
                     }else{
-                        loadproducto();
+                        ArrayAdapter<obProductos> adaptercircuito2 = new ArrayAdapter<obProductos>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, pcircuito);
+                        spinCircuito.setAdapter(adaptercircuito2);
+
+
                     }
 
 
                 }else{
                    System.out.println("no existen datos en la fecha"+f);
-                   loadproducto();
+                    ArrayAdapter<obProductos> adaptercircuito2 = new ArrayAdapter<obProductos>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, pcircuito);
+                    spinCircuito.setAdapter(adaptercircuito2);
+
                 }
+
+
+
+
                 }
 
 
@@ -591,6 +623,12 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             }
 
         });
+        }else{
+            ArrayList<String> Nodisp = new ArrayList<>();
+            Nodisp.add("Horario no permitido");
+            ArrayAdapter<String> adapterNo = new ArrayAdapter<String>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, Nodisp);
+            spinCircuito.setAdapter(adapterNo);
+        }
 
 
     }
@@ -713,6 +751,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 etPlannedDate.setText("");
                 final String selectedDate = twoDigits(año) + "-" + twoDigits(mes+1) + "-" + dia;
                 etPlannedDate.setText(selectedDate);
+                loadcircuito();
 
             }
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));

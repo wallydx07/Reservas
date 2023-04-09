@@ -1,14 +1,15 @@
 package com.example.reservas.view;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
@@ -32,25 +33,23 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
     List<objPersona> Personalist;
     Button siguiente;
     ListClientesAdpater adapter;
+
     reservaDatosClientesFragment cliente=new reservaDatosClientesFragment();
     reservaDProductoFragment producto=new reservaDProductoFragment();
-
-
-
+   Bundle bundle = new Bundle();
     public nuevaReserva() {
-
-
     }
 
     @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+        loadFragment(cliente);
         Bundle parametros = this.getIntent().getExtras();
         if(parametros !=null) {
-
             String bandera=parametros.getString("bandera");
             if(bandera.equals("reserva")) {
                 horaInicio = parametros.getString("horaInicio");
+                System.out.println("______________________________"+horaInicio+"______________________________");
                 fecha = parametros.getString("fecha");
                 guia = parametros.getString("guia");
             }
@@ -59,49 +58,19 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
                 horaInicio =reserva.getHoraInicio();
                 fecha = reserva.getFecha();
                 guia = reserva.getGuia();
+                Personalist=reserva.getPersonalist();
+                adapter = new ListClientesAdpater(cliente.getContext(), Personalist);
+
             }
 
         }
            // setContentView(R.layout.nuevareserva);
         setContentView(R.layout.nuevares);
-            //tablayout=findViewById(R.id.tabnuevareserva);
-            //viewpager=findViewById(R.id.viewventa);
         tNombre=(EditText)findViewById(R.id.txtDatosApellidoyNombre);
-        loadFragment(cliente);
-        Personalist = new ArrayList<>();
-            //tab1=findViewById(R.id.tabCLiente);
-            //tab2=findViewById(R.id.tabReserva);
-            //pagercontroller=new PagerController(getSupportFragmentManager(),tablayout.getTabCount());
-            //viewpager.setAdapter(pagercontroller);
-            /*tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    viewpager.setCurrentItem(tab.getPosition());
-                    if(tab.getPosition()==0) {
-                        pagercontroller.notifyDataSetChanged();
+        Personalist = new ArrayList<objPersona>();
 
-}
-                    if(tab.getPosition()==1){
-                        pagercontroller.notifyDataSetChanged();
 
-}
-                }
 
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-
-                }
-            });
-             viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tablayout));
-       */
-        /*
-       // pasarparametros();
-             */
     }
 
     public void loadFragment(Fragment fragment){
@@ -109,54 +78,75 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
         transaction.replace(R.id.frame_reserva,fragment);
         transaction.commit();
 
-
-
-
     }
-
+    public void mandarlist(){
+        objPersona persona1;
+        ListClientesAdpater adapter1 = (ListClientesAdpater) cliente.lista.getAdapter();
+        if (adapter1 != null) {
+            List<objPersona> allData =adapter1.getData();
+            for (int i = 0; i < adapter1.getCount(); i++) {
+                persona1=allData.get(i);
+                String nombre= persona1.getNombre();
+                String DNI=persona1.getDni();
+                String fNacimiento=persona1.getFechaN();
+                cliente.bund(nombre,DNI,fNacimiento);
+            }
+        }
+    }
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
 
             case R.id.btSiguienteReservaDatosCliente:
-                loadFragment(producto);
-                break;
+                int count=0;
+                ListClientesAdpater adapterb = (ListClientesAdpater) cliente.lista.getAdapter();
+                if (adapterb != null) {
+                    count = adapterb.getCount();
+                    System.out.println(count);
+                }
+                String correo=cliente.correo.getText().toString();
+                String hospedaje=cliente.hospedaje.getText().toString();
+                String telefono=cliente.telefono.getText().toString();
+                String origen=cliente.procedencia.getText().toString();
+                if (correo.isEmpty() || hospedaje.isEmpty() ||telefono.isEmpty()||count==0) {
+                    Toast.makeText(getApplicationContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
 
+                }else {
+                    mandarlist();
+                    cliente.bunde(correo,hospedaje,telefono,origen);
+                    loadFragment(producto);
+                }
+
+                break;
             case R.id.bottomDatosnAgregar:
                 String nombre=cliente.tNombre.getText().toString();
                 String DNI=cliente.tDNI.getText().toString();
                 String fNacimiento=cliente.tNacimiento.getText().toString();
-                persona=new objPersona(nombre,DNI,fNacimiento,"cliente");
-                Personalist.add(persona);
-                adapter = new ListClientesAdpater(cliente.getContext(), Personalist);
-                cliente.lista.setAdapter(adapter);
-                cliente.tNombre.setText("");
-                cliente. tDNI.setText("");
-                cliente.tNacimiento.setText("");
+
+                if (nombre.isEmpty() || DNI.isEmpty() ||fNacimiento.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
+
+                }else {
+
+
+                    persona=new objPersona(nombre,DNI,fNacimiento,"cliente");
+                    //    cliente.bund(nombre,DNI,fNacimiento);
+                    Personalist.add(persona);
+                    adapter = new ListClientesAdpater(cliente.getContext(), Personalist);
+                    cliente.lista.setAdapter(adapter);
+                    cliente.tNombre.setText("");
+                    cliente. tDNI.setText("");
+                    cliente.tNacimiento.setText("");
+
+                }
+
+
+
+
+
              break;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
-
-
-
-
-
     }
 
     @Override

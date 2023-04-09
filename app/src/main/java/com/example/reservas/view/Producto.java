@@ -107,12 +107,15 @@ public class Producto extends Fragment implements View.OnClickListener{
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {//ver
-                    System.out.println("se van a cargar los elementos");
                     for (DataSnapshot ds : snapshot.getChildren()) {
+                        String id = ds.getKey();
                         String nombre = ds.child("nombre").getValue().toString();
                         String tipo = ds.child("tipo").getValue().toString();
-                        int precio=Integer.valueOf(ds.child("precio").getValue().toString());
-                        productolist.add(new obProductos(nombre, precio,tipo));
+                        String precio=ds.child("precio").getValue().toString();
+                        obProductos producto=new obProductos(nombre, precio,tipo);
+                        producto.setDescripcion(ds.child("descripcion").getValue().toString());
+                        producto.setId(id);
+                        productolist.add(producto);
                     }
 
 
@@ -125,9 +128,28 @@ public class Producto extends Fragment implements View.OnClickListener{
                     lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                            Intent intent=new Intent(getActivity(), EditarProductos.class);
+                            // Obtenemos el producto seleccionado de la lista
+                            obProductos productoSeleccionado = (obProductos) ListViewAdapter.getItemAtPosition(i);
+
+                            Intent intent = new Intent(getActivity(), EditarProductos.class);
+                            if (productoSeleccionado != null) {
+                                String id = productoSeleccionado.getId();
+                                String N = productoSeleccionado.getNombre();
+                                String D=productoSeleccionado.getDescripcion();
+
+
+                                // Pasamos el ID del producto como extra en el intent
+                                intent.putExtra("productoId", id);
+                                intent.putExtra("productoN", N);
+                                intent.putExtra("productoD", D);
+                                // Resto del código aquí
+                            }
+
+                            // Creamos un nuevo intent para la actividad de edición
+
+
+                            // Iniciamos la actividad
                             startActivity(intent);
-                            Toast.makeText(getContext(), "presiono " + i, Toast.LENGTH_SHORT).show();
                         }
                     });
                     lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

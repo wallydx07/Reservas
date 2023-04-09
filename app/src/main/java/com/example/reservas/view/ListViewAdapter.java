@@ -15,13 +15,18 @@ public class ListViewAdapter extends BaseAdapter {
     // Declare Variables
     Context context;
     obProductos producto;
-    List<obProductos> producto1;
+    static List<obProductos> producto1;
     LayoutInflater inflater;
 
 
     public ListViewAdapter(Context context, List<obProductos> Producto) {
         this.context = context;
         this.producto1 = Producto;
+    }
+
+    public static Object getItemAtPosition(int i) {
+
+        return producto1.get(i);
     }
 
     @Override
@@ -44,7 +49,7 @@ public class ListViewAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         // Declare Variables
-        TextView txtTitle, txtSubTitle;
+        TextView txtTitle, txtSubTitle, txtDescription;
         ImageView imgImg;
 
         //http://developer.android.com/intl/es/reference/android/view/LayoutInflater.html
@@ -55,16 +60,23 @@ public class ListViewAdapter extends BaseAdapter {
         // Locate the TextViews in listview_item.xml
         txtTitle = (TextView) itemView.findViewById(R.id.list_row_title);
         txtSubTitle = (TextView) itemView.findViewById(R.id.list_row_subtitle);
+        txtDescription=(TextView) itemView.findViewById(R.id.list_row_description);
         imgImg = (ImageView) itemView.findViewById(R.id.list_row_image);
 
         // Capture position and set to the TextViews
         producto = producto1.get(position);
         String nombre = producto.getNombre();
-        int precio = producto.getPrecio();
+        String precio = producto.getPrecio();
+        String descripcion= producto.getDescripcion();
         txtTitle.setText(nombre);
         txtSubTitle.setText(String.valueOf(precio));
-        imgImg.setImageResource(R.drawable.ic_account);
-
+        txtDescription.setText(String.valueOf(descripcion));
+        if(producto.getTipo().equals("Circuito")) {
+            imgImg.setImageResource(R.drawable.caminata);
+        }
+        if(producto.getTipo().equals("Caballo")) {
+            imgImg.setImageResource(R.drawable.caballo);
+        }
 
         return itemView;
     }

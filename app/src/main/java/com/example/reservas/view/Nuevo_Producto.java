@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.reservas.R;
 import com.google.firebase.database.DataSnapshot;
@@ -19,11 +20,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Nuevo_Producto extends AppCompatActivity implements View.OnClickListener {
     Spinner spin;
-    EditText nombre, precio, tipo;
+    EditText nombre, precio, tipo,descripcion;
     DatabaseReference mDatabase;
     Button guardar;
 
@@ -38,6 +41,7 @@ public class Nuevo_Producto extends AppCompatActivity implements View.OnClickLis
         guardar=findViewById(R.id.bottonGuardarProducto);
         nombre=findViewById(R.id.txtEditarProducto);
         precio=findViewById(R.id.txtEditarPrecio);
+        descripcion=findViewById(R.id.txtEditarDescripcion);
 
        // loadproducto();
         guardar.setOnClickListener(this);
@@ -51,16 +55,37 @@ public class Nuevo_Producto extends AppCompatActivity implements View.OnClickLis
             case R.id.bottonGuardarProducto:
                 String nombre1=String.valueOf(nombre.getText());
                 String tipo1=spin.getSelectedItem().toString();
-                int precio1=Integer.valueOf(String.valueOf(precio.getText()));
-                writeNewProducto(nombre1,precio1,tipo1);
+                String precio1=precio.getText().toString();
+                String d=descripcion.getText().toString();
+
+                if (nombre1.isEmpty() || precio1.isEmpty() ||d.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
+
+                }else {
+                    writeNewProducto(nombre1,precio1,tipo1,d);
+                    finish();
+
+                }
+
+
+
+
+
+
+
+
+
+
+
                break;
 
         }
     }
 
-    public void writeNewProducto( String name, int price, String type) {
+    public void writeNewProducto( String name, String price, String type, String desc) {
 
          obProductos producto = new obProductos(name,price,type);
+         producto.setDescripcion(desc);
         mDatabase.child("producto").push().setValue(producto);
     }
 

@@ -1,36 +1,14 @@
 package com.example.reservas.view;
-
-import static android.app.Activity.RESULT_OK;
-
-import android.app.FragmentManager;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import com.example.reservas.R;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,13 +19,13 @@ import java.util.List;
  */
 public class reservaDatosClientesFragment extends Fragment implements View.OnClickListener{
 
-    EditText tNombre, tNacimiento,tDNI, correo, telefono, hospedaje;
+    EditText tNombre, tNacimiento,tDNI, correo, telefono, hospedaje,procedencia;
     View v;
     Button agregar,siguiente;
     List<objPersona> Personalist;
     objPersona persona;
     ListViewAdapter adapter1;
-    ListClientesAdpater adapter;
+   // ListClientesAdpater adapter;
     ListView lista;
     Bundle bundle;
     reservaDProductoFragment fragment;
@@ -67,7 +45,7 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = new Bundle();
-        fragment = new reservaDProductoFragment();
+    //    fragment = new reservaDProductoFragment();
 
 
 
@@ -79,70 +57,9 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
 
         v=inflater.inflate(R.layout.fragment_reserva_datos_clientes, container, false);
         correo=v.findViewById(R.id.txtCorreoDatosClientes);
-
-       /* correo.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String myMessage = correo.getText().toString();
-                bundle.putString("correo", myMessage );
-                getParentFragmentManager().setFragmentResult("K",bundle);
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                System.out.println("se ha dehado de actulizar");
-
-
-            }
-        });*/
+        procedencia=v.findViewById(R.id.txtProcedenciaDatosCliente);
+        hospedaje=v.findViewById(R.id.txtHospedajeDatosCliente);
         telefono=v.findViewById(R.id.txtTelefonoDatosClientes);
-       /* telefono.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String myMessage = telefono.getText().toString();
-                bundle.putString("telefono", myMessage );
-                getParentFragmentManager().setFragmentResult("K",bundle);
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-
-            }
-        });*/
-        /*hospedaje=v.findViewById(R.id.txtHospedajeDatosCliente);
-        hospedaje.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String myMessage = hospedaje.getText().toString();
-                bundle.putString("hospedaje", myMessage );
-                getParentFragmentManager().setFragmentResult("K",bundle);
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-
-            }
-        });*/
         siguiente=v.findViewById(R.id.btSiguienteReservaDatosCliente);
         siguiente.setOnClickListener(((nuevaReserva)this.getActivity()));
         tNombre=v.findViewById(R.id.txtDatosApellidoyNombre);
@@ -153,10 +70,28 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
         agregar.setOnClickListener(((nuevaReserva)this.getActivity()));
         Personalist = new ArrayList<>();
         lista =v.findViewById(R.id.listViewDatosClientes);
+        //lista.setAdapter(adapter);
         return v;
     }
 
 
+
+public void bund(String nombre, String DNI, String fNacimiento ){
+    bundle.putString("nombre", nombre );
+    bundle.putString("dni", DNI );
+    bundle.putString("nacimiento", fNacimiento );
+    getParentFragmentManager().setFragmentResult("key",bundle);
+
+}
+
+
+    public void bunde(String correo, String telefono, String hospedaje, String procedencia ){
+        bundle.putString("correo", correo );
+        bundle.putString("telefono", telefono );
+        bundle.putString("hospedaje", hospedaje );
+        bundle.putString("procedencia",procedencia);
+        getParentFragmentManager().setFragmentResult("K",bundle);
+    }
 
 
 
@@ -164,7 +99,7 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
     public void onClick(View view) {
         switch(view.getId()) {
           case R.id.bottomDatosnAgregar:
-                String nombre=String.valueOf(tNombre.getText());
+              String nombre=String.valueOf(tNombre.getText());
                 String DNI=String.valueOf(tDNI.getText());
                 String fNacimiento=String.valueOf(tNacimiento.getText());
                 persona=new objPersona(nombre,DNI,fNacimiento,"nose");
@@ -177,7 +112,7 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
                 bundle.putString("nombre", nombre );
                 bundle.putString("dni", DNI );
                 bundle.putString("nacimiento", fNacimiento );
-                getParentFragmentManager().setFragmentResult("key",bundle);
+               getParentFragmentManager().setFragmentResult("key",bundle);
                 break;
 
         }

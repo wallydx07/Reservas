@@ -2,10 +2,30 @@ package com.example.reservas.view;
 
 public class obProductos {
     String Nombre;
-    int Precio;
+    String Precio;
     String tipo;
 
-    public obProductos(String nombre, int precio, String tipo) {
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    String descripcion;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    String id;
+
+    public obProductos(String nombre, String precio, String tipo) {
         Nombre = nombre;
         Precio = precio;
         this.tipo = tipo;
@@ -20,12 +40,12 @@ public class obProductos {
         Nombre = nombre;
     }
 
-    public int getPrecio() {
+    public String getPrecio() {
 
         return Precio;
     }
 
-    public void setPrecio(int precio) {
+    public void setPrecio(String precio) {
         Precio = precio;
     }
 

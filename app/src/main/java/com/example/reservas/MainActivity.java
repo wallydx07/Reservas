@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
@@ -34,10 +35,9 @@ public class MainActivity extends AppCompatActivity {
       Calendario calendario= new Calendario();
       Producto producto= new Producto();
       Usuario usuario=new Usuario();
-    //private int dia, mes, año;
-    AwesomeValidation awesomevalidation;
-    FirebaseAuth firebasauth;
-    EditText email,password;
+     AwesomeValidation awesomevalidation;
+     FirebaseAuth firebasauth;
+     EditText email,password;
 
 
    @Override
@@ -64,6 +64,52 @@ public class MainActivity extends AppCompatActivity {
             email = (EditText) findViewById(R.id.Email);
             password = (EditText) findViewById(R.id.Password);
             buttoniniciarsecion = (Button) findViewById(R.id.buttoniniciarsesion);
+            buttoniniciarsecion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+
+
+
+                    String Semail=(String.valueOf(email.getText()));
+                    String Spassword=(String.valueOf(password.getText()));
+                    if (Semail.isEmpty() || Spassword.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
+
+                    }else {
+                        firebasauth.signInWithEmailAndPassword(Semail, Spassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    setContentView(R.layout.activity_main);
+                                    BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+                                    navigation.setOnNavigationItemSelectedListener(onNav);
+                                    loadFragment(usuario);
+                                } else {
+                                    String errocode = ((FirebaseAuthException) task.getException()).getErrorCode();
+                                    String error="";
+                                    if(errocode.equals("ERROR_USER_NOT_FOUND")){
+                                        error="Verifique el correo";
+                                    }
+                                    if(errocode.equals("ERROR_WRONG_PASSWORD")){
+                                        error="Contraseña Incorrecta";
+                                    }
+                                    Toast.makeText(getApplicationContext(),error, Toast.LENGTH_SHORT).show();
+
+                                    mError(errocode);
+                                }
+
+
+                            }
+                        });
+
+
+                    }
+
+
+                }
+            });
         }
     }
 

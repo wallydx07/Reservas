@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,13 +20,14 @@ import java.util.List;
 
 public class ConsultaReserva extends AppCompatActivity implements View.OnClickListener  {
     objReserva Reserva;
-    TextView circuito,fecha,horapartida,horallegada,deposito,pendiente;
+    TextView circuito,fecha,horapartida,horallegada,deposito,pendiente,guia,procedencia,hospedaje,telefono,usuario,correo;
     ListView clientes, caballos;
     Button descarga,eliminar,editar;
     List<objPersona> Personalist;
-    List<objCaballo> Caballolist;
+    List<obProductos> Caballolist;
     objPersona persona;
     ListClientesAdpater adapter;
+
     String URLdni, URLSalud;
 
 
@@ -39,17 +41,29 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
             String datos = parametros.getString("datos");
             Reserva  = (objReserva) getIntent().getSerializableExtra("reserva");
             Personalist=Reserva.getPersonalist();
-            URLdni=Reserva.getUrlDNI();
-            URLSalud=Reserva.getUrlBuenaSalud();
-            System.out.println(URLSalud+"qwertyuiopñlkjhgfdsazxcvbnm");
+            Caballolist=Reserva.getCaballolist();
+            ArrayAdapter<obProductos> adapter1=new ArrayAdapter<obProductos>(getApplicationContext(),R.layout.listview_item,Caballolist);
+
+            caballos=(ListView)findViewById(R.id.lvConsutlaReservaCaballos);
+            adapter = new ListClientesAdpater(this,Personalist);
+           // URLdni=Reserva.getUrlDNI();
+          //  URLSalud=Reserva.getUrlBuenaSalud();
+           // System.out.println(URLSalud+"qwertyuiopñlkjhgfdsazxcvbnm");
             fecha=(TextView)findViewById(R.id.txtConsultaReservaCircuito);
             horapartida=(TextView)findViewById(R.id.txtConsutlaReservaHoraPartida);
             horallegada=(TextView)findViewById(R.id.txtConsutlaReservaHoraRegreso);
             deposito=(TextView)findViewById(R.id.txtConsutlaReservaDeposito);
             pendiente=(TextView)findViewById(R.id.txtConsutlaReservaPendiente);
             clientes=(ListView)findViewById(R.id.lvConsutlaReservaclientes);
-            caballos=(ListView)findViewById(R.id.lvConsutlaReservaCaballos);
+            usuario=(TextView)findViewById(R.id.textView9);
+            correo=(TextView)findViewById(R.id.txtCrr);
+
+            hospedaje=(TextView)findViewById(R.id.textView14h);
             descarga=(Button)findViewById(R.id.btDescargaConsultaReserva);
+            telefono=(TextView)findViewById(R.id.txttl);
+            procedencia=(TextView)findViewById(R.id.txtproc);
+            guia=(TextView)findViewById(R.id.textView11);
+            circuito=(TextView)findViewById(R.id.txtcirc);
             descarga.setOnClickListener(this);
             editar=(Button)findViewById(R.id.btEditarConsultaReserva);
             editar.setOnClickListener(this);
@@ -60,10 +74,23 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
             horallegada.setText(Reserva.getHoraFin());
             deposito.setText(Reserva.getDeposito());
             pendiente.setText(Reserva.getPendiente());
+            usuario.setText(Reserva.getUsuario());
+            guia.setText(Reserva.getGuia());
+
+            correo.setText(Reserva.getCorreo());
+            hospedaje.setText(Reserva.getHospedaje());
+            telefono.setText(Reserva.getTelefono());
+            procedencia.setText(Reserva.getProcedencia());
            // ArrayAdapter<objPersona> adapter=new ArrayAdapter<objPersona>(this.getApplicationContext(),R.layout.clientesadapter,Personalist);
-            adapter = new ListClientesAdpater(this,Personalist);
+
             clientes.setAdapter(adapter);
-            System.out.println(Reserva);
+if(Caballolist==null){
+
+}else {
+    caballos.setAdapter(adapter1);
+    System.out.println(Reserva);
+}
+
 
 
             //Reserva=parametros.getString("datos");

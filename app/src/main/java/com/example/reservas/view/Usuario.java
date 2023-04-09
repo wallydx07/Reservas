@@ -27,9 +27,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.example.reservas.MainActivity;
 import com.example.reservas.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,7 +46,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,8 +74,8 @@ public class Usuario extends Fragment implements View.OnClickListener{
     private final int SELECT_PICTURE = 300;
 
     private ImageView mSetImage;
-    private Button bottomGuardar;
-    EditText nameUser;
+    private Button bottomGuardar, buttoncerrar;
+    EditText nameUser, correo, pass;
     private RelativeLayout mRlView;
     private String mPath;
     private static final int PICK_IMAGE = 100;
@@ -104,32 +110,27 @@ public class Usuario extends Fragment implements View.OnClickListener{
         mDatabase = FirebaseDatabase.getInstance().getReference();
         System.out.println("el id es:"+ID);
         String finalID = ID;
-        mDatabase.child("guia").child(ID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    //Actualizar
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        System.out.println(ds.getKey());
-
-                   }
-                }else{
-                    //ingresar
-                    mDatabase.child("guia").child(finalID).child("nombre").setValue(nameUser.getText().toString());
-
-                }
-}
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }});
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("guia").child(finalID);
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("nombre", nameUser.getText().toString()  );
+        userRef.setValue(userData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // La operación se realizó con éxito
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Ocurrió un error al realizar la operación
+                    }
+                });
 
         String newName=String.valueOf(nameUser.getText());
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest
                     .Builder()
                     .setDisplayName(newName)
-                    .setPhotoUri(imageUri)
                     .build();
                 user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -145,21 +146,20 @@ public class Usuario extends Fragment implements View.OnClickListener{
                     // [END update_profile]
 
                 @SuppressLint("SetTextI18n")
-                public void getUserProfile (ImageView image, EditText nameUser){
+                public void getUserProfile (){
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
                         nameUser.setText(user.getDisplayName());
-                        Uri photoUrl = user.getPhotoUrl();
-                        System.out.println(photoUrl + "sfdhd7897898");
+                        correo.setText(user.getEmail());
+                     //   Uri photoUrl = user.getPhotoUrl();
+                      //  System.out.println(photoUrl + "sfdhd7897898");
                         //mSetImage.setImageURI(photoUrl);
 
 // Check if user's email is verified
                         boolean emailVerified = user.isEmailVerified();
                         String uid = user.getUid();
-                        System.out.println("fghjhgfdf0dsfhgnh111111111111111dgfdsah");
                     } else {
                         System.out.println("fghjhgfdf0dsfhgnhdgfdsah");
-                        // [END get_user_profile]
                     }
                 }
 
@@ -171,21 +171,50 @@ public class Usuario extends Fragment implements View.OnClickListener{
                     mSetImage = v.findViewById(R.id.userViewUser);
                     bottomGuardar = v.findViewById(R.id.buttonGuardar);
                     bottomGuardar.setOnClickListener(this);
+                    buttoncerrar = v.findViewById(R.id.buttonCerrarSecion);
+                    buttoncerrar.setOnClickListener(this);
                     nameUser = v.findViewById(R.id.txtUser);
-                    mSetImage.setOnClickListener(this);
-                    getUserProfile(mSetImage, nameUser);
+                    correo= v.findViewById(R.id.editTextTextEmailAddress);
+                    pass= v.findViewById(R.id.editTextNumberPassword);
+                   // mSetImage.setOnClickListener(this);
+                    getUserProfile();
                     return v;//muy impoortante
                 }
                 @Override
                 public void onClick (View view){
                     switch (view.getId()) {
                         case R.id.userViewUser:
-                            showOptions();
+                         //   showOptions();
                             break;
                         case R.id.buttonGuardar:
                             updateProfile();
+                            updateEmail ();
+                            String ps=pass.getText().toString();
+                            if(ps.isEmpty()){
+
+                            }else{
+                                if (ps.length()<6) {
+                                    Toast.makeText(getContext(), "Contraseña debe ser mayor a 6 numeros", Toast.LENGTH_SHORT).show();
+
+                                }else {
+                                    updatePassword (ps);
+                                }
 
 
+
+
+
+
+                            }
+
+
+                            break;
+                        case R.id.buttonCerrarSecion:
+                            FirebaseAuth.getInstance().signOut();
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            getActivity().finish();
                             break;
                     }
                 }
@@ -239,7 +268,7 @@ public class Usuario extends Fragment implements View.OnClickListener{
                     // [START update_email]
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                    user.updateEmail("user@example.com")
+                    user.updateEmail(correo.getText().toString())
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -250,17 +279,18 @@ public class Usuario extends Fragment implements View.OnClickListener{
                             });
                     // [END update_email]
                 }
-                public void updatePassword () {
+                public void updatePassword (String p) {
                     // [START update_password]
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    String newPassword = "SOME-SECURE-PASSWORD";
-
+                    String newPassword = p;
                     user.updatePassword(newPassword)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         Log.d(TAG, "User password updated.");
+                                    }else {
+                                        Log.w(TAG, "Error updating password.", task.getException());
                                     }
                                 }
                             });

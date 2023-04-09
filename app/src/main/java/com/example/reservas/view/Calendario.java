@@ -39,19 +39,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Calendario#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Calendario extends Fragment {
     ListCalendarioAdapter adapter;
     private int dia, mes, año;
     private TextView textview;
     private ListView listview;
+    private Button botonBorrar;
     private View v;
-    private String horasTV[]={"7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"};
-private Spinner spinGuia;
+    private String horasTV[]={"0:00","1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00",};
+    private Spinner spinGuia;
     List<objReserva> Reservalist;
     String formattedDate;
     DatabaseReference mDatabase;
@@ -246,15 +242,9 @@ private Spinner spinGuia;
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
-
-                        System.out.println(ds.child("fecha").getValue().toString());
-                        System.out.println(fecha);
-                        System.out.println("qwerty7777777777777777777");
                         String guia = ds.child("guia").getValue().toString();
-
                         try {
                             if (guia.equals(spinGuia.getSelectedItem().toString())) {
-
                                 System.out.println(ds.getKey());
                                 List<objPersona> plist = new ArrayList<>();
                                 String fecha=ds.child("fecha").getValue().toString();
@@ -262,7 +252,6 @@ private Spinner spinGuia;
                                 String correo = ds.child("correo").getValue().toString();
                                 String urlBuenaSalud=ds.child("urlBuenaSalud").getValue().toString();
                                 String urlDNI=ds.child("urlDNI").getValue().toString();
-
                                 String usuario = ds.child("usuario").getValue().toString();
                                 String hospedaje = ds.child("hospedaje").getValue().toString();
                                 String telefono = ds.child("telefono").getValue().toString();
@@ -270,7 +259,7 @@ private Spinner spinGuia;
                                 String horaFin = ds.child("horaFin").getValue().toString();
                                 String circuito = ds.child("circuito").getValue().toString();
                                 String deposito= ds.child("deposito").getValue().toString();
-
+                                String procedencia= ds.child("procedencia").getValue().toString();
                                 String pendiente = ds.child("pendiente").getValue().toString();
                                 for (DataSnapshot dsi : ds.child("personalist").getChildren()) {
                                     String nombre = dsi.child("nombre").getValue().toString();
@@ -279,20 +268,17 @@ private Spinner spinGuia;
                                     String tipo = dsi.child("tipo").getValue().toString();
                                     plist.add(new objPersona(nombre, dni, fechaN, tipo));
                                 }
-                                objReserva Res=new objReserva(fecha, hora0, horaFin, correo, telefono, hospedaje, usuario, guia, circuito, plist, null,pendiente,deposito);
+                                objReserva Res=new objReserva(fecha, hora0, horaFin, correo, telefono, hospedaje, usuario, guia, circuito, plist, null,pendiente,deposito,procedencia);
                                 Res.setUrlDNI(urlDNI);
                                 System.out.println(urlBuenaSalud);
                                 Res.setUrlBuenaSalud(urlBuenaSalud);
                                 rlist.add(Res);
-
-
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 }else{
-
                     System.out.println("no se ha enctrado nadi aca");
                 }
                 BurbujaColObj(rlist);
@@ -330,9 +316,8 @@ private Spinner spinGuia;
                             Bundle datoenvia = new Bundle();
                             objReserva Reserva=Reservalist.get(i);
                             datoenvia.putString("datos", textItemList);
-
                             Intent intent = new Intent(getActivity(), ConsultaReserva.class);
-                            //  intent.putExtras(datoenvia);
+                            //intent.putExtras(datoenvia);
                             intent.putExtra("reserva", Reserva);
                             startActivity(intent);
 
@@ -369,7 +354,6 @@ pguia.add(usuariuo);
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         String nombre = ds.child("nombre").getValue().toString();
                         if(!(nombre.equals(usuariuo))) {
-
                             pguia.add(nombre);
                             System.out.println("pguia es: " + nombre);
                         }

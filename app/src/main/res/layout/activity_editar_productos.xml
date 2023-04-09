@@ -7,45 +7,64 @@
     tools:context=".view.Nuevo_Producto">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.497">
+
+
+
+
+
+
+
+
     <EditText
         android:id="@+id/txtEditarProducto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Nombre Del servicio"
-        app:layout_constraintBottom_toTopOf="@+id/txtEditarPrecio"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.836" />
+        android:hint="Nombre Del servicio"
+        tools:layout_editor_absoluteX="100dp"
+        tools:layout_editor_absoluteY="191dp"
+        android:layout_marginTop="15dp"/>
 
-    <Button
-        android:id="@+id/bottonEditarProducto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/green"
-        android:text="Guardar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.535"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.809" />
+        <EditText
+            android:id="@+id/txtEditarPrecio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="114dp"
+            android:hint="Precio"
+            android:layout_marginTop="15dp"/>
+        <EditText
+            android:id="@+id/txtEditarDescripcion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="114dp"
+            android:hint="Precio"
+            android:layout_marginTop="15dp"/>
 
-    <EditText
-        android:id="@+id/txtEditarPrecio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="140dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/bottonGuardarProducto"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/bottonGuardarP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/green"
+            android:text="Guardar"
+            tools:layout_editor_absoluteX="153dp"
+            tools:layout_editor_absoluteY="300dp"
+            android:layout_marginTop="15dp"/>
 
-
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

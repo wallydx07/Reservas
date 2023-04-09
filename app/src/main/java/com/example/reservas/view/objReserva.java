@@ -18,6 +18,21 @@ public class objReserva implements Serializable {
     String UrlDNI;
     String pendiente;
     String deposito;
+    String procedencia;
+
+    public void setProcedencia(String procedencia) {
+        this.procedencia = procedencia;
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
+
+    String total;
     List<objPersona> Personalist;
     List<obProductos> Caballolist;
 
@@ -45,7 +60,7 @@ public class objReserva implements Serializable {
         UrlDNI = urlDNI;
     }
 
-    public objReserva(String fecha, String horaInicio, String horaFin, String correo, String telefono, String hospedaje, String usuario, String guia, String circuito, List<objPersona> personalist, List<obProductos> caballolist,String pendiente,String deposito) {
+    public objReserva(String fecha, String horaInicio, String horaFin, String correo, String telefono, String hospedaje, String usuario, String guia, String circuito, List<objPersona> personalist, List<obProductos> caballolist,String pendiente,String deposito, String procedencia) {
         this.fecha = fecha;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
@@ -59,6 +74,15 @@ public class objReserva implements Serializable {
         this.circuito = circuito;
         Personalist = personalist;
         Caballolist = caballolist;
+        this.procedencia=procedencia;
+    }
+
+    public String getProcedencia() {
+        return procedencia;
+    }
+
+    public void setPrecedencia(String precedencia) {
+        this.procedencia = precedencia;
     }
 
     public objReserva() {
