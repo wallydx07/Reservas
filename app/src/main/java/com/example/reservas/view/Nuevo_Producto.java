@@ -67,16 +67,6 @@ public class Nuevo_Producto extends AppCompatActivity implements View.OnClickLis
 
                 }
 
-
-
-
-
-
-
-
-
-
-
                break;
 
         }

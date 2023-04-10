@@ -190,10 +190,10 @@
 
 
             <TextView
-                android:id="@+id/txttl"
+                android:id="@+id/textView14h"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="Hospedaje:"
                 android:textSize="16sp" />
 
             <TextView
@@ -216,16 +216,16 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textView14h"
-                android:layout_width="90dp"
-                android:layout_height="wrap_content"
-                android:text="Hospedaje:"
-                android:textSize="16sp" />
-
 
             <TextView
                 android:id="@+id/txtHospedaje"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:text="Hospedaje"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txttl"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:text="TextView"
@@ -270,7 +270,7 @@
 
         <ListView
             android:id="@+id/lvConsutlaReservaCaballos"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="154dp" />
 
         <LinearLayout
@@ -284,7 +284,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="editar"
-                android:visibility="invisible"/>
+                android:visibility="visible"/>
 
             <Button
                 android:id="@+id/btEliminarConsultaReserva"

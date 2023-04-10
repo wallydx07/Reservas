@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,6 +38,8 @@ import android.widget.Toast;
 import com.example.reservas.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -78,6 +81,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     EditText nombre,dni,fechanNacimiento, total, anticipo, pendiente, etFecha;
     String correo,telefono,hospedaje, procedencia;
     ListView datoscaballos;
+    adapterCaballo adaptercaballo;
     DatabaseReference mDatabase;
     private ProgressBar miprogress;
     private ObjectAnimator anim;
@@ -128,20 +132,21 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         guia=((nuevaReserva)this.getActivity()).guia;
         user = FirebaseAuth.getInstance().getCurrentUser();
         super.onCreate(savedInstanceState);
-        personalist = new ArrayList<>();
+       // personalist = new ArrayList<>();
+       // personalist=((nuevaReserva)this.getActivity()).personafinal;
         mDatabase= FirebaseDatabase.getInstance().getReference();
         cabalgatalist=new ArrayList<>();
-        getParentFragmentManager().setFragmentResultListener("key",this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                String nombreO=result.getString("nombre");
-                String dni=result.getString("dni");
-                String nacimineto=result.getString("nacimiento");
-                persona=new objPersona(nombreO,dni,nacimineto,"Cliente");
-                personalist.add(persona);
-                System.out.println("se agrego nueov");
-                }
-        });
+      ///  getParentFragmentManager().setFragmentResultListener("key",this, new FragmentResultListener() {
+          //  @Override
+          //  public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+           //     String nombreO=result.getString("nombre");
+           //     String dni=result.getString("dni");
+          //      String nacimineto=result.getString("nacimiento");
+         //       persona=new objPersona(nombreO,dni,nacimineto,"Cliente");
+       //         personalist.add(persona);
+       //         System.out.println("se agrego nueov");
+        //        }
+      //  });
         getParentFragmentManager().setFragmentResultListener("K",this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
@@ -188,6 +193,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 loadcircuito();
+                loadcaballo();
                 System.out.println("sew ha llamado a loadcircuito");
             }
 
@@ -200,7 +206,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
            @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 loadcircuito();
-            }
+               loadcaballo();
+           }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -211,6 +218,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 loadcircuito();
+                loadcaballo();
             }
 
             @Override
@@ -247,6 +255,38 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         });
 */
 
+
+
+
+        if(((nuevaReserva)getActivity()).bandera.equals("editar")){
+
+            cabalgatalist=((nuevaReserva)getActivity()).reserva.getCaballolist();
+            anticipo.setText(((nuevaReserva)getActivity()).reserva.getDeposito());
+            pendiente.setText(((nuevaReserva)getActivity()).reserva.getPendiente());
+            total.setText(((nuevaReserva)getActivity()).reserva.getTotal());
+
+            if(cabalgatalist!=null){
+                adaptercaballo = new adapterCaballo(getContext(), cabalgatalist);
+                //ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.cabaloadapter, cabalgatalist);
+                datoscaballos.setAdapter(adaptercaballo);
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         loadproducto();
         loadGuias();
         loadcaballo();
@@ -281,8 +321,11 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                         cabalgata.add(productosss);
                     }
                 }
-                ArrayAdapter<obProductos> adapter=new ArrayAdapter<obProductos>(getActivity().getApplicationContext(),R.layout.listview_item,cabalgata);
-                datoscaballos.setAdapter(adapter);
+
+
+               // ArrayAdapter<obProductos> adapter=new ArrayAdapter<obProductos>(getActivity().getApplicationContext(),R.layout.listview_item,cabalgata);
+                adaptercaballo = new adapterCaballo(getContext(), cabalgata);
+                datoscaballos.setAdapter(adaptercaballo);
                 break;
             case R.id.btBuenaSaludReservaDeProducto:
                 System.out.println("accionaste el boton salud");
@@ -294,27 +337,34 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 break;
             case R.id.buttonReservaProductoFinalizar:
 
+                personalist=((nuevaReserva)this.getActivity()).personafinal;
+                System.out.println("finalreser");
+                System.out.println("============="+personalist.size()+"==========");
+
                String pend=pendiente.getText().toString();
                 String tot=total.getText().toString();
                 String ant=anticipo.getText().toString();
                 String hora0=spinhoraInicio.getSelectedItem().toString();
                 String hora1=spinhoraFin.getSelectedItem().toString();
-
-
                 if (pend.isEmpty() || tot.isEmpty() ||ant.isEmpty()) {
                     Toast.makeText(getContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
-
-
 
                 }else {
                    // int Fin=Transforma(spinhoraFin.getSelectedItem().toString());
                  //   Fin=Transforma(horaInicio)+Fin;
+
                     objReserva reserva=new objReserva(fecha, hora0, hora1,  correo,  telefono,  hospedaje,   user.getDisplayName(),guia, spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist,pend,ant,procedencia);
                     reserva.setTotal(tot);
                     //  Subir("Salud", imageuri, reserva.nombreTitular(), reserva);
                     reserva.setUrlBuenaSalud("---");
                     reserva.setUrlDNI("---");
-                    writeNewReserva(reserva);
+                    if(((nuevaReserva)getActivity()).bandera.equals("editar")){
+                        updateReserva(((nuevaReserva)getActivity()).reserva.getID(),reserva);
+                    }else{
+                        writeNewReserva(reserva);
+                    }
+
+
                 }
 
 
@@ -347,6 +397,29 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         mDatabase.child("reserva").push().setValue(reserva);
         requireActivity().finish();
     }
+
+
+    private void updateReserva(String reservaKey, objReserva updatedReserva) {
+        mDatabase.child("reserva").child(reservaKey).setValue(updatedReserva)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Reserva actualizada exitosamente
+                        requireActivity().finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Error al actualizar la reserva
+                        Toast.makeText(requireContext(), "Error al actualizar la reserva", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+
+
     public int Transforma(String Hora){
         int fin=0;
         try {
@@ -399,14 +472,17 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
        // spinCaballo.setAdapter(null);
         String h1=spinhoraInicio.getSelectedItem().toString();
         String h2=spinhoraFin.getSelectedItem().toString();
-        String f=etFecha.toString();
+        String f=etFecha.getText().toString();
         final List<obProductos> pcabalgata = new ArrayList<>();
       //  pcircuito = new ArrayList<>();
+        System.out.println("antes de mdatabse_______________________");
         mDatabase.child("reserva").orderByChild("fecha").equalTo(f).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println("sepaso el override_______________________");
+                System.out.println("Número de datos encontrados en la búsqueda: " + snapshot.getChildrenCount());
                 if (snapshot.exists()) {//ver
-
+                    System.out.println("el porducto existe_______________________");
                     String precio = "0";
                     String tipo = "";
                     String caballonombre = "";
@@ -442,13 +518,13 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                             e.printStackTrace();
                         }
                         if(hora1<hora2) {
-
-                            if ((H1< hora1 && H2 > hora1) || (H1 > hora1 && H1 < hora2) || (H2 > hora1 && H2 < hora2)) {
+                            if ((H1< hora1 && H2 > hora1) || (H1 > hora1 && H1 < hora2) || (H2 > hora1 && H2 < hora2)) {//hay citas dentro de ese rango
                                 for (DataSnapshot dsi : ds.child("caballolist").getChildren()) {
                                     try {
                                         caballonombre = dsi.child("nombre").getValue().toString();
                                         precio = dsi.child("precio").getValue().toString();
                                         tipo = dsi.child("tipo").getValue().toString();
+                                        System.out.println("____________________caballo ---"+caballonombre+"NO disponbler");
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -461,37 +537,20 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                         }
                     }
 
+
                     boolean disponible = true;
-                    List<obProductos> auxadapter = new ArrayList<>();
-                    for (int i = 0; i < cabalgatalist.size(); i++) {
-                        obProductos auxpro = cabalgatalist.get(i);
-                        for (int j = 0; j < pcabalgata.size(); j++) {
-                            obProductos auxpro1 = pcabalgata.get(j);
-                            if ((auxpro.getNombre()).equals(auxpro1.getNombre())) {
-                                disponible = false;
-                            } else {
-                                disponible = true;
-                            }
-
-                        }
-                        if (disponible) {
-                            auxadapter.add(auxpro);
-                        }
-
-                    }
+                    List<obProductos> auxadapter = new ArrayList<>(cabalgatalist);
+                    auxadapter.removeAll(pcabalgata);
                     ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, auxadapter);
                     spinCaballo.setAdapter(adaptercaballo);
 
 
 
-                }else{
 
+                }else{
+                    System.out.println("no existe_______________________");
                     ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getActivity().getApplication(), android.R.layout.simple_dropdown_item_1line, cabalgatalist);
                     spinCaballo.setAdapter(adaptercaballo);
-
-
-
-
             }
                 }
 
@@ -500,11 +559,6 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
             }
         });
-
-
-
-
-
     }
     public void loadcircuito() {
         String h11=spinhoraInicio.getSelectedItem().toString();
@@ -668,6 +722,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+        loadcaballo();
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -758,6 +813,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         //,dia,mes,año);
         datePickerDialog.show();
         loadcircuito();
+        loadcaballo();
 
 
     }

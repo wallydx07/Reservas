@@ -25,7 +25,7 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
     List<objPersona> Personalist;
     objPersona persona;
     ListViewAdapter adapter1;
-   // ListClientesAdpater adapter;
+    ListClientesAdpater adapter;
     ListView lista;
     Bundle bundle;
     reservaDProductoFragment fragment;
@@ -45,6 +45,8 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = new Bundle();
+        Personalist = new ArrayList<>();
+
     //    fragment = new reservaDProductoFragment();
 
 
@@ -68,9 +70,23 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
         agregar=v.findViewById(R.id.bottomDatosnAgregar);
         //agregar.setOnClickListener(this);
         agregar.setOnClickListener(((nuevaReserva)this.getActivity()));
-        Personalist = new ArrayList<>();
         lista =v.findViewById(R.id.listViewDatosClientes);
-        //lista.setAdapter(adapter);
+        if(((nuevaReserva)getActivity()).bandera.equals("editar")){
+            Personalist=((nuevaReserva)getActivity()).getPersonalist();
+            correo.setText(((nuevaReserva)getActivity()).reserva.getCorreo());
+            hospedaje.setText(((nuevaReserva)getActivity()).reserva.getHospedaje());
+            telefono.setText(((nuevaReserva)getActivity()).reserva.getTelefono());
+            procedencia.setText(((nuevaReserva)getActivity()).reserva.getProcedencia());
+        }
+
+
+
+        if(!Personalist.isEmpty()){
+            adapter = new ListClientesAdpater(getContext(), Personalist);
+        }
+        if (adapter!=null){
+            lista.setAdapter(adapter);
+        }
         return v;
     }
 

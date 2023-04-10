@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class objCaballo implements Serializable {
     String nombre;
-    int precio;
+    String precio;
 
-    public objCaballo(String nombre, int precio) {
+    public objCaballo(String nombre, String precio) {
         this.nombre = nombre;
         this.precio = precio;
     }
@@ -19,11 +19,11 @@ public class objCaballo implements Serializable {
         this.nombre = nombre;
     }
 
-    public int getPrecio() {
+    public String getPrecio() {
         return precio;
     }
 
-    public void setPrecio(int precio) {
+    public void setPrecio(String precio) {
         this.precio = precio;
     }
 }

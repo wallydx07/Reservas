@@ -159,39 +159,22 @@ public class Producto extends Fragment implements View.OnClickListener{
                             return false;
                         }
                     });
-
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
-
     }
-
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.floatingActionButton2:
                 Intent intent=new Intent(getActivity(), Nuevo_Producto.class);
                 startActivity(intent);
-
                 break;
-
         }
     }
-
-
-
-
-
-
-
-
-
     }
 
 

@@ -1,6 +1,8 @@
 package com.example.reservas.view;
 
-public class obProductos {
+import java.io.Serializable;
+
+public class obProductos implements Serializable {
     String Nombre;
     String Precio;
     String tipo;

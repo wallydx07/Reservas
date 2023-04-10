@@ -6,12 +6,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
@@ -19,6 +21,7 @@ import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.example.reservas.view.Calendario;
 import com.example.reservas.view.Producto;
 import com.example.reservas.view.Usuario;
+import com.example.reservas.view.losspasw;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,19 +34,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
-      Button buttoniniciarsecion;
-      Calendario calendario= new Calendario();
-      Producto producto= new Producto();
-      Usuario usuario=new Usuario();
+    Button buttoniniciarsecion;
+    Calendario calendario= new Calendario();
+    Producto producto= new Producto();
+    Usuario usuario=new Usuario();
      AwesomeValidation awesomevalidation;
      FirebaseAuth firebasauth;
      EditText email,password;
+     TextView signupTextView;
 
 
    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       FirebaseDatabase.getInstance().setPersistenceEnabled(false);
+       FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         firebasauth=FirebaseAuth.getInstance();
        awesomevalidation=new AwesomeValidation(ValidationStyle.BASIC);
        inicialize();
@@ -64,6 +68,18 @@ public class MainActivity extends AppCompatActivity {
             email = (EditText) findViewById(R.id.Email);
             password = (EditText) findViewById(R.id.Password);
             buttoniniciarsecion = (Button) findViewById(R.id.buttoniniciarsesion);
+            signupTextView = (TextView) findViewById(R.id.signupTextView);
+            signupTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), losspasw.class);
+                    startActivity(intent);
+
+
+                }
+            });
+
+
             buttoniniciarsecion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -132,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
         public void onclick(View view) {
+
             String Semail=(String.valueOf(email.getText()));
             String Spassword=(String.valueOf(password.getText()));
             firebasauth.signInWithEmailAndPassword(Semail,Spassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -147,8 +164,6 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(errocode);
                         mError(errocode);
                                             }
-
-
                 }
             });
 

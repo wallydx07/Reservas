@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -30,7 +31,16 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
     objReserva reserva;
     objPersona persona;
     ListViewAdapter adapter1;
-    List<objPersona> Personalist;
+    String bandera;
+    public List<objPersona> getPersonalist() {
+        return Personalist;
+    }
+
+    public void setPersonalist(List<objPersona> personalist) {
+        Personalist = personalist;
+    }
+
+    List<objPersona> Personalist, personafinal;
     Button siguiente;
     ListClientesAdpater adapter;
 
@@ -45,8 +55,15 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
             super.onCreate(savedInstanceState);
         loadFragment(cliente);
         Bundle parametros = this.getIntent().getExtras();
+        // setContentView(R.layout.nuevareserva);
+        setContentView(R.layout.nuevares);
+        tNombre=(EditText)findViewById(R.id.txtDatosApellidoyNombre);
+       // pers=(ListView)findViewById(R.id.listViewDatosClientes);
+        Personalist = new ArrayList<objPersona>();
         if(parametros !=null) {
-            String bandera=parametros.getString("bandera");
+
+            bandera=parametros.getString("bandera");
+
             if(bandera.equals("reserva")) {
                 horaInicio = parametros.getString("horaInicio");
                 System.out.println("______________________________"+horaInicio+"______________________________");
@@ -59,15 +76,16 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
                 fecha = reserva.getFecha();
                 guia = reserva.getGuia();
                 Personalist=reserva.getPersonalist();
-                adapter = new ListClientesAdpater(cliente.getContext(), Personalist);
-
+                cliente.Personalist=Personalist;
+               // adapter = new ListClientesAdpater(cliente.getContext(), Personalist);
+               // if (cliente.lista != null) {
+              //  adapter = new ListClientesAdpater(cliente.getContext(), Personalist);
+              //      cliente.lista.setAdapter(adapter);
+              //  }
             }
 
         }
-           // setContentView(R.layout.nuevareserva);
-        setContentView(R.layout.nuevares);
-        tNombre=(EditText)findViewById(R.id.txtDatosApellidoyNombre);
-        Personalist = new ArrayList<objPersona>();
+
 
 
 
@@ -80,16 +98,23 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
 
     }
     public void mandarlist(){
+
+        personafinal=new ArrayList<objPersona>();
         objPersona persona1;
         ListClientesAdpater adapter1 = (ListClientesAdpater) cliente.lista.getAdapter();
         if (adapter1 != null) {
             List<objPersona> allData =adapter1.getData();
             for (int i = 0; i < adapter1.getCount(); i++) {
+
                 persona1=allData.get(i);
                 String nombre= persona1.getNombre();
                 String DNI=persona1.getDni();
                 String fNacimiento=persona1.getFechaN();
-                cliente.bund(nombre,DNI,fNacimiento);
+                personafinal.add(new objPersona(nombre,DNI,fNacimiento,"Cliente"));
+
+
+               // cliente.bund(nombre,DNI,fNacimiento);
+                System.out.println("=============="+i+"-"+nombre+"=============");
             }
         }
     }
@@ -126,9 +151,7 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
                 if (nombre.isEmpty() || DNI.isEmpty() ||fNacimiento.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
 
-                }else {
-
-
+                }else{
                     persona=new objPersona(nombre,DNI,fNacimiento,"cliente");
                     //    cliente.bund(nombre,DNI,fNacimiento);
                     Personalist.add(persona);

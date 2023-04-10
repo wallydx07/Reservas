@@ -15,7 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Reservas"
         tools:targetApi="31">
-           <activity
+        <activity
+            android:name=".adapterCaballo"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
@@ -27,14 +30,19 @@
         </activity>
         <activity
             android:name=".view.nuevaReserva"
-            android:windowSoftInputMode="adjustResize"
-            />
-        <activity android:name=".view.Nuevo_Producto"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".view.EditarProductos"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".view.ConsultaReserva"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.losspasw"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.Nuevo_Producto"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.EditarProductos"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.ConsultaReserva"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

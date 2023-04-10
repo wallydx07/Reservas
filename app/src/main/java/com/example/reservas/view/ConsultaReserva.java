@@ -15,6 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.reservas.R;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -37,7 +40,6 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_consulta_reserva);
         Bundle parametros = this.getIntent().getExtras();
         if(parametros !=null){
-
             String datos = parametros.getString("datos");
             Reserva  = (objReserva) getIntent().getSerializableExtra("reserva");
             Personalist=Reserva.getPersonalist();
@@ -57,7 +59,6 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
             clientes=(ListView)findViewById(R.id.lvConsutlaReservaclientes);
             usuario=(TextView)findViewById(R.id.textView9);
             correo=(TextView)findViewById(R.id.txtCrr);
-
             hospedaje=(TextView)findViewById(R.id.textView14h);
             descarga=(Button)findViewById(R.id.btDescargaConsultaReserva);
             telefono=(TextView)findViewById(R.id.txttl);
@@ -76,7 +77,6 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
             pendiente.setText(Reserva.getPendiente());
             usuario.setText(Reserva.getUsuario());
             guia.setText(Reserva.getGuia());
-
             correo.setText(Reserva.getCorreo());
             hospedaje.setText(Reserva.getHospedaje());
             telefono.setText(Reserva.getTelefono());
@@ -127,7 +127,6 @@ if(Caballolist==null){
 
                 break;
             case R.id.btEditarConsultaReserva:
-
                 Intent intent = new Intent(this, nuevaReserva.class);
                 intent.putExtra("reserva", Reserva);
                 Bundle datoenvia = new Bundle();
@@ -135,9 +134,24 @@ if(Caballolist==null){
                 intent.putExtras(datoenvia);
                 startActivity(intent);
                 finish();
-
                 break;
             case R.id.btEliminarConsultaReserva:
+                DatabaseReference registroRef = FirebaseDatabase.getInstance().getReference("reserva/"+Reserva.getID());
+
+// Eliminar el registro
+                registroRef.removeValue(new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError error, DatabaseReference ref) {
+                        if (error == null) {
+                            System.out.println("Registro eliminado exitosamente.");
+                        } else {
+                            System.out.println("Error al eliminar el registro: " + error.getMessage());
+                        }
+                    }
+                });
+
+                finish();
+
 
                 break;
 

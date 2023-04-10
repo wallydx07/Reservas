@@ -9,10 +9,11 @@ android:gravity="center">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_launcher_foreground" />
+        android:background="@drawable/paraisio" />
 
     <EditText
         android:id="@+id/Email"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -25,6 +26,7 @@ android:gravity="center">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:layout_gravity="center_horizontal"
         android:hint="Password"
         android:inputType="textPassword" />
 
@@ -36,5 +38,15 @@ android:gravity="center">
         android:layout_marginTop="32dp"
         android:background="@color/green"
         android:text="Iniciar Sesión" />
+
+    <TextView
+        android:id="@+id/signupTextView"
+        android:layout_marginTop="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¿Olvidaste tu contraseña?"
+        android:textStyle="italic"
+        android:gravity="center"
+        android:textColor="@color/black" />
 
 </LinearLayout>

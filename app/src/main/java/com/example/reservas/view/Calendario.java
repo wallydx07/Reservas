@@ -247,6 +247,8 @@ public class Calendario extends Fragment {
                             if (guia.equals(spinGuia.getSelectedItem().toString())) {
                                 System.out.println(ds.getKey());
                                 List<objPersona> plist = new ArrayList<>();
+                                List<obProductos> clist = new ArrayList<>();
+
                                 String fecha=ds.child("fecha").getValue().toString();
                                 String hora = ds.child("horaInicio").getValue().toString();
                                 String correo = ds.child("correo").getValue().toString();
@@ -268,8 +270,25 @@ public class Calendario extends Fragment {
                                     String tipo = dsi.child("tipo").getValue().toString();
                                     plist.add(new objPersona(nombre, dni, fechaN, tipo));
                                 }
-                                objReserva Res=new objReserva(fecha, hora0, horaFin, correo, telefono, hospedaje, usuario, guia, circuito, plist, null,pendiente,deposito,procedencia);
+                                for (DataSnapshot dsi : ds.child("caballolist").getChildren()) {
+                                    String nombre = dsi.child("nombre").getValue().toString();
+                                    String precio = dsi.child("precio").getValue().toString();
+                                    obProductos cab=new obProductos(nombre,precio,"caballo");
+                                    clist.add(cab);
+                                }
+                                System.out.println("=============="+clist.size()+"===============");
+
+
+
+
+
+
+
+
+
+                                objReserva Res=new objReserva(fecha, hora0, horaFin, correo, telefono, hospedaje, usuario, guia, circuito, plist, clist,pendiente,deposito,procedencia);
                                 Res.setUrlDNI(urlDNI);
+                                Res.setID(ds.getKey());
                                 System.out.println(urlBuenaSalud);
                                 Res.setUrlBuenaSalud(urlBuenaSalud);
                                 rlist.add(Res);
@@ -317,7 +336,7 @@ public class Calendario extends Fragment {
                             objReserva Reserva=Reservalist.get(i);
                             datoenvia.putString("datos", textItemList);
                             Intent intent = new Intent(getActivity(), ConsultaReserva.class);
-                            //intent.putExtras(datoenvia);
+                            intent.putExtras(datoenvia);
                             intent.putExtra("reserva", Reserva);
                             startActivity(intent);
 
@@ -325,9 +344,6 @@ public class Calendario extends Fragment {
                         Toast.makeText(getContext(), "presiono " + i, Toast.LENGTH_SHORT).show();
                     }
                 });
-                //==========================================
-
-                        //===================================
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
