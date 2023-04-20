@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Reservas"
         tools:targetApi="31">
         <activity
+            android:name=".consultaHorario"
+            android:exported="false" />
+        <activity
             android:name=".adapterCaballo"
             android:exported="false" />
         <activity

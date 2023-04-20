@@ -72,9 +72,9 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
             }
             if(bandera.equals("editar")){
                 reserva  = (objReserva) getIntent().getSerializableExtra("reserva");
-                horaInicio =reserva.getHoraInicio();
-                fecha = reserva.getFecha();
-                guia = reserva.getGuia();
+               // horaInicio =reserva.getHoraInicio();
+               // fecha = reserva.getFecha();
+               // guia = reserva.getGuia();
                 Personalist=reserva.getPersonalist();
                 cliente.Personalist=Personalist;
                // adapter = new ListClientesAdpater(cliente.getContext(), Personalist);

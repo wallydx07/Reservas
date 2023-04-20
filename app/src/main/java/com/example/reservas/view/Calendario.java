@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,7 +49,7 @@ public class Calendario extends Fragment {
     private View v;
     private String horasTV[]={"0:00","1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00",};
     private Spinner spinGuia;
-    List<objReserva> Reservalist;
+    List<objHorario> horariolist;
     String formattedDate;
     DatabaseReference mDatabase;
     reservaDProductoFragment fragment;
@@ -119,21 +120,21 @@ public class Calendario extends Fragment {
     }
 
 
-    public static void BurbujaColObj(List<objReserva> reservador) {
-        objReserva aux;
-        for(int i = 0;i < reservador.size()-1;i++){
-            for(int j = 0;j < reservador.size()-i-1;j++){
+    public static void BurbujaColObj(List<objHorario> citas) {
+        objHorario aux;
+        for(int i = 0;i < citas.size()-1;i++){
+            for(int j = 0;j < citas.size()-i-1;j++){
 
                 try {
                     DateFormat inFormat = new SimpleDateFormat("HH:mm");
-                    Date horainicio = inFormat.parse(reservador.get(j+1).getHoraInicio());
-                    Date horafin = inFormat.parse(reservador.get(j).getHoraInicio());
+                    Date horainicio = inFormat.parse(citas.get(j+1).getHoraInicio());
+                    Date horafin = inFormat.parse(citas.get(j).getHoraInicio());
                     long hora1 = horainicio.getTime();
                     long hora2 = horafin.getTime();
                     if(hora1 < hora2){
-                        aux = reservador.get(j+1);
-                        reservador.set(j+1,reservador.get(j));
-                        reservador.set(j,aux);
+                        aux = citas.get(j+1);
+                        citas.set(j+1,citas.get(j));
+                        citas.set(j,aux);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -196,18 +197,18 @@ public class Calendario extends Fragment {
         }
         return fin;
     }
-    public List<objReserva> acomodar(List<objReserva> res){
+    public List<objHorario> acomodar(List<objHorario> res){
 
-        List<objReserva> aux= new ArrayList<objReserva>();
+        List<objHorario> aux= new ArrayList<objHorario>();
         for(int f=0;f<horasTV.length;f++) {
             aux.add(null);
         }
-        List<objReserva> Reservas1 = res;
+        List<objHorario> Reservas1 = res;
         String inicio="00:00";
         String fin="00:00";
         for( int i=0;i<res.size();i++){
             System.out.println(i+"_");
-            objReserva reser = null;
+            objHorario reser = null;
             try {
                 reser = Reservas1.get(i);
                 inicio=reser.getHoraInicio();
@@ -233,11 +234,12 @@ public class Calendario extends Fragment {
     public void loadHoras() {
         String fecha=textview.getText().toString();
         final List<objReserva>rlist = new ArrayList<>();
+        final List<objHorario> hlist = new ArrayList<>();
         final ListView lista =v.findViewById(R.id.lvCalendarioHoras);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         System.out.println(fecha+
         "qwerty44444");
-        mDatabase.child("reserva").orderByChild("fecha").equalTo(fecha).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("cita").orderByChild("fecha").equalTo(fecha).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -245,53 +247,52 @@ public class Calendario extends Fragment {
                         String guia = ds.child("guia").getValue().toString();
                         try {
                             if (guia.equals(spinGuia.getSelectedItem().toString())) {
-                                System.out.println(ds.getKey());
+                                String hID=ds.getKey();
+
                                 List<objPersona> plist = new ArrayList<>();
                                 List<obProductos> clist = new ArrayList<>();
-
                                 String fecha=ds.child("fecha").getValue().toString();
-                                String hora = ds.child("horaInicio").getValue().toString();
-                                String correo = ds.child("correo").getValue().toString();
-                                String urlBuenaSalud=ds.child("urlBuenaSalud").getValue().toString();
-                                String urlDNI=ds.child("urlDNI").getValue().toString();
-                                String usuario = ds.child("usuario").getValue().toString();
-                                String hospedaje = ds.child("hospedaje").getValue().toString();
-                                String telefono = ds.child("telefono").getValue().toString();
-                                String hora0 = ds.child("horaInicio").getValue().toString();
+                                String horainicio = ds.child("horaInicio").getValue().toString();
                                 String horaFin = ds.child("horaFin").getValue().toString();
                                 String circuito = ds.child("circuito").getValue().toString();
-                                String deposito= ds.child("deposito").getValue().toString();
-                                String procedencia= ds.child("procedencia").getValue().toString();
-                                String pendiente = ds.child("pendiente").getValue().toString();
-                                for (DataSnapshot dsi : ds.child("personalist").getChildren()) {
-                                    String nombre = dsi.child("nombre").getValue().toString();
-                                    String dni = dsi.child("dni").getValue().toString();
-                                    String fechaN = dsi.child("fechaN").getValue().toString();
-                                    String tipo = dsi.child("tipo").getValue().toString();
-                                    plist.add(new objPersona(nombre, dni, fechaN, tipo));
+
+
+
+                                for (DataSnapshot dsii : ds.child("reservalist").getChildren()) {
+                                    String rID=dsii.getKey();
+                                    String correo = dsii.child("correo").getValue().toString();
+                                    // String urlBuenaSalud=ds.child("urlBuenaSalud").getValue().toString();
+                                    //   String urlDNI=ds.child("urlDNI").getValue().toString();
+                                    String usuario = dsii.child("usuario").getValue().toString();
+                                    String hospedaje = dsii.child("hospedaje").getValue().toString();
+                                    String telefono = dsii.child("telefono").getValue().toString();
+                                    String deposito= dsii.child("deposito").getValue().toString();
+                                    String procedencia= dsii.child("procedencia").getValue().toString();
+                                    String pendiente = dsii.child("pendiente").getValue().toString();
+
+
+                                    for (DataSnapshot dsi : dsii.child("personalist").getChildren()) {
+                                        String nombre = dsi.child("nombre").getValue().toString();
+                                        String dni = dsi.child("dni").getValue().toString();
+                                        String fechaN = dsi.child("fechaN").getValue().toString();
+                                        String tipo = dsi.child("tipo").getValue().toString();
+                                        plist.add(new objPersona(nombre, dni, fechaN, tipo));
+                                    }
+                                    for (DataSnapshot dsi : ds.child("caballolist").getChildren()) {
+                                        String nombre = dsi.child("nombre").getValue().toString();
+                                        String precio = dsi.child("precio").getValue().toString();
+                                        obProductos cab=new obProductos(nombre,precio,"caballo");
+                                        clist.add(cab);
+                                    }
+                                    System.out.println("=============="+clist.size()+"===============");
+                                    //fecha, hora0, horaFin, guia, circuito,
+                                    objReserva Res=new objReserva(correo, telefono, hospedaje, usuario,  plist, clist,pendiente,deposito,procedencia);
+                                    Res.setID(rID);
+                                    rlist.add(Res);
                                 }
-                                for (DataSnapshot dsi : ds.child("caballolist").getChildren()) {
-                                    String nombre = dsi.child("nombre").getValue().toString();
-                                    String precio = dsi.child("precio").getValue().toString();
-                                    obProductos cab=new obProductos(nombre,precio,"caballo");
-                                    clist.add(cab);
-                                }
-                                System.out.println("=============="+clist.size()+"===============");
-
-
-
-
-
-
-
-
-
-                                objReserva Res=new objReserva(fecha, hora0, horaFin, correo, telefono, hospedaje, usuario, guia, circuito, plist, clist,pendiente,deposito,procedencia);
-                                Res.setUrlDNI(urlDNI);
-                                Res.setID(ds.getKey());
-                                System.out.println(urlBuenaSalud);
-                                Res.setUrlBuenaSalud(urlBuenaSalud);
-                                rlist.add(Res);
+                                objHorario cit=new objHorario(fecha, horainicio, horaFin, guia, circuito,rlist);
+                                cit.setID(hID);
+                                hlist.add(cit);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -300,10 +301,10 @@ public class Calendario extends Fragment {
                 }else{
                     System.out.println("no se ha enctrado nadi aca");
                 }
-                BurbujaColObj(rlist);
-                Reservalist=acomodar(rlist);
+                BurbujaColObj(hlist);
+                horariolist=acomodar(hlist);
                 try {
-                    adapter = new ListCalendarioAdapter(getActivity().getApplicationContext(), Reservalist);
+                    adapter = new ListCalendarioAdapter(getActivity().getApplicationContext(), horariolist);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -333,11 +334,11 @@ public class Calendario extends Fragment {
                             startActivity(intent);
                         }else{
                             Bundle datoenvia = new Bundle();
-                            objReserva Reserva=Reservalist.get(i);
+                            objHorario Reserva=horariolist.get(i);
                             datoenvia.putString("datos", textItemList);
                             Intent intent = new Intent(getActivity(), ConsultaReserva.class);
                             intent.putExtras(datoenvia);
-                            intent.putExtra("reserva", Reserva);
+                            intent.putExtra("reserva", (Serializable) horariolist);
                             startActivity(intent);
 
                         }

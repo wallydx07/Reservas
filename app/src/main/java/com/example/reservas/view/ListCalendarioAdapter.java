@@ -29,15 +29,16 @@ import java.util.List;
 public class ListCalendarioAdapter extends BaseAdapter {
 
     Context context;
-    objReserva reserva;
+    objHorario horario;
     List<objReserva> reservaslist;
+    List<objHorario> horariolist;
     LayoutInflater inflater;
     RelativeLayout rlMainLayout;
     int ultimo;
     private String horasTV[]={"00:00","1:00","2:00","3:00","4:00","5:00","6:00","7:00","8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00",};
 
     //============================================================
-   public ListCalendarioAdapter(Context context, List<objReserva> reservaslist) {
+   public ListCalendarioAdapter(Context context, List<objHorario> horariolist) {
         this.context = context;
        /* try {
             BurbujaColObj(reservaslist);
@@ -45,12 +46,12 @@ public class ListCalendarioAdapter extends BaseAdapter {
             e.printStackTrace();
         }*/
        // this.reservaslist = acomodar(reservaslist);
-       this.reservaslist = reservaslist;
+       this.horariolist = horariolist;
 
     }
 
-    public static void BurbujaColObj(List<objReserva> reservador) throws ParseException {
-        objReserva aux;
+    public static void BurbujaColObj(List<objHorario> reservador) throws ParseException {
+        objHorario aux;
         for(int i = 0;i < reservador.size()-1;i++){
             for(int j = 0;j < reservador.size()-i-1;j++){
                 DateFormat inFormat = new SimpleDateFormat("HH:mm");
@@ -79,18 +80,18 @@ public class ListCalendarioAdapter extends BaseAdapter {
     }
 
 
-    public List<objReserva> acomodar(List<objReserva> res){
+    public List<objHorario> acomodar(List<objHorario> res){
 
-        List<objReserva> aux= new ArrayList<objReserva>();
+        List<objHorario> aux= new ArrayList<objHorario>();
         for(int f=0;f<horasTV.length;f++) {
             aux.add(null);
         }
-        List<objReserva> Reservas1 = res;
+        List<objHorario> Reservas1 = res;
         String inicio="00:00";
         String fin="00:00";
         for( int i=0;i<res.size();i++){
             System.out.println(i+"_");
-                objReserva reser = null;
+                objHorario reser = null;
             try {
                 reser = Reservas1.get(i);
                 inicio=reser.getHoraInicio();
@@ -138,7 +139,7 @@ public class ListCalendarioAdapter extends BaseAdapter {
    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         System.out.println(position);
-        System.out.println(reserva);
+        System.out.println(horario);
         TextView txtTitle, txtSubTitle,txtHour;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
          View itemView = inflater.inflate(R.layout.calendarlistview, parent, false);
@@ -151,12 +152,12 @@ public class ListCalendarioAdapter extends BaseAdapter {
         String horafin= null;
 
 
-        if((reservaslist.get(position))!=null){
-            reserva = reservaslist.get(position);
-            nombre = reserva.nombreTitular();
-            circuito = reserva.getCircuito();
+        if((horariolist.get(position))!=null){
+            horario = horariolist.get(position);
+            nombre ="cambiar";
+            circuito = horario.getCircuito();
             horainicio = horasTV[position];
-            horafin=reserva.horaFin;
+            horafin=horario.horaFin;
             itemView.setBackgroundColor(Color.BLUE);
         }else{
                 nombre = "Disponible";

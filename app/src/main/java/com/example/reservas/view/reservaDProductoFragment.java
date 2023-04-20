@@ -74,6 +74,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     List<objPersona> personalist;
     List<obProductos> cabalgatalist;
     List<obProductos> pcircuito;
+    List<objReserva> reservalist;
     List<String> Circuito;
     objReserva miReserva;
     objPersona persona;
@@ -242,18 +243,6 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     //    cabalgata=v.findViewById(R.id.switchCaballo);
         agregar.setEnabled(true);
         spinCaballo.setEnabled(true);
-    /*    cabalgata.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    agregar.setEnabled(isChecked);
-                    spinCaballo.setEnabled(isChecked);
-                    if(isChecked){
-                        loadcaballo();
-                    }
-            }
-        });
-*/
 
 
 
@@ -338,6 +327,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             case R.id.buttonReservaProductoFinalizar:
 
                 personalist=((nuevaReserva)this.getActivity()).personafinal;
+                reservalist= new ArrayList<>();
                 System.out.println("finalreser");
                 System.out.println("============="+personalist.size()+"==========");
 
@@ -346,6 +336,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                 String ant=anticipo.getText().toString();
                 String hora0=spinhoraInicio.getSelectedItem().toString();
                 String hora1=spinhoraFin.getSelectedItem().toString();
+                String circ=spinCircuito.getSelectedItem().toString();
                 if (pend.isEmpty() || tot.isEmpty() ||ant.isEmpty()) {
                     Toast.makeText(getContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
 
@@ -353,32 +344,25 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                    // int Fin=Transforma(spinhoraFin.getSelectedItem().toString());
                  //   Fin=Transforma(horaInicio)+Fin;
 
-                    objReserva reserva=new objReserva(fecha, hora0, hora1,  correo,  telefono,  hospedaje,   user.getDisplayName(),guia, spinCircuito.getSelectedItem().toString(), personalist,cabalgatalist,pend,ant,procedencia);
+                    objReserva reserva=new objReserva(correo,  telefono,  hospedaje,   user.getDisplayName(),personalist,cabalgatalist,pend,ant,procedencia);
+
                     reserva.setTotal(tot);
-                    //  Subir("Salud", imageuri, reserva.nombreTitular(), reserva);
-                    reserva.setUrlBuenaSalud("---");
-                    reserva.setUrlDNI("---");
+                    reservalist.add(reserva);
+                    objHorario cita=new objHorario(fecha,hora0,hora1,guia,circ,reservalist);
                     if(((nuevaReserva)getActivity()).bandera.equals("editar")){
                         updateReserva(((nuevaReserva)getActivity()).reserva.getID(),reserva);
                     }else{
-                        writeNewReserva(reserva);
+                        writeNewReserva(cita);
                     }
-
-
                 }
-
-
-
-
-
                break;
             case R.id.btDNIReservaDeProducto:
-                System.out.println("accionaste el boton dni");
-                Intent galleryIntent1 = new Intent();
-                galleryIntent1.setAction(Intent.ACTION_GET_CONTENT);
+               // System.out.println("accionaste el boton dni");
+              //  Intent galleryIntent1 = new Intent();
+               // galleryIntent1.setAction(Intent.ACTION_GET_CONTENT);
                 // We will be redirected to choose pdf
-                galleryIntent1.setType("application/pdf");
-                startActivityForResult(galleryIntent1, 2);
+              //  galleryIntent1.setType("application/pdf");
+              //  startActivityForResult(galleryIntent1, 2);
                 break;
         }
     }
@@ -392,9 +376,9 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         miprogress.setVisibility(View.GONE);
         anim.cancel();
     }
-    private void writeNewReserva(objReserva reserva) {
+    private void writeNewReserva(objHorario cita) {
 
-        mDatabase.child("reserva").push().setValue(reserva);
+        mDatabase.child("cita").push().setValue(cita);
         requireActivity().finish();
     }
 
@@ -740,11 +724,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
 
         }
     }
-
-
-
-
-        public void Subir(String act, Uri uri, String titular, objReserva reserva) {
+    public void Subir(String act, Uri uri, String titular, objReserva reserva) {
         objAux aux =new objAux ("");
             final String messagePushID = act+titular+fecha;
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -774,12 +754,12 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                         aux.setUrl(downloadUrl.toString());
 
                         if(act.equals("Salud")) {
-                            reserva.setUrlBuenaSalud(downloadUrl.toString());
+                         //   reserva.setUrlBuenaSalud(downloadUrl.toString());
                             Subir("DNI", imageuri2, reserva.nombreTitular(), reserva);
                         }
                         if(act.equals("DNI")){
-                            reserva.setUrlDNI(downloadUrl.toString());
-                            writeNewReserva(reserva);
+                     //       reserva.setUrlDNI(downloadUrl.toString());
+                         //   writeNewReserva(reserva);
                         }
 
                     }

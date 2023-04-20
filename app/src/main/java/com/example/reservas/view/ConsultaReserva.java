@@ -23,6 +23,7 @@ import java.util.List;
 
 public class ConsultaReserva extends AppCompatActivity implements View.OnClickListener  {
     objReserva Reserva;
+    objHorario horario;
     TextView circuito,fecha,horapartida,horallegada,deposito,pendiente,guia,procedencia,hospedaje,telefono,usuario,correo;
     ListView clientes, caballos;
     Button descarga,eliminar,editar;
@@ -41,7 +42,7 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
         Bundle parametros = this.getIntent().getExtras();
         if(parametros !=null){
             String datos = parametros.getString("datos");
-            Reserva  = (objReserva) getIntent().getSerializableExtra("reserva");
+            horario  = (objHorario) getIntent().getSerializableExtra("reserva");
             Personalist=Reserva.getPersonalist();
             Caballolist=Reserva.getCaballolist();
             ArrayAdapter<obProductos> adapter1=new ArrayAdapter<obProductos>(getApplicationContext(),R.layout.listview_item,Caballolist);
@@ -70,13 +71,13 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
             editar.setOnClickListener(this);
             eliminar=(Button)findViewById(R.id.btEliminarConsultaReserva);
             eliminar.setOnClickListener(this);
-            fecha.setText(Reserva.getFecha());
-            horapartida.setText(Reserva.getHoraInicio());
-            horallegada.setText(Reserva.getHoraFin());
+          //  fecha.setText(Reserva.getFecha());
+           // horapartida.setText(Reserva.getHoraInicio());
+           // horallegada.setText(Reserva.getHoraFin());
             deposito.setText(Reserva.getDeposito());
             pendiente.setText(Reserva.getPendiente());
             usuario.setText(Reserva.getUsuario());
-            guia.setText(Reserva.getGuia());
+          //  guia.setText(Reserva.getGuia());
             correo.setText(Reserva.getCorreo());
             hospedaje.setText(Reserva.getHospedaje());
             telefono.setText(Reserva.getTelefono());
