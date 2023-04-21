@@ -1,5 +1,7 @@
 package com.example.reservas.view;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,10 +64,30 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
         procedencia=v.findViewById(R.id.txtProcedenciaDatosCliente);
         hospedaje=v.findViewById(R.id.txtHospedajeDatosCliente);
         telefono=v.findViewById(R.id.txtTelefonoDatosClientes);
-        siguiente=v.findViewById(R.id.btSiguienteReservaDatosCliente);
+       // siguiente=v.findViewById(R.id.btSiguienteReservaDatosCliente);
         siguiente.setOnClickListener(((nuevaReserva)this.getActivity()));
         tNombre=v.findViewById(R.id.txtDatosApellidoyNombre);
         tNacimiento=v.findViewById(R.id.txtDAtosFechaNacimiento);
+        tNacimiento.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No es necesario hacer nada antes de cambiar el texto
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Formatear el texto según tus necesidades
+                if (s.length() == 2 || s.length() == 5) {
+                    tNacimiento.setText(s + "/");
+                    tNacimiento.setSelection(s.length() + 1);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // No es necesario hacer nada después de cambiar el texto
+            }
+        });
         tDNI=v.findViewById(R.id.txtDatosDNI);
         agregar=v.findViewById(R.id.bottomDatosnAgregar);
         //agregar.setOnClickListener(this);
@@ -78,9 +100,6 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
             telefono.setText(((nuevaReserva)getActivity()).reserva.getTelefono());
             procedencia.setText(((nuevaReserva)getActivity()).reserva.getProcedencia());
         }
-
-
-
         if(!Personalist.isEmpty()){
             adapter = new ListClientesAdpater(getContext(), Personalist);
         }

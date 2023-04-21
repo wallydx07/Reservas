@@ -324,7 +324,7 @@ public class Calendario extends Fragment {
                             String horaInicio  = texHorainicio.getText().toString();//si esta disponible le manda la hora de inicio
                             String guia=spinGuia.getSelectedItem().toString();
                             String fecha=textview.getText().toString();
-                            Intent intent = new Intent(getActivity(), nuevaReserva.class);
+                            Intent intent = new Intent(getActivity(), crearReserv.class);
                             Bundle datoenvia = new Bundle();
                             datoenvia.putString("guia",guia);
                             datoenvia.putString("bandera","reserva");
@@ -334,11 +334,11 @@ public class Calendario extends Fragment {
                             startActivity(intent);
                         }else{
                             Bundle datoenvia = new Bundle();
-                            objHorario Reserva=horariolist.get(i);
+                            objHorario cita=horariolist.get(i);
                             datoenvia.putString("datos", textItemList);
-                            Intent intent = new Intent(getActivity(), ConsultaReserva.class);
+                            Intent intent = new Intent(getActivity(), consultaHorario.class);
                             intent.putExtras(datoenvia);
-                            intent.putExtra("reserva", (Serializable) horariolist);
+                            intent.putExtra("horario", cita);
                             startActivity(intent);
 
                         }

@@ -99,16 +99,6 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     public reservaDProductoFragment() {
         // Required empty publifffc constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment reservaDProductoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static reservaDProductoFragment newInstance(String param1, String param2) {
         reservaDProductoFragment fragment = new reservaDProductoFragment();
         Bundle args = new Bundle();
@@ -133,21 +123,8 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         guia=((nuevaReserva)this.getActivity()).guia;
         user = FirebaseAuth.getInstance().getCurrentUser();
         super.onCreate(savedInstanceState);
-       // personalist = new ArrayList<>();
-       // personalist=((nuevaReserva)this.getActivity()).personafinal;
         mDatabase= FirebaseDatabase.getInstance().getReference();
         cabalgatalist=new ArrayList<>();
-      ///  getParentFragmentManager().setFragmentResultListener("key",this, new FragmentResultListener() {
-          //  @Override
-          //  public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-           //     String nombreO=result.getString("nombre");
-           //     String dni=result.getString("dni");
-          //      String nacimineto=result.getString("nacimiento");
-         //       persona=new objPersona(nombreO,dni,nacimineto,"Cliente");
-       //         personalist.add(persona);
-       //         System.out.println("se agrego nueov");
-        //        }
-      //  });
         getParentFragmentManager().setFragmentResultListener("K",this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
@@ -171,9 +148,9 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         etFecha =v.findViewById(R.id.etFechaReservaProducto);
         etFecha.setText(fecha);
         etFecha.setOnClickListener(this);
-        sDNI=v.findViewById(R.id.txtDNIReservaDeProducto);
-        sSalud=v.findViewById(R.id.txtBuenaSaludReservaDeProducto);
-        miprogress =v.findViewById(R.id.circularProgress);
+    //    sDNI=v.findViewById(R.id.txtDNIReservaDeProducto);
+     //   sSalud=v.findViewById(R.id.txtBuenaSaludReservaDeProducto);
+       // miprogress =v.findViewById(R.id.circularProgress);
         anim = ObjectAnimator.ofInt(miprogress, "progress", 0, 100);
         spinCircuito=v.findViewById(R.id.spinnerReservaProductoCircuito);
         spinCaballo=v.findViewById(R.id.spinnerReservaProductoCaballo);
@@ -230,13 +207,13 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
         total=v.findViewById(R.id.txtReservaProductoTotal);
         anticipo=v.findViewById(R.id.txtReservaProductoAnticipo);
         pendiente=v.findViewById(R.id.txtReservaProductoPendiente);
-        agregar=v.findViewById(R.id.buttonReservaProductoagregar);
+        //agregar=v.findViewById(R.id.buttonReservaProductoagregar);
         agregar.setOnClickListener(this);
-        subirsalud=v.findViewById(R.id.btBuenaSaludReservaDeProducto);
+      //  subirsalud=v.findViewById(R.id.btBuenaSaludReservaDeProducto);
         subirsalud.setOnClickListener(this);
-        subirDNI=v.findViewById(R.id.btDNIReservaDeProducto);
+       // subirDNI=v.findViewById(R.id.btDNIReservaDeProducto);
         subirDNI.setOnClickListener(this);
-        datoscaballos=v.findViewById(R.id.listViewReservaProducto);
+       // datoscaballos=v.findViewById(R.id.listViewReservaProducto);
      //   cabalgata=v.findViewById(R.id.switchCaballo);
         finalizar=v.findViewById(R.id.buttonReservaProductoFinalizar);
         finalizar.setOnClickListener(this);
@@ -301,70 +278,76 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             case R.id.etFechaReservaProducto:
                 loadCalendario();
                 break;
-            case R.id.buttonReservaProductoagregar:
-                List<obProductos> cabalgata=new ArrayList<>();
-                String nombre=spinCaballo.getSelectedItem().toString();
-                for (int i = 0; i< cabalgatalist.size(); i++) {
-                    obProductos productosss= cabalgatalist.get(i);
-                    if(productosss.getNombre().equals(nombre)){
+          /*  case R.id.buttonReservaProductoagregar:
+                List<obProductos> cabalgata = new ArrayList<>();
+                String nombre = spinCaballo.getSelectedItem().toString();
+                for (int i = 0; i < cabalgatalist.size(); i++) {
+                    obProductos productosss = cabalgatalist.get(i);
+                    if (productosss.getNombre().equals(nombre)) {
                         cabalgata.add(productosss);
                     }
                 }
 
 
-               // ArrayAdapter<obProductos> adapter=new ArrayAdapter<obProductos>(getActivity().getApplicationContext(),R.layout.listview_item,cabalgata);
+                // ArrayAdapter<obProductos> adapter=new ArrayAdapter<obProductos>(getActivity().getApplicationContext(),R.layout.listview_item,cabalgata);
                 adaptercaballo = new adapterCaballo(getContext(), cabalgata);
                 datoscaballos.setAdapter(adaptercaballo);
                 break;
-            case R.id.btBuenaSaludReservaDeProducto:
+       /*     case R.id.btBuenaSaludReservaDeProducto:
                 System.out.println("accionaste el boton salud");
                 Intent galleryIntent = new Intent();
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 // We will be redirected to choose pdf
                 galleryIntent.setType("application/pdf");
                 startActivityForResult(galleryIntent, 1);
-                break;
+                break;*/
             case R.id.buttonReservaProductoFinalizar:
+                System.out.println("GUIA_______"+(spinGuia.getSelectedItem().toString()));
+                if ((spinCircuito.getSelectedItem().toString()).equals("Guia no disponible")) {
+                    Toast.makeText(getContext(), "Guia no dispònible!", Toast.LENGTH_SHORT).show();
 
-                personalist=((nuevaReserva)this.getActivity()).personafinal;
-                reservalist= new ArrayList<>();
-                System.out.println("finalreser");
-                System.out.println("============="+personalist.size()+"==========");
 
-               String pend=pendiente.getText().toString();
-                String tot=total.getText().toString();
-                String ant=anticipo.getText().toString();
-                String hora0=spinhoraInicio.getSelectedItem().toString();
-                String hora1=spinhoraFin.getSelectedItem().toString();
-                String circ=spinCircuito.getSelectedItem().toString();
-                if (pend.isEmpty() || tot.isEmpty() ||ant.isEmpty()) {
-                    Toast.makeText(getContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
+                } else {
 
-                }else {
-                   // int Fin=Transforma(spinhoraFin.getSelectedItem().toString());
-                 //   Fin=Transforma(horaInicio)+Fin;
+                    personalist = ((nuevaReserva) this.getActivity()).personafinal;
+                    reservalist = new ArrayList<>();
+                    System.out.println("finalreser");
+                    System.out.println("=============" + personalist.size() + "==========");
 
-                    objReserva reserva=new objReserva(correo,  telefono,  hospedaje,   user.getDisplayName(),personalist,cabalgatalist,pend,ant,procedencia);
+                    String pend = pendiente.getText().toString();
+                    String tot = total.getText().toString();
+                    String ant = anticipo.getText().toString();
+                    String hora0 = spinhoraInicio.getSelectedItem().toString();
+                    String hora1 = spinhoraFin.getSelectedItem().toString();
+                    String circ = spinCircuito.getSelectedItem().toString();
+                    if (pend.isEmpty() || tot.isEmpty() || ant.isEmpty()) {
+                        Toast.makeText(getContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
 
-                    reserva.setTotal(tot);
-                    reservalist.add(reserva);
-                    objHorario cita=new objHorario(fecha,hora0,hora1,guia,circ,reservalist);
-                    if(((nuevaReserva)getActivity()).bandera.equals("editar")){
-                        updateReserva(((nuevaReserva)getActivity()).reserva.getID(),reserva);
-                    }else{
-                        writeNewReserva(cita);
+                    } else {
+
+                        objReserva reserva = new objReserva(correo, telefono, hospedaje, user.getDisplayName(), personalist, cabalgatalist, pend, ant, procedencia);
+
+                        reserva.setTotal(tot);
+                        reservalist.add(reserva);
+                        objHorario cita = new objHorario(fecha, hora0, hora1, guia, circ, reservalist);
+                        if (((nuevaReserva) getActivity()).bandera.equals("editar")) {
+                            updateReserva(((nuevaReserva) getActivity()).reserva.getID(), reserva);
+                        } else {
+                            writeNewReserva(cita);
+                        }
                     }
                 }
-               break;
-            case R.id.btDNIReservaDeProducto:
-               // System.out.println("accionaste el boton dni");
-              //  Intent galleryIntent1 = new Intent();
-               // galleryIntent1.setAction(Intent.ACTION_GET_CONTENT);
-                // We will be redirected to choose pdf
-              //  galleryIntent1.setType("application/pdf");
-              //  startActivityForResult(galleryIntent1, 2);
-                break;
-        }
+                    break;
+                  /*  case R.id.btDNIReservaDeProducto:
+                        // System.out.println("accionaste el boton dni");
+                        //  Intent galleryIntent1 = new Intent();
+                        // galleryIntent1.setAction(Intent.ACTION_GET_CONTENT);
+                        // We will be redirected to choose pdf
+                        //  galleryIntent1.setType("application/pdf");
+                        //  startActivityForResult(galleryIntent1, 2);
+                        break;*/
+                }
+
     }
     private void mostrarProgress(){
         miprogress.setVisibility(View.VISIBLE);
@@ -418,8 +401,6 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
     }
     public void loadproducto() {
         System.out.println(("________________________________loadPorducto"));
-       // final List<obProductos> pcabalgata = new ArrayList<>();
-        //final List<obProductos> pcircuito = new ArrayList<>();
         pcircuito = new ArrayList<>();
         cabalgatalist = new ArrayList<>();
         mDatabase.child("producto").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -562,7 +543,7 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
             e.printStackTrace();
         }
         if(h1w1<h1w2){
-        mDatabase.child("reserva").orderByChild("fecha").equalTo(f).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("cita").orderByChild("fecha").equalTo(f).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 long h1=0;
@@ -605,15 +586,6 @@ public class reservaDProductoFragment extends Fragment implements View.OnClickLi
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
- /*
-                            if ((horarec > hora1) && (horarec < hora2)) {//hay citas programadas en el itervalo
-                                haycitas=true;
-                                resul="Horario no disponible";
-                                System.out.println("Hoy citas entre las"+hora1+" "+horarec+" "+hora2);
-                            }
-
-*/
-
 
                                 if ((H1< h1 && H2 > h1) || (H1 > h1 && H1 < h2) || (H2 > h1 && H2 < h2)) {
                                     haycitas=true;

@@ -43,7 +43,6 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
     List<objPersona> Personalist, personafinal;
     Button siguiente;
     ListClientesAdpater adapter;
-
     reservaDatosClientesFragment cliente=new reservaDatosClientesFragment();
     reservaDProductoFragment producto=new reservaDProductoFragment();
    Bundle bundle = new Bundle();
@@ -72,9 +71,15 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
             }
             if(bandera.equals("editar")){
                 reserva  = (objReserva) getIntent().getSerializableExtra("reserva");
-               // horaInicio =reserva.getHoraInicio();
-               // fecha = reserva.getFecha();
-               // guia = reserva.getGuia();
+                String horaih = parametros.getString("horai");
+                String horafh= parametros.getString("horaf");
+                String fechah=parametros.getString("fecha");
+                String guiah=parametros.getString("guia");
+
+
+                horaInicio =horaih;
+               fecha = fechah;
+               guia = guiah;
                 Personalist=reserva.getPersonalist();
                 cliente.Personalist=Personalist;
                // adapter = new ListClientesAdpater(cliente.getContext(), Personalist);
@@ -122,7 +127,7 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch(view.getId()) {
 
-            case R.id.btSiguienteReservaDatosCliente:
+           /* case R.id.btSiguienteReservaDatosCliente:
                 int count=0;
                 ListClientesAdpater adapterb = (ListClientesAdpater) cliente.lista.getAdapter();
                 if (adapterb != null) {
@@ -167,7 +172,7 @@ public class nuevaReserva extends AppCompatActivity implements View.OnClickListe
 
 
 
-             break;
+             break;*/
 
         }
     }

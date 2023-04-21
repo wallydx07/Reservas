@@ -34,6 +34,8 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
 
     String URLdni, URLSalud;
 
+    String horaih,horafh,fechah,guiah;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +43,11 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_consulta_reserva);
         Bundle parametros = this.getIntent().getExtras();
         if(parametros !=null){
-            String datos = parametros.getString("datos");
-            horario  = (objHorario) getIntent().getSerializableExtra("reserva");
+            horaih = parametros.getString("horai");
+            horafh= parametros.getString("horaf");
+            fechah=parametros.getString("fecha");
+            guiah=parametros.getString("guia");
+            Reserva  = (objReserva) getIntent().getSerializableExtra("reserva");
             Personalist=Reserva.getPersonalist();
             Caballolist=Reserva.getCaballolist();
             ArrayAdapter<obProductos> adapter1=new ArrayAdapter<obProductos>(getApplicationContext(),R.layout.listview_item,Caballolist);
@@ -71,13 +76,13 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
             editar.setOnClickListener(this);
             eliminar=(Button)findViewById(R.id.btEliminarConsultaReserva);
             eliminar.setOnClickListener(this);
-          //  fecha.setText(Reserva.getFecha());
-           // horapartida.setText(Reserva.getHoraInicio());
-           // horallegada.setText(Reserva.getHoraFin());
+           fecha.setText(fechah);
+           horapartida.setText(horaih);
+           horallegada.setText(horafh);
             deposito.setText(Reserva.getDeposito());
             pendiente.setText(Reserva.getPendiente());
             usuario.setText(Reserva.getUsuario());
-          //  guia.setText(Reserva.getGuia());
+            guia.setText(guiah);
             correo.setText(Reserva.getCorreo());
             hospedaje.setText(Reserva.getHospedaje());
             telefono.setText(Reserva.getTelefono());
@@ -94,8 +99,6 @@ if(Caballolist==null){
 
 
 
-            //Reserva=parametros.getString("datos");
-            System.out.println(datos);
         }
     }
 
@@ -132,6 +135,10 @@ if(Caballolist==null){
                 intent.putExtra("reserva", Reserva);
                 Bundle datoenvia = new Bundle();
                 datoenvia.putString("bandera","editar");
+                datoenvia.putString("horai",horaih);
+                datoenvia.putString("horaf", horafh);
+                datoenvia.putString("fecha", fechah);
+                datoenvia.putString("guia", guiah);
                 intent.putExtras(datoenvia);
                 startActivity(intent);
                 finish();
