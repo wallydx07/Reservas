@@ -65,7 +65,7 @@ public class reservaDatosClientesFragment extends Fragment implements View.OnCli
         hospedaje=v.findViewById(R.id.txtHospedajeDatosCliente);
         telefono=v.findViewById(R.id.txtTelefonoDatosClientes);
        // siguiente=v.findViewById(R.id.btSiguienteReservaDatosCliente);
-        siguiente.setOnClickListener(((nuevaReserva)this.getActivity()));
+       // siguiente.setOnClickListener(((nuevaReserva)this.getActivity()));
         tNombre=v.findViewById(R.id.txtDatosApellidoyNombre);
         tNacimiento=v.findViewById(R.id.txtDAtosFechaNacimiento);
         tNacimiento.addTextChangedListener(new TextWatcher() {

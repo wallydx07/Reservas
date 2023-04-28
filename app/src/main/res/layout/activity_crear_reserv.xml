@@ -96,6 +96,7 @@
                     android:text="Hora Fin"
                     android:textSize="20sp" />
 
+
                 <Spinner
                     android:id="@+id/spinnerhorafinReservaProducto"
                     android:layout_width="match_parent"
@@ -126,8 +127,8 @@
 
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="246dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="3dp"
                 android:orientation="horizontal">
@@ -142,7 +143,7 @@
 
                     <EditText
                         android:id="@+id/txtDatosApellidoyNombre"
-                        android:layout_width="328dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:ems="10"
@@ -154,7 +155,7 @@
 
                     <EditText
                         android:id="@+id/txtDatosDNI"
-                        android:layout_width="330dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:ems="10"
@@ -167,7 +168,7 @@
 
                     <EditText
                         android:id="@+id/txtDAtosFechaNacimiento"
-                        android:layout_width="332dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:ems="10"
@@ -180,11 +181,21 @@
 
                     <Spinner
                         android:id="@+id/spinnerReservaProductoCaballo"
-                        android:layout_width="334dp"
-                        android:layout_height="43dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:enabled="true" />
+                    <EditText
+                        android:id="@+id/txtobs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:hint="Observaciones"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPersonName"
+                        tools:text="" />
 
                 </LinearLayout>
 

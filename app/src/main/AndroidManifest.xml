@@ -4,6 +4,7 @@
     package="com.example.reservas">
 
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Reservas"
         tools:targetApi="31">
+        <activity
+            android:name=".adapterclienteconsulta"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

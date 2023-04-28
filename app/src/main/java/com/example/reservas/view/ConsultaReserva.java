@@ -30,13 +30,10 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
     List<objPersona> Personalist;
     List<obProductos> Caballolist;
     objPersona persona;
-    ListClientesAdpater adapter;
-
+    //ListClientesAdpater adapter;
+    adapterclienteconsulta adapter;
     String URLdni, URLSalud;
-
     String horaih,horafh,fechah,guiah;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,10 +47,11 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
             Reserva  = (objReserva) getIntent().getSerializableExtra("reserva");
             Personalist=Reserva.getPersonalist();
             Caballolist=Reserva.getCaballolist();
-            ArrayAdapter<obProductos> adapter1=new ArrayAdapter<obProductos>(getApplicationContext(),R.layout.listview_item,Caballolist);
+
 
             caballos=(ListView)findViewById(R.id.lvConsutlaReservaCaballos);
-            adapter = new ListClientesAdpater(this,Personalist);
+            //adapter = new ListClientesAdpater(this,Personalist);
+            adapter = new adapterclienteconsulta(this,Personalist);
            // URLdni=Reserva.getUrlDNI();
           //  URLSalud=Reserva.getUrlBuenaSalud();
            // System.out.println(URLSalud+"qwertyuiopñlkjhgfdsazxcvbnm");
@@ -93,6 +91,7 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
 if(Caballolist==null){
 
 }else {
+    ArrayAdapter<obProductos> adapter1=new ArrayAdapter<obProductos>(getApplicationContext(),R.layout.listview_item,Caballolist);
     caballos.setAdapter(adapter1);
     System.out.println(Reserva);
 }
@@ -131,7 +130,7 @@ if(Caballolist==null){
 
                 break;
             case R.id.btEditarConsultaReserva:
-                Intent intent = new Intent(this, nuevaReserva.class);
+                Intent intent = new Intent(this, crearReserv.class);
                 intent.putExtra("reserva", Reserva);
                 Bundle datoenvia = new Bundle();
                 datoenvia.putString("bandera","editar");

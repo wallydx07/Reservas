@@ -244,8 +244,8 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
             ttotal.setText(reserva.getTotal());
 
             if(cabalgatalist!=null){
-                adaptercaballo = new adapterCaballo(this, cabalgatalist);
-                datoscaballos.setAdapter(adaptercaballo);
+              //  adaptercaballo = new adapterCaballo(this, cabalgatalist);
+               // datoscaballos.setAdapter(adaptercaballo);
 
             }
         }

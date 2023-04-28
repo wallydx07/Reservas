@@ -57,8 +57,6 @@ public class consultaHorario extends AppCompatActivity {
                     datoenvia.putString("horaf", horario.getHoraFin());
                     datoenvia.putString("fecha", horario.getFecha());
                     datoenvia.putString("guia", horario.getGuia());
-
-
                     Intent intent = new Intent(getApplicationContext(), ConsultaReserva.class);
                     intent.putExtras(datoenvia);
                     intent.putExtra("reserva", res);
