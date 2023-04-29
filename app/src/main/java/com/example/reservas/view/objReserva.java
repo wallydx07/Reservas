@@ -4,38 +4,31 @@ import java.io.Serializable;
 import java.util.List;
 
 public class objReserva implements Serializable {
-    String ID;
-    //String fecha;
-    //String horaInicio;
-    //String horaFin;
-    String correo;
-    String telefono;
-    String hospedaje;
-    String usuario;
-   // String guia;
-    //String circuito;
-   // String UrlBuenaSalud;
-   // String UrlDNI;
-    String pendiente;
-    String deposito;
-    String procedencia;
-    String total;
-    List<objPersona> Personalist;
-    List<obProductos> Caballolist;
+    private String ID;
+    private String correo;
+    private String telefono;
+    private  String hospedaje;
+    private String usuario;
+    private String pendiente;
+    private String deposito;
+    private String procedencia;
+    private String total;
+     List<objPersona> Personalist;
 
-    public void setProcedencia(String procedencia) {
-        this.procedencia = procedencia;
+
+    public objReserva(String correo, String telefono, String hospedaje, String usuario, List<objPersona> personalist,String pendiente,String deposito, String procedencia) {
+        this.correo = correo;
+        this.telefono = telefono;
+        this.hospedaje = hospedaje;
+        this.usuario = usuario;
+        this.deposito=deposito;
+        this.pendiente=pendiente;
+        this.Personalist = personalist;
+        this.procedencia=procedencia;
     }
 
-    public String getTotal() {
-        return total;
+    public objReserva() {
     }
-
-    public void setTotal(String total) {
-        this.total = total;
-    }
-
-
 
     public String getID() {
         return ID;
@@ -44,97 +37,6 @@ public class objReserva implements Serializable {
     public void setID(String ID) {
         this.ID = ID;
     }
-
-   // public String getUrlBuenaSalud() {
-   //     return UrlBuenaSalud;
-   // }
-
-    //public void setUrlBuenaSalud(String urlBuenaSalud) {
-     //   UrlBuenaSalud = urlBuenaSalud;
-   // }
-
-    //public String getUrlDNI() {
-     //   return UrlDNI;
-   // }
-
-   // public void setUrlDNI(String urlDNI) {
-    //    UrlDNI = urlDNI;
-   // }
-
-    public objReserva(String correo, String telefono, String hospedaje, String usuario, List<objPersona> personalist, List<obProductos> caballolist,String pendiente,String deposito, String procedencia) {
-      //  this.fecha = fecha;
-     //   this.horaInicio = horaInicio;
-     //   this.horaFin = horaFin;
-        this.correo = correo;
-        this.telefono = telefono;
-        this.hospedaje = hospedaje;
-        this.usuario = usuario;
-       // this.guia = guia;
-        this.deposito=deposito;
-        this.pendiente=pendiente;
-     //   this.circuito = circuito;
-        Personalist = personalist;
-        Caballolist = caballolist;
-        this.procedencia=procedencia;
-    }
-
-    public String getProcedencia() {
-        return procedencia;
-    }
-
-    public void setPrecedencia(String precedencia) {
-        this.procedencia = precedencia;
-    }
-
-    public objReserva() {
-
-    }
-
-    public String getPendiente() {
-        return pendiente;
-    }
-
-    public void setPendiente(String pendiente) {
-        this.pendiente = pendiente;
-    }
-
-    public String getDeposito() {
-        return deposito;
-    }
-
-    public void setDeposito(String Deposito) {
-        deposito = Deposito;
-    }
-
-   public String nombreTitular() {
-            objPersona titular = Personalist.get(0);
-            String nombrexd = titular.getNombre();
-            return nombrexd;
-        }
-
-   // public String getFecha() {
-   //     return fecha;
-   // }
-
-   // public void setFecha(String fecha) {
-   //     this.fecha = fecha;
-   // }
-
-  //  public String getHoraInicio() {
-   //     return horaInicio;
-   // }
-
-   // public void setHoraInicio(String horaInicio) {
-   //     this.horaInicio = horaInicio;
-  //  }
-
-   // public String getHoraFin() {
-   //     return horaFin;
-    //}
-
-    //public void setHoraFin(String horaFin) {
-     //   this.horaFin = horaFin;
-  //  }
 
     public String getCorreo() {
         return correo;
@@ -168,21 +70,37 @@ public class objReserva implements Serializable {
         this.usuario = usuario;
     }
 
-  //  public String getGuia() {
-   //     return guia;
-   // }
+    public String getPendiente() {
+        return pendiente;
+    }
 
-  //  public void setGuia(String guia) {
-   //     this.guia = guia;
-   // }
+    public void setPendiente(String pendiente) {
+        this.pendiente = pendiente;
+    }
 
-   // public String getCircuito() {
-   //     return circuito;
-   // }
+    public String getDeposito() {
+        return deposito;
+    }
 
-   // public void setCircuito(String circuito) {
-     //   this.circuito = circuito;
-    //}
+    public void setDeposito(String deposito) {
+        this.deposito = deposito;
+    }
+
+    public String getProcedencia() {
+        return procedencia;
+    }
+
+    public void setProcedencia(String procedencia) {
+        this.procedencia = procedencia;
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
 
     public List<objPersona> getPersonalist() {
         return Personalist;
@@ -192,11 +110,5 @@ public class objReserva implements Serializable {
         Personalist = personalist;
     }
 
-    public List<obProductos> getCaballolist() {
-        return Caballolist;
-    }
 
-    public void setCaballolist(List<obProductos> caballolist) {
-        Caballolist = caballolist;
-    }
 }

@@ -60,6 +60,7 @@ public class ListClientesAdpater extends BaseAdapter {
         txtdni = (TextView) itemView.findViewById(R.id.txtDNIClienteAdapter);
         txtfecha = (TextView) itemView.findViewById(R.id.txtFechaClienteAdapter);
         borrar=(ImageButton)itemView.findViewById(R.id.imageButton3);
+        borrar.setImageResource(R.drawable.eliminar);
         cliente = clientelist.get(position);
         String nombre = cliente.getNombre();
         String dni=  cliente.getDni();

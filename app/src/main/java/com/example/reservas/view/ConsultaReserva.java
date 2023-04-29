@@ -46,7 +46,6 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
             guiah=parametros.getString("guia");
             Reserva  = (objReserva) getIntent().getSerializableExtra("reserva");
             Personalist=Reserva.getPersonalist();
-            Caballolist=Reserva.getCaballolist();
 
 
             caballos=(ListView)findViewById(R.id.lvConsutlaReservaCaballos);
@@ -125,8 +124,8 @@ if(Caballolist==null){
                 break;*/
             case R.id.btDescargaConsultaReserva:
 
-                downloadFile(this.getApplicationContext(),Reserva.nombreTitular()+"-Salud",".pdf", Environment.DIRECTORY_DOWNLOADS,URLSalud);
-                downloadFile(this.getApplicationContext(),Reserva.nombreTitular()+"-DNI",".pdf", Environment.DIRECTORY_DOWNLOADS,URLdni);
+                //downloadFile(this.getApplicationContext(),Reserva.nombreTitular()+"-Salud",".pdf", Environment.DIRECTORY_DOWNLOADS,URLSalud);
+               // downloadFile(this.getApplicationContext(),Reserva.nombreTitular()+"-DNI",".pdf", Environment.DIRECTORY_DOWNLOADS,URLdni);
 
                 break;
             case R.id.btEditarConsultaReserva:

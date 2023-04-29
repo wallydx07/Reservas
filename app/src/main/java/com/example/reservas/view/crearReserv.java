@@ -13,12 +13,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -49,7 +51,7 @@ import java.util.List;
 public class crearReserv extends AppCompatActivity implements View.OnClickListener  {
     TabLayout tablayout;
     ViewPager viewpager;
-    EditText tNombre, tNacimiento,tDNI, tcorreo, ttelefono, thospedaje,total, tanticipo, tpendiente, tFecha,ttotal, tprocedencia;
+    EditText tNombre, tobs, tNacimiento,tDNI, tcorreo, ttelefono, thospedaje,total, tanticipo, tpendiente, tFecha,ttotal, tprocedencia;
     String horaInicio,fecha,guia,bandera,correo,telefono,hospedaje, procedencia,User;;
     objReserva reserva;
     objPersona persona;
@@ -59,7 +61,6 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
     List<objPersona> Personalist,personafinal;
     ListClientesAdpater adapter;
     ListView lista;
-    List<objPersona> personalist;
     List<obProductos> cabalgatalist;
     List<obProductos> pcircuito;
     List<objReserva> reservalist;
@@ -111,11 +112,12 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
                 fecha = fechah;
                 guia = guiah;
                 Personalist=reserva.getPersonalist();
+
             }
 
         }
 
-
+        tobs=(EditText)findViewById(R.id.txtobs);
         tcorreo=(EditText) findViewById(R.id.txtCorreoDatosClientes);
         tprocedencia=(EditText) findViewById(R.id.txtProcedenciaDatosCliente);
         thospedaje=(EditText) findViewById(R.id.txtHospedajeDatosCliente);
@@ -148,7 +150,6 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
         lista =(ListView) findViewById(R.id.listViewDatosClientes);
         if(bandera.equals("editar")){
             Personalist=reserva.getPersonalist();
-           // correo.setText(reserva.getCorreo());
             //hospedaje.setText(reserva.getHospedaje());
            // telefono.setText(((nuevaReserva)getActivity()).reserva.getTelefono());
            // procedencia.setText(((nuevaReserva)getActivity()).reserva.getProcedencia());
@@ -158,6 +159,7 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
         }
         if (adapter!=null){
             lista.setAdapter(adapter);
+            setListViewHeightBasedOnItems(lista);
         }
 
 //============================================
@@ -237,17 +239,13 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
         spinCaballo.setEnabled(true);
 
         if(bandera.equals("editar")){
-
-            cabalgatalist=(reserva.getCaballolist());
+            tcorreo.setText(reserva.getCorreo());
+            ttelefono.setText(reserva.getTelefono());
+            thospedaje.setText(reserva.getHospedaje());
+            tprocedencia.setText(reserva.getProcedencia());
             tanticipo.setText(reserva.getDeposito());
             tpendiente.setText(reserva.getPendiente());
             ttotal.setText(reserva.getTotal());
-
-            if(cabalgatalist!=null){
-              //  adaptercaballo = new adapterCaballo(this, cabalgatalist);
-               // datoscaballos.setAdapter(adaptercaballo);
-
-            }
         }
 
 
@@ -352,19 +350,23 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
     }
 
 
-    public void loadcaballo() {
+   public void loadcaballo() {
         System.out.println("se van a ller los caballos disp_______________________");
         String h1=spinhoraInicio.getSelectedItem().toString();
         String h2=spinhoraFin.getSelectedItem().toString();
         String f=tFecha.getText().toString();
         final List<obProductos> pcabalgata = new ArrayList<>();
         System.out.println("antes de mdatabse_______________________");
-        mDatabase.child("reserva").orderByChild("fecha").equalTo(f).addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+
+        mDatabase.child("cita").orderByChild("fecha").equalTo(f).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 System.out.println("sepaso el override_______________________");
                 System.out.println("Número de datos encontrados en la búsqueda: " + snapshot.getChildrenCount());
                 if (snapshot.exists()) {//ver
+                    List<String> caballosocupados = new ArrayList<>();
                     System.out.println("el porducto existe_______________________");
                     String precio = "0";
                     String tipo = "";
@@ -377,62 +379,71 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
                         //Date horafin = inFormat.parse(spinhoraFin.getSelectedItem().toString());
                         Date horainicio = inFormat.parse(h1);
                         Date horafin = inFormat.parse(h2);
-                        hora1 = (horainicio.getTime() / 3600000) - 3;//hora d einicio desde el listviewanterior
-                        hora2 = (horafin.getTime() / 3600000) - 3; //+ hora1;//+hora1;//hora inicio desde el spiner actual
+                        hora1 = (horainicio.getTime() / 3600000) ;//hora d einicio desde el listviewanterior
+                        hora2 = (horafin.getTime() / 3600000) ; //+ hora1;//+hora1;//hora inicio desde el spiner actual
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                     for (DataSnapshot ds : snapshot.getChildren()) {
-
-                        System.out.println(ds.child("circuito").getValue().toString());
                         long H1 = 0;
                         long H2 = 0;
                         String horaI = ds.child("horaInicio").getValue().toString();
-                        String horaII= ds.child("horaFin").getValue().toString();
+                        String horaII = ds.child("horaFin").getValue().toString();
 
                         try {
                             DateFormat inFormat = new SimpleDateFormat("HH:mm");
                             Date horainicio = inFormat.parse(horaI);
-                            Date horafin=inFormat.parse(horaII);
-                            H1 = (horainicio.getTime() / 3600000) - 3;
-                            H2 = (horafin.getTime() / 3600000) - 3;
-
+                            Date horafin = inFormat.parse(horaII);
+                            H1 = (horainicio.getTime() / 3600000) ;
+                            H2 = (horafin.getTime() / 3600000) ;
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        if(hora1<hora2) {
-                            if ((H1< hora1 && H2 > hora1) || (H1 > hora1 && H1 < hora2) || (H2 > hora1 && H2 < hora2)) {//hay citas dentro de ese rango
-                                for (DataSnapshot dsi : ds.child("caballolist").getChildren()) {
-                                    try {
-                                        caballonombre = dsi.child("nombre").getValue().toString();
-                                        precio = dsi.child("precio").getValue().toString();
-                                        tipo = dsi.child("tipo").getValue().toString();
-                                        System.out.println("____________________caballo ---"+caballonombre+"NO disponbler");
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    System.out.println(caballonombre);
-                                    obProductos caballo = new obProductos(caballonombre, precio, tipo);
-                                    pcabalgata.add(caballo);
-                                }
+                        if (hora1 < hora2) {
+                            System.out.println("Horas validas");
 
+                           // if ((H1 < hora1 && H2 > hora1) || (H1 > hora1 && H1 < hora2) || (H2 > hora1 && H2 < hora2)||(H1==hora1)&&(H2==hora2)) {//hay citas dentro de ese rango
+                            if ((H1 >= hora1 && H1 < hora2) || (H2 > hora1 && H2 <= hora2) || (H1 <= hora1 && H2 >= hora2)) {
+                                System.out.println("hay citas en esa hora posiblecbalgata_____________________");
+                                for (DataSnapshot dsi : ds.child("reservalist").getChildren()) {
+                                    System.out.println("analizando reserva");
+                                    for (DataSnapshot dsii : dsi.child("personalist").getChildren()) {
+                                        System.out.println("analizando persona_______________________");
+                                        try {
+                                            caballonombre = dsii.child("caballo").getValue().toString();
+                                            caballosocupados.add(caballonombre);
+                                            System.out.println("____________________caballo ---" + caballonombre + "NO disponible");
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            } else {
+                                System.out.println("no se encontraron citas en este horario_______________________");
                             }
                         }
                     }
 
-
-                    boolean disponible = true;
-                    List<obProductos> auxadapter = new ArrayList<>(cabalgatalist);
-                    auxadapter.removeAll(pcabalgata);
-                    ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, auxadapter);
+                    List<String> caballosDisponibles = new ArrayList<>();
+                    for (obProductos objeto : cabalgatalist) {
+                        caballosDisponibles.add(objeto.getNombre());
+                    }
+                    caballosDisponibles.removeAll(caballosocupados);
+                    ArrayAdapter<String> adaptercaballo = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, caballosDisponibles);
+                    adaptercaballo.insert("Sin Cabalgata", 0);
                     spinCaballo.setAdapter(adaptercaballo);
 
 
 
 
                 }else{
-                    System.out.println("no existe_______________________");
-                    ArrayAdapter<obProductos> adaptercaballo = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, cabalgatalist);
+                    List<String> caballosDisponibles = new ArrayList<>();
+                    for (obProductos objeto : cabalgatalist) {
+                        caballosDisponibles.add(objeto.getNombre());
+                    }
+                    ArrayAdapter<String> adaptercaballo = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, caballosDisponibles);
+                    adaptercaballo.insert("Sin Cabalgata", 0);
                     spinCaballo.setAdapter(adaptercaballo);
                 }
             }
@@ -443,16 +454,13 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
             }
         });
     }
-
-
-
     public void loadcircuito() {
-        String h11=spinhoraInicio.getSelectedItem().toString();
-        String h22=spinhoraFin.getSelectedItem().toString();
-        String f=tFecha.getText().toString();
-        System.out.println("se ha inicado load Circuito con fecha: "+f);
-        long h1w1=0;
-        long h1w2=0 ;
+        String h11 = spinhoraInicio.getSelectedItem().toString();
+        String h22 = spinhoraFin.getSelectedItem().toString();
+        String f = tFecha.getText().toString();
+        System.out.println("se ha inicado load Circuito con fecha: " + f);
+        long h1w1 = 0;
+        long h1w2 = 0;
         try {
             DateFormat inFormat = new SimpleDateFormat("HH:mm");
             Date horainicio = inFormat.parse(h11);
@@ -460,75 +468,67 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
             h1w1 = (horainicio.getTime() / 3600000) - 3;//hora d einicio desde el listviewanterior
             h1w2 = (horafin.getTime() / 3600000) - 3;//+hora1;//hora inicio desde el spiner actual
         } catch (ParseException e) {
-            System.out.println("error"+e);
+            System.out.println("error" + e);
             e.printStackTrace();
         }
-        if(h1w1<h1w2){
+        if (h1w1 < h1w2) {
             mDatabase.child("cita").orderByChild("fecha").equalTo(f).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    long h1=0;
-                    long h2=0 ;
-
-
+                    long h1 = 0;
+                    long h2 = 0;
                     if (snapshot.exists()) {//ver
                         try {
                             DateFormat inFormat = new SimpleDateFormat("HH:mm");
                             Date horainicio = inFormat.parse(h11);
                             Date horafin = inFormat.parse(h22);
-                            h1 = (horainicio.getTime() / 3600000) - 3;//hora d einicio desde el listviewanterior
-                            h2 = (horafin.getTime() / 3600000) - 3;//+hora1;//hora inicio desde el spiner actual
+                            h1 = (horainicio.getTime() / 3600000) ;//hora d einicio desde el listviewanterior
+                            h2 = (horafin.getTime() / 3600000) ;//+hora1;//hora inicio desde el spiner actual
                         } catch (ParseException e) {
-                            System.out.println("error"+e);
+                            System.out.println("error" + e);
                             e.printStackTrace();
                         }
-                        String resul="";
+                        String resul = "";
 
-                        boolean haycitas=false;
+                        boolean haycitas = false;
+                        int cont =0;
                         for (DataSnapshot ds : snapshot.getChildren()) {
-                            String guiaaxu=ds.child("guia").getValue().toString();
-                            if(guiaaxu.equals(spinGuia.getSelectedItem().toString())) {
-                                //System.out.println(h1+"-"+h2);
-
-
-
-
-                                long H1= 0;
-                                long H2=0;
+                            String guiaaxu = ds.child("guia").getValue().toString();
+                            if (guiaaxu.equals(spinGuia.getSelectedItem().toString())) {
+                                long H1 = 0;
+                                long H2 = 0;
                                 String horaI = ds.child("horaInicio").getValue().toString();
-                                String horaII= ds.child("horaFin").getValue().toString();
+                                String horaII = ds.child("horaFin").getValue().toString();
                                 try {
                                     DateFormat inFormat = new SimpleDateFormat("HH:mm");
                                     Date horainicio = inFormat.parse(horaI);
-                                    Date horafin= inFormat.parse(horaII);
+                                    Date horafin = inFormat.parse(horaII);
 
-                                    H1 = (horainicio.getTime() / 3600000) - 3;
-                                    H2=(horafin.getTime() / 3600000) - 3;
+                                    H1 = (horainicio.getTime() / 3600000) ;
+                                    H2 = (horafin.getTime() / 3600000) ;
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
 
-                                if ((H1< h1 && H2 > h1) || (H1 > h1 && H1 < h2) || (H2 > h1 && H2 < h2)) {
-                                    haycitas=true;
-                                    resul="Guia no disponible";
-                                    System.out.println("Hoy citas entre las"+h1+"-"+h2+"---- "+H1+"-"+H2);
+                               // if ((H1 < h1 && H2 > h1) || (H1 > h1 && H1 < h2) || (H2 > h1 && H2 < h2)) {
+                                if ((H1 <= h1 && h1 < H2) || (H1 < h2 && h2 <= H2) || (h1 <= H1 && H2 <= h2)) {
+                                    haycitas = true;
+                                    cont++;
+                                    resul = "Guia no disponible";
+                                    System.out.println("Hoy citas entre las Spinner" + h1 + "-" + h2 + "---basedatos- " + H1 + "-" + H2);
                                 } else {
-                                    resul="Disponible";
-                                    System.out.println("no hay citas entre las"+h1+"-"+h2+"---- "+H1+"-"+H2);
-                                    haycitas=false;
+                                    resul = "Disponible";
+                                    System.out.println("no hay citas entre las Spinner" + h1 + "-" + h2 + "---basedatos- " + H1 + "-" + H2);
+                                    haycitas = false;
                                 }
-
-
-
-
                             }
                         }
-                        if(haycitas) {
+                        if (cont>0) {
                             ArrayList<String> Nodisp = new ArrayList<>();
-                            Nodisp.add(resul);
+                            Nodisp.add("Guia no disponible");
                             ArrayAdapter<String> adapterNo = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, Nodisp);
                             spinCircuito.setAdapter(adapterNo);
-                        }else{
+                        } else {
                             ArrayAdapter<obProductos> adaptercircuito2 = new ArrayAdapter<obProductos>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, pcircuito);
                             spinCircuito.setAdapter(adaptercircuito2);
 
@@ -536,14 +536,12 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
                         }
 
 
-                    }else{
-                        System.out.println("no existen datos en la fecha"+f);
+                    } else {
+                        System.out.println("no existen datos en la fecha" + f);
                         ArrayAdapter<obProductos> adaptercircuito2 = new ArrayAdapter<obProductos>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, pcircuito);
                         spinCircuito.setAdapter(adaptercircuito2);
 
                     }
-
-
 
 
                 }
@@ -554,7 +552,7 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
                 }
 
             });
-        }else{
+        } else {
             ArrayList<String> Nodisp = new ArrayList<>();
             Nodisp.add("Horario no permitido");
             ArrayAdapter<String> adapterNo = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, Nodisp);
@@ -563,6 +561,13 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
 
 
     }
+
+
+
+
+
+
+
     public void loadGuias(){
         String ID="";
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -703,34 +708,41 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
                 String nombre=tNombre.getText().toString();
                 String DNI=tDNI.getText().toString();
                 String fNacimiento=tNacimiento.getText().toString();
+                String caballo=spinCaballo.getSelectedItem().toString();
+                String obs=tobs.getText().toString();
 
                 if (nombre.isEmpty() || DNI.isEmpty() ||fNacimiento.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
 
                 }else{
-                    persona=new objPersona(nombre,DNI,fNacimiento,"cliente");
-                    //    cliente.bund(nombre,DNI,fNacimiento);
+                    persona=new objPersona(nombre,DNI,fNacimiento,"cliente",caballo,obs);
                     Personalist.add(persona);
                     adapter = new ListClientesAdpater(getApplicationContext(), Personalist);
                     lista.setAdapter(adapter);
                     tNombre.setText("");
                      tDNI.setText("");
                     tNacimiento.setText("");
+                    setListViewHeightBasedOnItems(lista);
 
                 }
+                System.out.println("Personalist tiene+---"+Personalist.size() );
                 break;
             case R.id.buttonReservaProductoFinalizar:
+
                 System.out.println("GUIA_______"+(spinGuia.getSelectedItem().toString()));
                 if ((spinCircuito.getSelectedItem().toString()).equals("Guia no disponible")) {
                     Toast.makeText(getApplicationContext(), "Guia no dispònible!", Toast.LENGTH_SHORT).show();
 
 
+                } else if((spinCircuito.getSelectedItem().toString()).equals("Horario no permitido")){
+
+                    Toast.makeText(getApplicationContext(), "Horario no permitido", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    personalist = personafinal;
+                   // personalist = personafinal;
                     reservalist = new ArrayList<>();
                     System.out.println("finalreser");
-                    System.out.println("=============" + personalist.size() + "==========");
+                    System.out.println("=============" + Personalist.size() + "==========");
 
                     String pend = tpendiente.getText().toString();
                     String tot = ttotal.getText().toString();
@@ -738,12 +750,17 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
                     String hora0 = spinhoraInicio.getSelectedItem().toString();
                     String hora1 = spinhoraFin.getSelectedItem().toString();
                     String circ = spinCircuito.getSelectedItem().toString();
+
+
                     if (pend.isEmpty() || tot.isEmpty() || ant.isEmpty()) {
                         Toast.makeText(getApplicationContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
 
                     } else {
-
-                        objReserva reserva = new objReserva(correo, telefono, hospedaje, user.getDisplayName(), personalist, cabalgatalist, pend, ant, procedencia);
+                        correo=tcorreo.getText().toString();
+                        telefono=ttelefono.getText().toString();
+                        hospedaje=thospedaje.getText().toString();
+                        procedencia=tprocedencia.getText().toString();
+                        objReserva reserva = new objReserva(correo, telefono, hospedaje, user.getDisplayName(), Personalist,  pend, ant, procedencia);
 
                         reserva.setTotal(tot);
                         reservalist.add(reserva);
@@ -764,6 +781,35 @@ public class crearReserv extends AppCompatActivity implements View.OnClickListen
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
     }
+
+
+
+
+    public void setListViewHeightBasedOnItems(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+
+
+
+
+
 }
 
 

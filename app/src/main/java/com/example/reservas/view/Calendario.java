@@ -52,7 +52,6 @@ public class Calendario extends Fragment {
     List<objHorario> horariolist;
     String formattedDate;
     DatabaseReference mDatabase;
-    reservaDProductoFragment fragment;
     public Calendario() {
         // Required empty public constructor
 
@@ -269,24 +268,19 @@ public class Calendario extends Fragment {
                                     String deposito= dsii.child("deposito").getValue().toString();
                                     String procedencia= dsii.child("procedencia").getValue().toString();
                                     String pendiente = dsii.child("pendiente").getValue().toString();
-
-
                                     for (DataSnapshot dsi : dsii.child("personalist").getChildren()) {
                                         String nombre = dsi.child("nombre").getValue().toString();
                                         String dni = dsi.child("dni").getValue().toString();
                                         String fechaN = dsi.child("fechaN").getValue().toString();
                                         String tipo = dsi.child("tipo").getValue().toString();
-                                        plist.add(new objPersona(nombre, dni, fechaN, tipo));
+                                        String caballo=dsi.child("caballo").getValue().toString();
+                                        String obs=dsi.child("obs").getValue().toString();
+                                        plist.add(new objPersona(nombre, dni, fechaN, tipo,caballo,obs));
                                     }
-                                    for (DataSnapshot dsi : ds.child("caballolist").getChildren()) {
-                                        String nombre = dsi.child("nombre").getValue().toString();
-                                        String precio = dsi.child("precio").getValue().toString();
-                                        obProductos cab=new obProductos(nombre,precio,"caballo");
-                                        clist.add(cab);
-                                    }
+
                                     System.out.println("=============="+clist.size()+"===============");
                                     //fecha, hora0, horaFin, guia, circuito,
-                                    objReserva Res=new objReserva(correo, telefono, hospedaje, usuario,  plist, clist,pendiente,deposito,procedencia);
+                                    objReserva Res=new objReserva(correo, telefono, hospedaje, usuario,  plist, pendiente,deposito,procedencia);
                                     Res.setID(rID);
                                     rlist.add(Res);
                                 }

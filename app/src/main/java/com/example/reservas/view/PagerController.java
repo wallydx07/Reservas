@@ -18,11 +18,11 @@ public class PagerController extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new reservaDatosClientesFragment();
+              //  return new reservaDatosClientesFragment();
 
             case 1:
 
-                return new reservaDProductoFragment();
+             //   return new reservaDProductoFragment();
 
             default:
                 return null;

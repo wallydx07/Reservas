@@ -135,8 +135,9 @@
 
 
                 <LinearLayout
-                    android:layout_width="350dp"
-                    android:layout_height="231dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
                     android:orientation="vertical">
@@ -202,8 +203,9 @@
 
                 <Button
                     android:id="@+id/bottomDatosnAgregar"
-                    android:layout_width="58dp"
-                    android:layout_height="236dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:imeOptions="actionDone"
@@ -308,8 +310,9 @@
 
             <Button
                 android:id="@+id/buttonReservaProductoFinalizar"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:text="Finalizar Reserva" />
 
         </LinearLayout>

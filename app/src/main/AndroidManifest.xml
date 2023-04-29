@@ -30,9 +30,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.nuevaReserva"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".view.losspasw"
             android:windowSoftInputMode="adjustResize" />
         <activity
