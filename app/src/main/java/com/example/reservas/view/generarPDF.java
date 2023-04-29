@@ -31,9 +31,9 @@ import java.io.IOException;
 
 public class generarPDF {
 
-    public void generatePDF(Context context, String fileName) throws IOException, DocumentException {
+    public void generatePDF(Context context, objSalud salud) throws IOException, DocumentException {
         File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(downloadsDir, fileName + ".pdf");
+        File file = new File(downloadsDir, "FichaSalud-"+salud.getAyn() +".pdf");
         FileOutputStream fos=new FileOutputStream(file);
         // Create a new document with PDF version 1.7
         Document doc= new Document();
@@ -74,76 +74,77 @@ public class generarPDF {
         doc.add(table1);
 
 
-        Paragraph cuerpo = new Paragraph("Los datos proporcionados serán de uso confidencial y exclusivo de los Programas Turísticos que Opera la Empresa de Turismo Activo “Paraíso de las Yungas”. Los mismos son considerados como Declaración Jurada.  ", font);
+        Paragraph cuerpo = new Paragraph("Los datos proporcionados serán de uso confidencial y exclusivo de los Programas Turísticos que Opera la Empresa de Turismo Activo “Paraíso de las Yungas”. Los mismos son considerados como Declaración Jurada. ", font);
         cuerpo.setAlignment(Element.ALIGN_LEFT);
         doc.add(cuerpo);
 
-
+      doc.add(o);
 
         PdfPTable table = new PdfPTable(4); // 4 es el número máximo de columnas que tendrá la tabla
         table.setWidthPercentage(100);
 // Primera fila
-        PdfPCell cell = new PdfPCell(new Phrase("Apellido y Nombre",font));
+        PdfPCell cell = new PdfPCell(new Phrase("Apellido y Nombre: "+salud.getAyn(),font));
         cell.setColspan(4); // Indicamos que esta celda ocupa las 4 columnas de la tabla
         table.addCell(cell);
 
 // Segunda fila
-      table.addCell(new PdfPCell(new Phrase("Fecha Nac:",font)));
-       table.addCell(new PdfPCell(new Phrase("DNI/Pasaporte: ",font)));
-       table.addCell(new PdfPCell(new Phrase("Edad: ",font)));
-      table.addCell(new PdfPCell(new Phrase("Sexo",font)));
+      table.addCell(new PdfPCell(new Phrase("Fecha Nac: "+salud.getFnac(),font)));
+       table.addCell(new PdfPCell(new Phrase("DNI/Pasaporte: " +salud.getDni(),font)));
+       table.addCell(new PdfPCell(new Phrase("Edad: "+salud.getEdad(),font)));
+      table.addCell(new PdfPCell(new Phrase("Sexo: "+salud.getSexo(),font)));
 
 // Tercera fila
-       table.addCell(new PdfPCell(new Phrase("Domicilio:  ",font))).setColspan(2);
+       table.addCell(new PdfPCell(new Phrase("Domicilio: " +salud.getDomicilio(),font))).setColspan(2);
         table.addCell(new PdfPCell(new Phrase("")));
-       table.addCell(new PdfPCell(new Phrase("Celular: ",font))).setColspan(2);
+       table.addCell(new PdfPCell(new Phrase("Celular: "+salud.getCelular(),font))).setColspan(2);
         table.addCell(new PdfPCell(new Phrase("")));
 
 // Cuarta fila
-      table.addCell(new PdfPCell(new Phrase("Mail: ",font))).setColspan(2);
+      table.addCell(new PdfPCell(new Phrase("Mail: "+salud.getMail(),font))).setColspan(2);
         table.addCell(new PdfPCell(new Phrase("")));
-      table.addCell(new PdfPCell(new Phrase("Profesión: ",font)));
-      table.addCell(new PdfPCell(new Phrase("Ocupación: ",font)));
+      table.addCell(new PdfPCell(new Phrase("Profesión: "+salud.getProfesion(),font)));
+      table.addCell(new PdfPCell(new Phrase("Ocupación: "+ salud.getOcupacion(),font)));
 
 // Quinta fila
-        table.addCell(new PdfPCell(new Phrase("Grupo Sanguíneo:",font)));
-       table.addCell(new PdfPCell(new Phrase("Factor: ",font)));
-      table.addCell(new PdfPCell(new Phrase("Altura:",font)));
-      table.addCell(new PdfPCell(new Phrase("Peso: ",font)));
+        table.addCell(new PdfPCell(new Phrase("Grupo Sanguíneo: "+salud.getGsanguineo(),font)));
+       table.addCell(new PdfPCell(new Phrase("Factor: "+salud.getFactor(),font)));
+      table.addCell(new PdfPCell(new Phrase("Altura: "+salud.getAltura(),font)));
+      table.addCell(new PdfPCell(new Phrase("Peso: "+salud.getPeso(),font)));
 
 // Sexta fila
-        table.addCell(new PdfPCell(new Phrase("¿Tiene experiencia previa en cabalgata?: ",font))).setColspan(2);
+        table.addCell(new PdfPCell(new Phrase("¿Tiene experiencia previa en cabalgata?: "+salud.getExpcab(),font))).setColspan(2);
         table.addCell(new PdfPCell(new Phrase("")));
-        table.addCell(new PdfPCell(new Phrase("¿De que duración?:",font))).setColspan(2);
+        table.addCell(new PdfPCell(new Phrase("¿De que duración?: "+salud.getExpdur(),font))).setColspan(2);
         table.addCell(new PdfPCell(new Phrase("")));
 
         doc.add(table); // Agregamos la tabla al documento
-        Paragraph emergencia = new Paragraph("En caso de emergencia Comunicarse con:  ", font);
+        Paragraph emergencia = new Paragraph("En caso de emergencia Comunicarse con:", font);
         emergencia.setAlignment(Element.ALIGN_CENTER);
         doc.add(emergencia);
-
+      doc.add(o);
         PdfPTable table2 = new PdfPTable(2); // 4 es el número máximo de columnas que tendrá la tabla
         table2.setWidthPercentage(100);
 
         //primeraFila
-        PdfPCell cell2 = new PdfPCell(new Phrase("Apellido y Nombre",font));
+        PdfPCell cell2 = new PdfPCell(new Phrase("Apellido y Nombre: "+salud.getEmerayn(),font));
         cell2.setColspan(2); // Indicamos que esta celda ocupa las 4 columnas de la tabla
         table2.addCell(cell2);
 
-        table2.addCell(new PdfPCell(new Phrase("Domicilio:",font))).setColspan(2);
+        table2.addCell(new PdfPCell(new Phrase("Domicilio: "+salud.getEmerdom(),font))).setColspan(2);
         table2.addCell(new PdfPCell(new Phrase("")));
 
-        table2.addCell(new PdfPCell(new Phrase("Parentesco: ",font)));
-        table2.addCell(new PdfPCell(new Phrase("Teléfono: ",font)));
+        table2.addCell(new PdfPCell(new Phrase("Parentesco: "+salud.getEmerparen(),font)));
+        table2.addCell(new PdfPCell(new Phrase("Teléfono: "+salud.getEmertelefono(),font)));
 
-        table2.addCell(new PdfPCell(new Phrase("Datos de Seguro Médico (Nombre y Número): ",font))).setColspan(2);
+        table2.addCell(new PdfPCell(new Phrase("Datos de Seguro Médico (Nombre y Número): "+salud.getDatosseguromedico(),font))).setColspan(2);
         table2.addCell(new PdfPCell(new Phrase("")));
         doc.add(table2);
 
 
-        Paragraph clinico = new Paragraph("DATOS CLÍNICOS - OTROS  ", font);
+        Paragraph clinico = new Paragraph("DATOS CLÍNICOS - OTROS ", font);
         clinico.setAlignment(Element.ALIGN_CENTER);
         doc.add(clinico);
+      doc.add(o);
 
 
 
@@ -168,7 +169,7 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("Si",font)));
         table3.addCell(new PdfPCell(new Phrase("No",font)));
-        table3.addCell(new PdfPCell(new Phrase("¿Sufre de alguna afección respiratoria? ¿Cuál?",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("¿Sufre de alguna afección respiratoria?: "+salud.getCualafeccionresp(),font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -176,8 +177,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+        if(salud.getAfeccionresp().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
+        }else{
+          table3.addCell(new PdfPCell(new Phrase("")));
+          table3.addCell(new PdfPCell(new Phrase("X")));
+
+        }
         table3.addCell(new PdfPCell(new Phrase("¿Tiene problemas de coagulación?",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -186,8 +193,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getCoag().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
         //===2
         table3.addCell(new PdfPCell(new Phrase("Anginas frecuentes",font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -197,8 +210,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getAnginas().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
         table3.addCell(new PdfPCell(new Phrase("Hemorragias o enfermedades de la sangre",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -207,8 +226,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getHemoragia().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
 //===3
         table3.addCell(new PdfPCell(new Phrase("Asma bronquial ",font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -218,8 +243,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getAsma().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
         table3.addCell(new PdfPCell(new Phrase("¿Sufre de problemas de presión?",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -228,10 +259,16 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getProbpres().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
 //====4
-        table3.addCell(new PdfPCell(new Phrase("Otras: ",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("Otras: "+salud.getOtrasrespiratorio(),font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -241,7 +278,7 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("Otras: ",font))).setColspan(8);;
+        table3.addCell(new PdfPCell(new Phrase("Otras: "+salud.getOtrascirc(),font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -274,7 +311,7 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("Si")));
         table3.addCell(new PdfPCell(new Phrase("No")));
 //====6
-        table3.addCell(new PdfPCell(new Phrase("¿Sufre de problemas gastrointestinales? ¿Cuál?",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("¿Sufre de problemas gastrointestinales?"+salud.getCualprobgast(),font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -282,8 +319,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getPrbgastr().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
         table3.addCell(new PdfPCell(new Phrase("Cardiopatía congénita ",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -292,10 +335,16 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getCardiopatia().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
 //===7
-        table3.addCell(new PdfPCell(new Phrase("Otras:",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("Otras: "+salud.getOtrosdigestivo(),font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -305,7 +354,7 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("Soplos cardiacos ",font))).setColspan(8);;
+        table3.addCell(new PdfPCell(new Phrase("Soplos cardiacos: ",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -313,8 +362,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getSoplo().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
 //===8
         table3.addCell(new PdfPCell(new Phrase(""))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -326,7 +381,7 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("Tensión arterial habitual: ",font))).setColspan(8);;
+        table3.addCell(new PdfPCell(new Phrase("Tensión arterial habitual: "+salud.getTension(),font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -347,7 +402,7 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("Pulso cardiaco: ",font))).setColspan(8);;
+        table3.addCell(new PdfPCell(new Phrase("Pulso cardiaco: "+salud.getPulso(),font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -358,14 +413,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
 //===10
-        table3.addCell(new PdfPCell(new Phrase("¿Sufre de alguna afección respiratoria? ¿Cuál?",font))).setColspan(8);
-        table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
+  /*     table3.addCell(new PdfPCell(new Phrase("¿Sufre de alguna afección respiratoria? ¿Cuál?",font))).setColspan(8);
+       table3.addCell(new PdfPCell(new Phrase("")));
+      table3.addCell(new PdfPCell(new Phrase("")));
+       table3.addCell(new PdfPCell(new Phrase("")));
+       table3.addCell(new PdfPCell(new Phrase("")));
+      table3.addCell(new PdfPCell(new Phrase("")));
+      table3.addCell(new PdfPCell(new Phrase("")));
+       table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("¿Tiene problemas de coagulación?",font))).setColspan(8);;
@@ -377,7 +432,7 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("")));*/
 
 //===11
         table3.addCell(new PdfPCell(new Phrase("OTROS",font))).setColspan(8);
@@ -401,7 +456,7 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
 //====12
-        table3.addCell(new PdfPCell(new Phrase("¿Es usted alérgico a medicamento?: ",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("¿Es usted alérgico a medicamento?: "+salud.getCualesmedicamentos(),font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -409,8 +464,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getMedalerg().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
         table3.addCell(new PdfPCell(new Phrase("Epilepsia",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -419,11 +480,17 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getEpilepcia().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
 
         //====13
-        table3.addCell(new PdfPCell(new Phrase("Lesiones de cintura, rodillas o tobillos ",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("Lesiones de cintura, rodillas o tobillos"+salud.getLescintura(),font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -431,20 +498,32 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getCualcintura().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
+        table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
+        table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
+        table3.addCell(new PdfPCell(new Phrase("Convulsiones. Que las provoca: "+salud.getQueprovcomb(),font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("Convulsiones. Que las provoca: ",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getConvulcion().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
 //====14
-        table3.addCell(new PdfPCell(new Phrase("Lesiones de hombros, columna o brazos ",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("Lesiones de hombros, columna o brazos: "+salud.getCualhombro(),font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -452,8 +531,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getLeshombro().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
         table3.addCell(new PdfPCell(new Phrase("Es usted una persona friolenta ",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -462,8 +547,14 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getFriolenta().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
 //===15
         table3.addCell(new PdfPCell(new Phrase("Diabetes",font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -473,20 +564,32 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getDiabetes().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
+        table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
+        table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
+        table3.addCell(new PdfPCell(new Phrase("Esta usted embarazada. ¿Cuántos meses?: "+salud.getMeses(),font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("Esta usted embarazada. ¿Cuántos meses?",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getEmbarazo().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
 //===16
-        table3.addCell(new PdfPCell(new Phrase("Lesiones en la cabeza, pérdida de conocimiento",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("Lesiones en la cabeza, pérdida de conocimiento: ",font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -494,20 +597,32 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getLescabeza().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
+        table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
+        table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
+        table3.addCell(new PdfPCell(new Phrase("Esta usted bajo tratamiento médico: "+salud.getCualtratamiento(),font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("Esta usted bajo tratamiento médico",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getTratmedico().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
 //==17
-        table3.addCell(new PdfPCell(new Phrase("Cirugías: ",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("Cirugías: "+salud.getCualcigia(),font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -515,9 +630,15 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getCirugia().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("Fobias: ",font))).setColspan(8);;
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
+        table3.addCell(new PdfPCell(new Phrase("Fobias: "+salud.getFobias(),font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -528,7 +649,7 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
 //===18
-        table3.addCell(new PdfPCell(new Phrase("Otro tipo de alergias: ",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("Otro tipo de alergias: "+salud.getOtroalergia(),font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -538,7 +659,7 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("Problemas musculares: ",font))).setColspan(8);;
+        table3.addCell(new PdfPCell(new Phrase("Problemas musculares: "+salud.getCualesmusculres(),font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -546,10 +667,16 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getCualesmusculres().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
         //===19
-        table3.addCell(new PdfPCell(new Phrase("¿Sufre actualmente alguna enfermedad? ¿Cuál?",font))).setColspan(8);
+        table3.addCell(new PdfPCell(new Phrase("¿Sufre actualmente alguna enfermedad?: "+salud.getCualenfermedad(),font))).setColspan(8);
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
@@ -557,18 +684,30 @@ public class generarPDF {
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getSufreeenfermedad().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
+        table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
+        table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
+        table3.addCell(new PdfPCell(new Phrase("¿Toma algún medicamento actualmente?: "+salud.getCualmed(),font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("¿Toma algún medicamento actualmente? ¿Cuál?",font))).setColspan(8);;
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      if(salud.getTomamed().equals("Si")){
+        table3.addCell(new PdfPCell(new Phrase("X")));
         table3.addCell(new PdfPCell(new Phrase("")));
+      }else{
         table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
-        table3.addCell(new PdfPCell(new Phrase("")));
+        table3.addCell(new PdfPCell(new Phrase("X")));
+
+      }
 
         doc.add(table3);
 
@@ -578,7 +717,7 @@ public class generarPDF {
         doc.add(rest);
 
 
-        Paragraph rest1 = new Paragraph("Necesita algún régimen de comida especial. ¿Cuál?....................................................................... ¿Hay algún alimento que no consuma o alguno que no sea de su agrado? …………………………………………………………………………………………………….", font);
+        Paragraph rest1 = new Paragraph("Necesita algún régimen de comida especial. ¿Cuál? "+salud.getRegimen()+" ¿Hay algún alimento que no consuma o alguno que no sea de su agrado? "+salud.getAlimento()+"\n", font);
         rest1.setAlignment(Element.ALIGN_LEFT);
         doc.add(rest1);
 
@@ -607,7 +746,7 @@ public class generarPDF {
       PdfPTable tablex = new PdfPTable(3);
       tablex.setWidthPercentage(100);
 
-      PdfPCell cell111 = new PdfPCell(new Phrase("Dir: José Hernández s/n - San Francisco - Dpto. Valle Grande - Jujuy / Tel: (0388) 154971402 (03886) 15477699", font));
+      PdfPCell cell111 = new PdfPCell(new Phrase("\n José Hernández s/n - San Francisco - Dpto. Valle Grande - Jujuy / Tel: (0388) 154971402 (03886) 15477699", font));
       cell111.setColspan(3);
       cell111.setBorder(Rectangle.NO_BORDER);
       cell111.setVerticalAlignment(Element.ALIGN_BOTTOM);
