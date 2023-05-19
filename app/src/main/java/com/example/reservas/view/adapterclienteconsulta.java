@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,21 +59,34 @@ public class adapterclienteconsulta extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView txtnombre, txtdni,txtfecha;
+        TextView txtnombre, txtdni,txtfecha, txtobs;
+        ImageView imagen;
         ImageButton borrar;
+
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.activity_adapterclienteconsulta, parent, false);
         txtnombre = (TextView) itemView.findViewById(R.id.txtNombreClienteAdapter1);
         txtdni = (TextView) itemView.findViewById(R.id.txtDNIClienteAdapter1);
         txtfecha = (TextView) itemView.findViewById(R.id.txtFechaClienteAdapter1);
         borrar=(ImageButton)itemView.findViewById(R.id.imageButton31);
+        imagen=(ImageView)itemView.findViewById(R.id.imageViewClienteAdapter);
+        txtobs=(TextView)itemView.findViewById(R.id.txtDescripcionClienteAdapter1);
+        borrar.setImageResource(R.drawable.descargar);
+        borrar.setAdjustViewBounds(true);
+        borrar.setBackgroundResource(android.R.color.transparent);
         cliente = clientelist.get(position);
         String nombre = cliente.getNombre();
         String dni=  cliente.getDni();
         String fecha =cliente.getFechaN();
+        String onservacion=cliente.getObs();
+        String cab=cliente.getCaballo();
         txtnombre.setText(nombre);
         txtdni.setText(dni);
         txtfecha.setText(fecha);
+        txtobs.setText(onservacion);
+        if(cab.equals("Sin Cabalgata")){
+            imagen.setImageResource(R.drawable.caminata);
+        }
         borrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

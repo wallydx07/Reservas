@@ -117,13 +117,13 @@ public class Usuario extends Fragment implements View.OnClickListener{
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        // La operación se realizó con éxito
+                        Toast.makeText(getActivity().getApplicationContext(), "Cambio Realizado con exito", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Ocurrió un error al realizar la operación
+                        Toast.makeText(getActivity().getApplicationContext(), "Ocurrio un error", Toast.LENGTH_SHORT).show();
                     }
                 });
 

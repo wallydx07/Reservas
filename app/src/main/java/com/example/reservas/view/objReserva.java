@@ -16,7 +16,7 @@ public class objReserva implements Serializable {
      List<objPersona> Personalist;
 
 
-    public objReserva(String correo, String telefono, String hospedaje, String usuario, List<objPersona> personalist,String pendiente,String deposito, String procedencia) {
+    public objReserva(String correo, String telefono, String hospedaje, String usuario, List<objPersona> personalist,String pendiente,String deposito, String procedencia, String total) {
         this.correo = correo;
         this.telefono = telefono;
         this.hospedaje = hospedaje;
@@ -25,6 +25,7 @@ public class objReserva implements Serializable {
         this.pendiente=pendiente;
         this.Personalist = personalist;
         this.procedencia=procedencia;
+        this.total=total;
     }
 
     public objReserva() {

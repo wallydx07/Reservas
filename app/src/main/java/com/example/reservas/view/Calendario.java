@@ -1,7 +1,9 @@
 package com.example.reservas.view;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -39,11 +43,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Calendario extends Fragment {
     ListCalendarioAdapter adapter;
     private int dia, mes, año;
-    private TextView textview;
+    private EditText textview;
     private ListView listview;
     private Button botonBorrar;
     private View v;
@@ -56,13 +61,42 @@ public class Calendario extends Fragment {
         // Required empty public constructor
 
     }
+    private String twoDigits(int n) {
+        return (n<=9) ? ("0"+n) : String.valueOf(n);
+    }
+
+    public void loadCalendario() {
+        int dia, mes, año;
+        final Calendar c = Calendar.getInstance();
+        final Calendar newCalendar = Calendar.getInstance();
+        dia = c.get(Calendar.DAY_OF_MONTH);
+        mes = c.get(Calendar.MONTH);
+        año = c.get(Calendar.YEAR);
+
+        Configuration config = getResources().getConfiguration();
+        Locale locale = new Locale("es", "ES");
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int dia, int mes, int año) {
+                EditText etPlannedDate = textview;
+                etPlannedDate.setText("");
+                final String selectedDate = twoDigits(año) + "-" + twoDigits(mes+1) + "-" + twoDigits(dia);
+                etPlannedDate.setText(selectedDate);
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
 
     public Calendario newInstance(String param1, String param2) {
         Calendario fragment = new Calendario();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         Button buttonfecha;
-        buttonfecha=(Button)getView().findViewById(R.id.buttonCalendarioFecha);
+       // buttonfecha=(Button)getView().findViewById(R.id.buttonCalendarioFecha);
         return fragment;
     }
     @Override
@@ -86,6 +120,42 @@ public class Calendario extends Fragment {
         textview=v.findViewById(R.id.txtCalendarioFecha);
         textview.setText(formattedDate);
         listview=v.findViewById(R.id.lvCalendarioHoras);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                //Se busca la referencia del TextView en la vista.
+                TextView textView = (TextView)view.findViewById(R.id.txtCalendarListCircuito);
+                //Obtiene el texto dentro del TextView.
+                String textItemList  = textView.getText().toString();
+                System.out.println(textItemList);
+                if(textItemList.equals("Disponible")){
+                    TextView texHorainicio = (TextView)view.findViewById(R.id.txtCalendarListHora);
+                    //Obtiene el texto dentro del TextView.
+                    String horaInicio  = texHorainicio.getText().toString();//si esta disponible le manda la hora de inicio
+                    String guia=spinGuia.getSelectedItem().toString();
+                    String fecha=textview.getText().toString();
+                    Intent intent = new Intent(getActivity(), crearReserv.class);
+                    Bundle datoenvia = new Bundle();
+                    datoenvia.putString("guia",guia);
+                    datoenvia.putString("bandera","reserva");
+                    datoenvia.putString("horaInicio", horaInicio);
+                    datoenvia.putString("fecha",fecha);
+                    intent.putExtras(datoenvia);
+                    startActivity(intent);
+                }else{
+                    Bundle datoenvia = new Bundle();
+                    objHorario cita=horariolist.get(i);
+                    datoenvia.putString("datos", textItemList);
+                    Intent intent = new Intent(getActivity(), consultaHorario.class);
+                    intent.putExtras(datoenvia);
+                    intent.putExtra("horario", cita);
+
+                    startActivity(intent);
+
+                }
+                Toast.makeText(getContext(), "presiono " + i, Toast.LENGTH_SHORT).show();
+            }
+        });
         spinGuia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
@@ -96,6 +166,14 @@ public class Calendario extends Fragment {
 
             }
         });
+        textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadCalendario();
+            }
+        });
+
+
 
         textview.addTextChangedListener(new TextWatcher() {
 
@@ -229,15 +307,11 @@ public class Calendario extends Fragment {
         }
         return aux;
     }
-
     public void loadHoras() {
         String fecha=textview.getText().toString();
-        final List<objReserva>rlist = new ArrayList<>();
         final List<objHorario> hlist = new ArrayList<>();
         final ListView lista =v.findViewById(R.id.lvCalendarioHoras);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        System.out.println(fecha+
-        "qwerty44444");
         mDatabase.child("cita").orderByChild("fecha").equalTo(fecha).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -247,27 +321,23 @@ public class Calendario extends Fragment {
                         try {
                             if (guia.equals(spinGuia.getSelectedItem().toString())) {
                                 String hID=ds.getKey();
-
-                                List<objPersona> plist = new ArrayList<>();
                                 List<obProductos> clist = new ArrayList<>();
                                 String fecha=ds.child("fecha").getValue().toString();
                                 String horainicio = ds.child("horaInicio").getValue().toString();
                                 String horaFin = ds.child("horaFin").getValue().toString();
                                 String circuito = ds.child("circuito").getValue().toString();
-
-
-
+                                List<objReserva>rlist = new ArrayList<>();
                                 for (DataSnapshot dsii : ds.child("reservalist").getChildren()) {
                                     String rID=dsii.getKey();
-                                    String correo = dsii.child("correo").getValue().toString();
-                                    // String urlBuenaSalud=ds.child("urlBuenaSalud").getValue().toString();
-                                    //   String urlDNI=ds.child("urlDNI").getValue().toString();
-                                    String usuario = dsii.child("usuario").getValue().toString();
+                                    String correo = dsii.child("correo").getValue().toString(); String usuario = dsii.child("usuario").getValue().toString();
                                     String hospedaje = dsii.child("hospedaje").getValue().toString();
                                     String telefono = dsii.child("telefono").getValue().toString();
                                     String deposito= dsii.child("deposito").getValue().toString();
+                                    String usuariores= dsii.child("usuario").getValue().toString();
                                     String procedencia= dsii.child("procedencia").getValue().toString();
                                     String pendiente = dsii.child("pendiente").getValue().toString();
+                                    String total= dsii.child("total").getValue().toString();
+                                    List<objPersona> plist = new ArrayList<>();
                                     for (DataSnapshot dsi : dsii.child("personalist").getChildren()) {
                                         String nombre = dsi.child("nombre").getValue().toString();
                                         String dni = dsi.child("dni").getValue().toString();
@@ -277,10 +347,7 @@ public class Calendario extends Fragment {
                                         String obs=dsi.child("obs").getValue().toString();
                                         plist.add(new objPersona(nombre, dni, fechaN, tipo,caballo,obs));
                                     }
-
-                                    System.out.println("=============="+clist.size()+"===============");
-                                    //fecha, hora0, horaFin, guia, circuito,
-                                    objReserva Res=new objReserva(correo, telefono, hospedaje, usuario,  plist, pendiente,deposito,procedencia);
+                                    objReserva Res=new objReserva(correo, telefono, hospedaje, usuariores,  plist, pendiente,deposito,procedencia,total);
                                     Res.setID(rID);
                                     rlist.add(Res);
                                 }
@@ -289,56 +356,17 @@ public class Calendario extends Fragment {
                                 hlist.add(cit);
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
+
                 }else{
                     System.out.println("no se ha enctrado nadi aca");
                 }
                 BurbujaColObj(hlist);
-                horariolist=acomodar(hlist);
-                try {
-                    adapter = new ListCalendarioAdapter(getActivity().getApplicationContext(), horariolist);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                //listview.setAdapter(adapter);
-                listview.setAdapter((ListAdapter) adapter);
-                listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                        //Se busca la referencia del TextView en la vista.
-                        TextView textView = (TextView)view.findViewById(R.id.txtCalendarListNombre);
-                        //Obtiene el texto dentro del TextView.
-                        String textItemList  = textView.getText().toString();
-                        System.out.println(textItemList);
-                        if(textItemList.equals("Disponible")){
-                            TextView texHorainicio = (TextView)view.findViewById(R.id.txtCalendarListHora);
-                            //Obtiene el texto dentro del TextView.
-                            String horaInicio  = texHorainicio.getText().toString();//si esta disponible le manda la hora de inicio
-                            String guia=spinGuia.getSelectedItem().toString();
-                            String fecha=textview.getText().toString();
-                            Intent intent = new Intent(getActivity(), crearReserv.class);
-                            Bundle datoenvia = new Bundle();
-                            datoenvia.putString("guia",guia);
-                            datoenvia.putString("bandera","reserva");
-                            datoenvia.putString("horaInicio", horaInicio);
-                            datoenvia.putString("fecha",fecha);
-                            intent.putExtras(datoenvia);
-                            startActivity(intent);
-                        }else{
-                            Bundle datoenvia = new Bundle();
-                            objHorario cita=horariolist.get(i);
-                            datoenvia.putString("datos", textItemList);
-                            Intent intent = new Intent(getActivity(), consultaHorario.class);
-                            intent.putExtras(datoenvia);
-                            intent.putExtra("horario", cita);
-                            startActivity(intent);
+               horariolist=acomodar(hlist);
 
-                        }
-                        Toast.makeText(getContext(), "presiono " + i, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                adapter = new ListCalendarioAdapter(getActivity().getApplicationContext(), horariolist);
+                listview.setAdapter(adapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -346,6 +374,8 @@ public class Calendario extends Fragment {
         });
 
     }
+
+
     public void loadGuias(){
         String ID="";
 

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.example.reservas.R;
 
@@ -40,12 +41,6 @@ public class ListCalendarioAdapter extends BaseAdapter {
     //============================================================
    public ListCalendarioAdapter(Context context, List<objHorario> horariolist) {
         this.context = context;
-       /* try {
-            BurbujaColObj(reservaslist);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
-       // this.reservaslist = acomodar(reservaslist);
        this.horariolist = horariolist;
 
     }
@@ -98,10 +93,6 @@ public class ListCalendarioAdapter extends BaseAdapter {
                 fin=reser.getHoraFin();
                 int dif=restarHoras(inicio,fin);
                 int posicion=getPositionInVector(horasTV,inicio);
-                System.out.println("indice: "+i);
-                System.out.println("se detecto Lahora inicio: "+inicio);
-                System.out.println("se detecto Lahora fin: "+fin);
-                System.out.println("exixste una diferencia "+dif);
                 for(int j=0;j<dif;j++){
                     int newpost=posicion+j;
                     System.out.println("se agregara a la posicion "+newpost);
@@ -154,16 +145,16 @@ public class ListCalendarioAdapter extends BaseAdapter {
 
         if((horariolist.get(position))!=null){
             horario = horariolist.get(position);
-            nombre ="cambiar";
+            nombre ="";
             circuito = horario.getCircuito();
             horainicio = horasTV[position];
             horafin=horario.horaFin;
-            itemView.setBackgroundColor(Color.BLUE);
+            itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.asentuar));
         }else{
-                nombre = "Disponible";
+                nombre = "";
                 circuito = "Disponible";
                 horainicio = horasTV[position];
-                itemView.setBackgroundColor(Color.GRAY);
+                itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.principal));
             }
 
 

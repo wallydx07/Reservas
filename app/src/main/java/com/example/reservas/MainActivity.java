@@ -83,11 +83,6 @@ public class MainActivity extends AppCompatActivity {
             buttoniniciarsecion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-
-
-
                     String Semail=(String.valueOf(email.getText()));
                     String Spassword=(String.valueOf(password.getText()));
                     if (Semail.isEmpty() || Spassword.isEmpty()) {

@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center_vertical"
+        android:layout_marginStart="20dp">
 
         <TextView
             android:id="@+id/tvGuia"
@@ -23,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:layout_marginStart="20dp"
             android:text="Valor de la guía" />
 
     </LinearLayout>
@@ -30,7 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center_vertical"
+        android:layout_marginStart="20dp">
 
         <TextView
             android:id="@+id/tvCircuito"
@@ -44,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:layout_marginStart="20dp"
             android:text="Valor de la hora de circuito" />
 
     </LinearLayout>
@@ -51,7 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center_vertical"
+        android:layout_marginStart="20dp">
 
         <TextView
             android:id="@+id/tvHoraPartida"
@@ -64,8 +69,9 @@
             android:id="@+id/tvHoraPartidaValor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:textSize="20sp"
-            android:text="Valor de la hora de partida" />
+            android:text="Valor de la hora de " />
 
     </LinearLayout>
 
@@ -73,7 +79,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center_vertical"
+        android:layout_marginStart="20dp">
 
         <TextView
             android:id="@+id/tvHoraRegreso"
@@ -86,8 +93,9 @@
             android:id="@+id/tvHoraRegresoValor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:textSize="20sp"
-            android:text="Valor de la hora de regreso" />
+            android:text="Valor de la hora de " />
 
     </LinearLayout>
 
@@ -95,7 +103,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center_vertical"
+        android:layout_marginStart="20dp">
 
         <TextView
             android:id="@+id/tvFecha"
@@ -109,6 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:layout_marginStart="20dp"
             android:text="Valor de la fecha" />
 
     </LinearLayout>

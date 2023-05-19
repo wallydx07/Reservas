@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class objPersona implements Serializable {
     String nombre;
     String dni;
-    String fechaNacimiento;
+    String fechaN;
     String Tipo;
     String caballo;
     String obs;
@@ -13,19 +13,13 @@ public class objPersona implements Serializable {
     public objPersona(String nombre, String dni, String fechaN, String tipo, String caballo,String obs) {
         this.nombre = nombre;
         this.dni = dni;
-        this.fechaNacimiento = fechaN;
+        this.fechaN = fechaN;
         this.Tipo = tipo;
         this.caballo=caballo;
         this.obs=obs;
     }
 
-    public String getFechaNacimiento() {
-        return fechaNacimiento;
-    }
 
-    public void setFechaNacimiento(String fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
 
     public String getCaballo() {
         return caballo;
@@ -60,11 +54,11 @@ public class objPersona implements Serializable {
     }
 
     public String getFechaN() {
-        return fechaNacimiento;
+        return fechaN;
     }
 
     public void setFechaN(String fechaN) {
-        this.fechaNacimiento = fechaNacimiento;
+        this.fechaN= fechaN;
     }
 
     public String getTipo() {

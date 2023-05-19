@@ -46,7 +46,8 @@
                     android:id="@+id/spinnerGuiaReservaProducto"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/textView8"
@@ -180,12 +181,6 @@
                         android:maxLength="10"
                         android:text="" />
 
-                    <Spinner
-                        android:id="@+id/spinnerReservaProductoCaballo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:enabled="true" />
                     <EditText
                         android:id="@+id/txtobs"
                         android:layout_width="match_parent"
@@ -197,6 +192,12 @@
                         android:imeOptions="actionDone"
                         android:inputType="textPersonName"
                         tools:text="" />
+                    <Spinner
+                        android:id="@+id/spinnerReservaProductoCaballo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:enabled="true" />
 
                 </LinearLayout>
 
@@ -218,7 +219,7 @@
                 android:id="@+id/listViewDatosClientes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:textSize="20dp"
                 android:gravity="center" />
 
             <EditText
@@ -275,8 +276,7 @@
                 android:ems="10"
                 android:hint="Total"
                 android:imeOptions="actionDone"
-                android:inputType="number"
-                android:text="100" />
+                android:inputType="number" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -291,8 +291,7 @@
                     android:ems="10"
                     android:hint="Anticipo"
                     android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:text="100" />
+                    android:inputType="number" />
 
 
                 <EditText
@@ -303,8 +302,7 @@
                     android:ems="10"
                     android:hint="Pendiente"
                     android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:text="0" />
+                    android:inputType="number" />
             </LinearLayout>
 
 

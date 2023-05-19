@@ -33,6 +33,7 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
     //ListClientesAdpater adapter;
     adapterclienteconsulta adapter;
     String URLdni, URLSalud;
+    int index;
     String horaih,horafh,fechah,guiah;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,42 +41,30 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_consulta_reserva);
         Bundle parametros = this.getIntent().getExtras();
         if(parametros !=null){
+            index = getIntent().getIntExtra("index", 0);
             horaih = parametros.getString("horai");
             horafh= parametros.getString("horaf");
             fechah=parametros.getString("fecha");
             guiah=parametros.getString("guia");
+            horario=(objHorario) getIntent().getSerializableExtra("horario");
             Reserva  = (objReserva) getIntent().getSerializableExtra("reserva");
             Personalist=Reserva.getPersonalist();
-
-
-            caballos=(ListView)findViewById(R.id.lvConsutlaReservaCaballos);
-            //adapter = new ListClientesAdpater(this,Personalist);
             adapter = new adapterclienteconsulta(this,Personalist);
-           // URLdni=Reserva.getUrlDNI();
-          //  URLSalud=Reserva.getUrlBuenaSalud();
-           // System.out.println(URLSalud+"qwertyuiopñlkjhgfdsazxcvbnm");
-            fecha=(TextView)findViewById(R.id.txtConsultaReservaCircuito);
-            horapartida=(TextView)findViewById(R.id.txtConsutlaReservaHoraPartida);
-            horallegada=(TextView)findViewById(R.id.txtConsutlaReservaHoraRegreso);
             deposito=(TextView)findViewById(R.id.txtConsutlaReservaDeposito);
             pendiente=(TextView)findViewById(R.id.txtConsutlaReservaPendiente);
             clientes=(ListView)findViewById(R.id.lvConsutlaReservaclientes);
             usuario=(TextView)findViewById(R.id.textView9);
             correo=(TextView)findViewById(R.id.txtCrr);
             hospedaje=(TextView)findViewById(R.id.textView14h);
-            descarga=(Button)findViewById(R.id.btDescargaConsultaReserva);
+          //  descarga=(Button)findViewById(R.id.btDescargaConsultaReserva);
             telefono=(TextView)findViewById(R.id.txttl);
             procedencia=(TextView)findViewById(R.id.txtproc);
             guia=(TextView)findViewById(R.id.textView11);
-            circuito=(TextView)findViewById(R.id.txtcirc);
-            descarga.setOnClickListener(this);
+//            descarga.setOnClickListener(this);
             editar=(Button)findViewById(R.id.btEditarConsultaReserva);
             editar.setOnClickListener(this);
             eliminar=(Button)findViewById(R.id.btEliminarConsultaReserva);
             eliminar.setOnClickListener(this);
-           fecha.setText(fechah);
-           horapartida.setText(horaih);
-           horallegada.setText(horafh);
             deposito.setText(Reserva.getDeposito());
             pendiente.setText(Reserva.getPendiente());
             usuario.setText(Reserva.getUsuario());
@@ -84,19 +73,7 @@ public class ConsultaReserva extends AppCompatActivity implements View.OnClickLi
             hospedaje.setText(Reserva.getHospedaje());
             telefono.setText(Reserva.getTelefono());
             procedencia.setText(Reserva.getProcedencia());
-           // ArrayAdapter<objPersona> adapter=new ArrayAdapter<objPersona>(this.getApplicationContext(),R.layout.clientesadapter,Personalist);
-
             clientes.setAdapter(adapter);
-if(Caballolist==null){
-
-}else {
-    ArrayAdapter<obProductos> adapter1=new ArrayAdapter<obProductos>(getApplicationContext(),R.layout.listview_item,Caballolist);
-    caballos.setAdapter(adapter1);
-    System.out.println(Reserva);
-}
-
-
-
         }
     }
 
@@ -122,40 +99,64 @@ if(Caballolist==null){
                 startActivity(intent);
 
                 break;*/
-            case R.id.btDescargaConsultaReserva:
+          //  case R.id.btDescargaConsultaReserva:
 
                 //downloadFile(this.getApplicationContext(),Reserva.nombreTitular()+"-Salud",".pdf", Environment.DIRECTORY_DOWNLOADS,URLSalud);
                // downloadFile(this.getApplicationContext(),Reserva.nombreTitular()+"-DNI",".pdf", Environment.DIRECTORY_DOWNLOADS,URLdni);
 
-                break;
+               // break;
             case R.id.btEditarConsultaReserva:
                 Intent intent = new Intent(this, crearReserv.class);
                 intent.putExtra("reserva", Reserva);
+                intent.putExtra("horario", horario);
                 Bundle datoenvia = new Bundle();
                 datoenvia.putString("bandera","editar");
                 datoenvia.putString("horai",horaih);
                 datoenvia.putString("horaf", horafh);
                 datoenvia.putString("fecha", fechah);
                 datoenvia.putString("guia", guiah);
+                datoenvia.putInt("index",index);
                 intent.putExtras(datoenvia);
                 startActivity(intent);
                 finish();
                 break;
             case R.id.btEliminarConsultaReserva:
-                DatabaseReference registroRef = FirebaseDatabase.getInstance().getReference("reserva/"+Reserva.getID());
+                if(horario.getReservalist().size()==1){
+                    DatabaseReference citaRef = FirebaseDatabase.getInstance().getReference("cita").child(horario.getID());
 
-// Eliminar el registro
-                registroRef.removeValue(new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError error, DatabaseReference ref) {
-                        if (error == null) {
-                            System.out.println("Registro eliminado exitosamente.");
-                        } else {
-                            System.out.println("Error al eliminar el registro: " + error.getMessage());
+                    citaRef.removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError error, DatabaseReference ref) {
+                            if (error == null) {
+                                System.out.println("Nodo cita eliminado exitosamente.");
+                            } else {
+                                System.out.println("Error al eliminar el nodo cita: " + error.getMessage());
+                            }
                         }
-                    }
-                });
+                    });
 
+
+
+
+                }else {
+
+                    DatabaseReference citaRef = FirebaseDatabase.getInstance().getReference("cita").child(horario.getID());
+                    DatabaseReference reservalistRef = citaRef.child("reservalist").child(Reserva.getID());
+
+                    reservalistRef.removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError error, DatabaseReference ref) {
+                            if (error == null) {
+                                System.out.println("Nodo reservalist eliminado exitosamente.");
+                            } else {
+                                System.out.println("Error al eliminar el nodo reservalist: " + error.getMessage());
+                            }
+                        }
+                    });
+
+
+
+                }
                 finish();
 
 

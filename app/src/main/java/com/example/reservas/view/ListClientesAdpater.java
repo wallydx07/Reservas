@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,7 +53,8 @@ public class ListClientesAdpater extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView txtnombre, txtdni,txtfecha;
+        TextView txtnombre, txtdni,txtfecha, txtobs;
+        ImageView imagen;
         ImageButton borrar;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.clientesadapter, parent, false);
@@ -61,13 +63,24 @@ public class ListClientesAdpater extends BaseAdapter {
         txtfecha = (TextView) itemView.findViewById(R.id.txtFechaClienteAdapter);
         borrar=(ImageButton)itemView.findViewById(R.id.imageButton3);
         borrar.setImageResource(R.drawable.eliminar);
+        borrar.setAdjustViewBounds(true);
+        borrar.setBackgroundResource(android.R.color.transparent);
+        imagen=(ImageView)itemView.findViewById(R.id.imageViewCliente);
+        txtobs=(TextView)itemView.findViewById(R.id.txtDescripcionCliente);
         cliente = clientelist.get(position);
         String nombre = cliente.getNombre();
         String dni=  cliente.getDni();
         String fecha =cliente.getFechaN();
+        String onservacion=cliente.getObs();
+        String cab=cliente.getCaballo();
+
         txtnombre.setText(nombre);
         txtdni.setText(dni);
         txtfecha.setText(fecha);
+        txtobs.setText(onservacion);
+        if(cab.equals("Sin Cabalgata")){
+            imagen.setImageResource(R.drawable.caminata);
+        }
         borrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

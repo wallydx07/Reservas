@@ -42,6 +42,7 @@
         <entry key="..\:/Users/Walter/AndroidStudioProjects/Reservas/app/src/main/res/menu/navigation.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1265" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/circular.xml" value="0.1265" />
+        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/divi.xml" value="0.1645" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/download.xml" value="0.3125" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/ic_account.xml" value="0.1265" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/ic_add.xml" value="0.1265" />
@@ -49,20 +50,21 @@
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/ic_calendar.xml" value="0.1265" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1265" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.222" />
+        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/ic_paraiso_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/ic_person.xml" value="0.1265" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/drawable/ic_store.xml" value="0.1265" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_adapter_caballo.xml" value="0.18819655521783182" />
-        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_adapterclienteconsulta.xml" value="0.18" />
-        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_consulta_horario.xml" value="0.1" />
-        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_consulta_reserva.xml" value="0.33" />
-        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_crear_reserv.xml" value="0.42407407407407405" />
+        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_adapterclienteconsulta.xml" value="0.33" />
+        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_consulta_horario.xml" value="0.4405458089668616" />
+        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_consulta_reserva.xml" value="0.18" />
+        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_crear_reserv.xml" value="0.39082969432314413" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_editar_productos.xml" value="0.33" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_main.xml" value="0.17481884057971014" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_nuevo_producto.xml" value="0.17481884057971014" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/activity_reservas_adapter.xml" value="0.1" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/cabaloadapter.xml" value="0.31765711842667804" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/calendarlistview.xml" value="0.17481884057971014" />
-        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/clientesadapter.xml" value="0.2518518518518518" />
+        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/clientesadapter.xml" value="0.33" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/fragment_calendario.xml" value="0.33" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/fragment_producto.xml" value="0.17481884057971014" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/fragment_reserva_d_producto.xml" value="0.1" />
@@ -70,7 +72,7 @@
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/fragment_usuario.xml" value="0.17481884057971014" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/list_row.xml" value="0.33" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/listview_item.xml" value="0.17481884057971014" />
-        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/login.xml" value="0.33" />
+        <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/login.xml" value="0.19927536231884058" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/losspasw.xml" value="0.17753623188405798" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/nuevares.xml" value="0.33" />
         <entry key="..\:/Users/Walter/StudioProjects/Reservas/app/src/main/res/layout/nuevareserva.xml" value="0.17481884057971014" />
